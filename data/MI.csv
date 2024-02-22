@@ -485,7 +485,7 @@ Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Pteropodidae;Rousettus;aegyptiacu
 Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Pteropodidae;Rousettus;lanosus;Long-haired rousette;;;;;103;CHIROPTERA;PTEROPODIDAE;Rousettus_lanosus_PTEROPODIDAE_CHIROPTERA
 Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Pteropodidae;Rousettus;leschenaultii;Leschenault's rousette;115;;1;;108.25;CHIROPTERA;PTEROPODIDAE;Rousettus_leschenaultii_PTEROPODIDAE_CHIROPTERA
 Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Rhinolophidae;Rhinolophus;euryale;Mediterranean horseshoe bat;90;;1;;8.2;CHIROPTERA;RHINOLOPHIDAE;Rhinolophus_euryale_RHINOLOPHIDAE_CHIROPTERA
-Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Rhinolophidae;Rhinolophus;ferrumequinum;Greater horseshoe bat;80;;1;;22,875;CHIROPTERA;RHINOLOPHIDAE;Rhinolophus_ferrumequinum_RHINOLOPHIDAE_CHIROPTERA
+Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Rhinolophidae;Rhinolophus;ferrumequinum;Greater horseshoe bat;80;;1;;22.88;CHIROPTERA;RHINOLOPHIDAE;Rhinolophus_ferrumequinum_RHINOLOPHIDAE_CHIROPTERA
 Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Rhinolophidae;Rhinolophus;hipposideros;Lesser horseshoe bat;67;35;1;;4.6;CHIROPTERA;RHINOLOPHIDAE;Rhinolophus_hipposideros_RHINOLOPHIDAE_CHIROPTERA
 Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Rhinolophidae;Rhinolophus;megaphyllus;Smaller horseshoe bat;128;61;1;;9.8;CHIROPTERA;RHINOLOPHIDAE;Rhinolophus_megaphyllus_RHINOLOPHIDAE_CHIROPTERA
 Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Vespertilionidae;Antrozous;pallidus;Pallid bat;62;50;2;;20.8;CHIROPTERA;VESPERTILIONIDAE;Antrozous_pallidus_VESPERTILIONIDAE_CHIROPTERA
@@ -536,7 +536,7 @@ Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Vespertilionidae;Pipistrellus;pip
 Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Vespertilionidae;Plecotus;auritus;Brown big-eared bat;65;42;1.33;;7.8;CHIROPTERA;VESPERTILIONIDAE;Plecotus_auritus_VESPERTILIONIDAE_CHIROPTERA
 Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Vespertilionidae;Plecotus;austriacus;Gray big-eared bat;65;;;;12;CHIROPTERA;VESPERTILIONIDAE;Plecotus_austriacus_VESPERTILIONIDAE_CHIROPTERA
 Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Vespertilionidae;Scotorepens;balstoni;Western broad-nosed bat;210;29;1.5;5.6;11.7;CHIROPTERA;VESPERTILIONIDAE;Scotorepens_balstoni_VESPERTILIONIDAE_CHIROPTERA
-Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Vespertilionidae;Scotorepens;orion;Orion broad-nosed bat;210;;;;11,765;CHIROPTERA;VESPERTILIONIDAE;Scotorepens_orion_VESPERTILIONIDAE_CHIROPTERA
+Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Vespertilionidae;Scotorepens;orion;Orion broad-nosed bat;210;;;;11.77;CHIROPTERA;VESPERTILIONIDAE;Scotorepens_orion_VESPERTILIONIDAE_CHIROPTERA
 Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Vespertilionidae;Vespadelus;darlingtoni;Large forest bat;;;;;6.06;CHIROPTERA;VESPERTILIONIDAE;Vespadelus_darlingtoni_VESPERTILIONIDAE_CHIROPTERA
 Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Vespertilionidae;Vespadelus;pumilus;Eastern forest bat;;;1.2;;5.4;CHIROPTERA;VESPERTILIONIDAE;Vespadelus_pumilus_VESPERTILIONIDAE_CHIROPTERA
 Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Vespertilionidae;Vespadelus;regulus;Southern forest bat;92;;1;;5.05;CHIROPTERA;VESPERTILIONIDAE;Vespadelus_regulus_VESPERTILIONIDAE_CHIROPTERA
@@ -690,7 +690,7 @@ Animalia;Chordata;Mammalia;Eutheria;Eulipotyphla;Erinaceidae;Atelerix;albiventri
 Animalia;Chordata;Mammalia;Eutheria;Eulipotyphla;Erinaceidae;Atelerix;algirus;North african hedgehog;40;40;5;;745;EULIPOTYPHLA;ERINACEIDAE;Atelerix_algirus_ERINACEIDAE_EULIPOTYPHLA
 Animalia;Chordata;Mammalia;Eutheria;Eulipotyphla;Erinaceidae;Atelerix;frontalis;Southern african hedgehog;37;36;5.4;;309;EULIPOTYPHLA;ERINACEIDAE;Atelerix_frontalis_ERINACEIDAE_EULIPOTYPHLA
 Animalia;Chordata;Mammalia;Eutheria;Eulipotyphla;Erinaceidae;Echinosorex;gymnura;Moonrat;37;;2;;1250;EULIPOTYPHLA;ERINACEIDAE;Echinosorex_gymnura_ERINACEIDAE_EULIPOTYPHLA
-Animalia;Chordata;Mammalia;Eutheria;Eulipotyphla;Erinaceidae;Erinaceus;amurensis;Amur hedgehog;36;;;;774,475;EULIPOTYPHLA;ERINACEIDAE;Erinaceus_amurensis_ERINACEIDAE_EULIPOTYPHLA
+Animalia;Chordata;Mammalia;Eutheria;Eulipotyphla;Erinaceidae;Erinaceus;amurensis;Amur hedgehog;36;;;;774.475;EULIPOTYPHLA;ERINACEIDAE;Erinaceus_amurensis_ERINACEIDAE_EULIPOTYPHLA
 Animalia;Chordata;Mammalia;Eutheria;Eulipotyphla;Erinaceidae;Erinaceus;concolor;Eastern European hedgehog;35;;4.5;;719;EULIPOTYPHLA;ERINACEIDAE;Erinaceus_concolor_ERINACEIDAE_EULIPOTYPHLA
 Animalia;Chordata;Mammalia;Eutheria;Eulipotyphla;Erinaceidae;Erinaceus;europaeus;Western European hedgehog;30;42;1.5;235;750;EULIPOTYPHLA;ERINACEIDAE;Erinaceus_europaeus_ERINACEIDAE_EULIPOTYPHLA
 Animalia;Chordata;Mammalia;Eutheria;Eulipotyphla;Erinaceidae;Hemiechinus;auritus;Long-eared hedgehog;39;36;4;;342;EULIPOTYPHLA;ERINACEIDAE;Hemiechinus_auritus_ERINACEIDAE_EULIPOTYPHLA
