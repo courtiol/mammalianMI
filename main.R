@@ -40,6 +40,7 @@ nrow(MI_subclasses) # 368
 orders_vs_N    <- aggregate(MI_clean[, "Key", drop = FALSE], list(Order = MI_clean$Order), length)
 orders_to_keep <- as.character(orders_vs_N$Order[orders_vs_N$Key >= 15])
 MI_orders <- droplevels(MI_subclasses[MI_subclasses$Order %in% orders_to_keep, ])
+unique(MI_orders$Order) # [1] Cetartiodactyla Carnivora Dasyuromorphia Diprotodontia Eulipotyphla Primates Rodentia    
 nrow(MI_orders) # 327
 str(MI_orders)
 
