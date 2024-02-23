@@ -3,7 +3,7 @@
 
 ## This function checks that all the package dependencies are met
 
-check_dependencies_all <- function() {
+check_dependencies_all <- function(pkgs) {
   
   check_dependencies_pkg <- function(pkg) {
     if (!requireNamespace(pkg, quietly = TRUE)) {
@@ -11,8 +11,10 @@ check_dependencies_all <- function() {
     }
   }
   
-  check_dependencies_pkg("ape")
-  check_dependencies_pkg("spaMM")
+  sapply(pkgs, \(pkg) {
+    check_dependencies_pkg(pkg)
+    message(paste("Package", pkg, "available. Version =", packageVersion(pkg), "found on your system."))
+    })
   print("All dependencies have been met, you can continue 🎉")
 }
 
