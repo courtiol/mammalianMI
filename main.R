@@ -57,3 +57,17 @@ indicator_species <- c("Tailess tenrec", "Red fox", "Blue whale", "Eurasian shre
 MI_indicators <- droplevels(MI_clean[MI_clean$Name %in% indicator_species, ])
 nrow(MI_indicators) # 20
 str(MI_indicators)
+
+
+# Fitting regression models -----------------------------------------------
+
+## Fitting SLR model for method comparison
+
+fit_SLR_models <- fitme(log(Litter_mass) ~ log(Adult_mass), data = MI_models)
+extract_fit_summary(fit_SLR_models)
+
+
+
+
+
+

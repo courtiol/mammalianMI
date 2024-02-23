@@ -71,3 +71,20 @@ prepare_df_MIfull <- function(raw_df) {
   ## Reorder columns
   raw_df[, c("Key", "Subclass", "Order", "Name", "Adult_mass", "Litter_mass", "Investment_duration")]
 }
+
+
+# Extract information from fits -------------------------------------------
+
+extract_fit_summary <- function(fit, digits = 3) {
+
+  if ("HLfit" %in% class(fit)) {
+    elev_stats <- c(estimate = fixef(fit)["(Intercept)"][[1]],
+                    confint(fit, parm = "(Intercept)", verbose = FALSE)$interval)
+    scale_stats <- c(estimate = fixef(fit)["log(Adult_mass)"][[1]],
+                     confint(fit, parm = "log(Adult_mass)", verbose = FALSE)$interval)
+    stats <- rbind(elev_stats, scale_stats)
+    colnames(stats) <- c("estimate", "lower", "upper")
+  }
+  
+  round(stats, digits = digits) 
+}
