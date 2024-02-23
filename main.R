@@ -46,10 +46,10 @@ nrow(MI_models) # 348
 str(MI_models)
 
 ### Prepare subsample for the 20 indicator species
-indicator_species <- c("Tailess tenrec", "Red fox", "Blue whale", "Eurasian shrew",
+indicator_species <- c("Tailless tenrec", "Red fox", "Blue whale", "Eurasian shrew",
                        "American bison", "Rat", "African bush elephant", "Impala", "Red panda",
-                       "Tammar wallaby", "Tiger", "Gray seal", "Chimpanzee",
-                       "Central American spider monkey", "Southern hairy-nosed wombat", "European hare",
+                       "Tammar wallaby", "Tiger", "Grey seal", "Chimpanzee",
+                       "Geoffroy's spider monkey", "Southern hairy-nosed wombat", "European hare",
                        "Red kangaroo", "Greater short-nosed fruit bat", "Short-beaked echidna", "Tasmanian devil")
 MI_indicators <- droplevels(MI_subclasses[MI_subclasses$Name %in% indicator_species, ])
 nrow(MI_indicators) # 20
