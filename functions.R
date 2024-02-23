@@ -198,8 +198,8 @@ draw_figure_1 <- function(data_models, fit_SLR, fit_PLMM, fit_SMA, fit_MA, fit_M
   data_pred$MSLR  <- 10^(predict(fit_MSLR, newdata = data_pred)[, 1])
   data_pred$MPLMM <- 10^(predict(fit_MPLMM, newdata = data_pred, re.form = NA)[, 1])
   
-  data_pred <- tidyr::pivot_longer(data_pred, cols = SLR:MPLMM, names_to = "Method", values_to = "Predict")
-  data_pred$Method <- factor(data_pred$Method, levels = c("SLR", "PLMM", "SMA", "MA", "MSLR", "MPLMM"))
+  data_pred <- tidyr::pivot_longer(data_pred, cols = SLR:MPLMM, names_to = "Model", values_to = "Predict")
+  data_pred$Model <- factor(data_pred$Model, levels = c("SLR", "PLMM", "SMA", "MA", "MSLR", "MPLMM"))
   
   fig <- ggplot2::ggplot(data = data_models, ggplot2::aes(Adult_mass, Litter_mass)) + 
     ggplot2::scale_x_continuous(trans = "log10", breaks = c(0.1, 1, 10, 100, 1000, 10000, 100000), 
@@ -211,7 +211,7 @@ draw_figure_1 <- function(data_models, fit_SLR, fit_PLMM, fit_SMA, fit_MA, fit_M
     ggplot2::scale_fill_manual(values = c("steelblue", "darkred", "#FCC501")) +
     ggplot2::scale_color_viridis_d() +
     ggplot2::geom_point(ggplot2::aes(shape = Subclass, fill = Subclass), alpha = 0.3, size = 2) +
-    ggplot2::geom_line(ggplot2::aes(y = Predict, x = Adult_mass, colour = Method), data = data_pred,
+    ggplot2::geom_line(ggplot2::aes(y = Predict, x = Adult_mass, colour = Model), data = data_pred,
                        linewidth = 0.7, alpha = 0.8, inherit.aes = FALSE) +
     ggplot2::xlab('Adult mass (kg)') +
     ggplot2::ylab('Litter mass at weaning age (kg)') +
