@@ -14,7 +14,7 @@ check_dependencies_all <- function(pkgs) {
   sapply(pkgs, \(pkg) {
     check_dependencies_pkg(pkg)
     message(paste("Package", pkg, "available. Version =", packageVersion(pkg), "found on your system."))
-    })
+  })
   print("All dependencies have been met, you can continue 🎉")
 }
 
@@ -33,7 +33,7 @@ check_dependencies_all <- function(pkgs) {
 ## - Investment_duration: the duration of maternal investment (gestation + lactation), in days
 
 prepare_df_MIfull <- function(raw_df) {
-
+  
   ## Rename column
   raw_df$Key  <- raw_df$Name
   raw_df$Name <- raw_df$Common.name
@@ -73,17 +73,70 @@ prepare_df_MIfull <- function(raw_df) {
 }
 
 
+# Fit P(G)LMM models ------------------------------------------------------
+
+## This function fits a phylogenetic GLMM given a lambda value using spaMM
+
+fitme_phylo_lambdafixed <- function(lambda = 1, tree, data, cor_fn = ape::corPagel, return.fit = TRUE, ...) {
+  corM <- nlme::corMatrix(nlme::Initialize(cor_fn(lambda, form = ~ Key, phy = tree), data = data)) 
+  fit <- spaMM::fitme(corrMatrix = corM, data = data, ...)
+  fit$phylo <- list(lambda = lambda, tree = tree, cor_fn = cor_fn, corM = corM)
+  if (return.fit) return(fit)
+  logLik(fit)
+}
+
+## This function fits a phylogenetic GLMM using spaMM and estimate the value of the parameter of the correlation structure (lambda)
+## by outer estimation
+
+fitme_phylo_lambdafree <- function(tree, data, cor_fn = ape::corPagel, ...) {
+  message("Fitting the P(G)LMM... be patient")
+  best_lambda <- optimize(fitme_phylo_lambdafixed, interval = c(0, 1), maximum = TRUE,
+                          fixed = list(phi = 1e-5), tree = tree, data = data, return.fit = FALSE, ...)
+  message(paste("estimated lambda =", round(best_lambda$maximum, digits = 3)))
+  fit <- fitme_phylo_lambdafixed(lambda = best_lambda$maximum, tree = tree, data = data,
+                                 cor_fn = cor_fn, return.fit = TRUE, fixed = list(phi = 1e-5), ...)
+  fit
+}
+
+## This function estimates the 95% CI of the parameter of the correlation structure (lambda)
+
+confint_lambda <- function(bestfit) {
+  lambda_ref <- bestfit$phylo$lambda
+  CI_fit <- function(x, ...) abs(fitme_phylo_lambdafixed(lambda = x, ...) - (logLik(bestfit) - qchisq(0.95, df = 1)/2)) ## asymptotic
+  
+  message("Estimating lower boundary for lambda... be patient")
+  lambda_lwr <- optimize(CI_fit, interval = c(0, lambda_ref),
+                         formula = formula(bestfit), tree = bestfit$phylo$tree, data = bestfit$data, cor_fn = bestfit$phylo$cor_fn,
+                         fixed = list(phi = 1e-5), return.fit = FALSE)$minimum
+  
+  message("Estimating upper boundary for lambda... be patient")
+  lambda_upr <- optimize(CI_fit, interval = c(lambda_ref, 1),
+                         formula = formula(bestfit), tree = bestfit$phylo$tree, data = bestfit$data, cor_fn = bestfit$phylo$cor_fn,
+                         fixed = list(phi = 1e-5), return.fit = FALSE)$minimum
+  
+  c(estimate = lambda_ref, lower = lambda_lwr, upper = lambda_upr)
+}
+
+
+
 # Extract information from fits -------------------------------------------
 
 extract_fit_summary <- function(fit, digits = 3) {
 
   if ("HLfit" %in% class(fit)) {
-    elev_stats <- c(estimate = fixef(fit)["(Intercept)"][[1]],
-                    confint(fit, parm = "(Intercept)", verbose = FALSE)$interval)
-    scale_stats <- c(estimate = fixef(fit)["log(Adult_mass)"][[1]],
-                     confint(fit, parm = "log(Adult_mass)", verbose = FALSE)$interval)
-    stats <- rbind(elev_stats, scale_stats)
+    if (!is.null(fit$phylo)) corM <<- fit$phylo$corM ## to circumvent spaMM scoping issue in confint()
+    elevation <- c(estimate = fixef(fit)["(Intercept)"][[1]],
+                   confint(fit, parm = "(Intercept)", verbose = FALSE)$interval)
+    scale <- c(estimate = fixef(fit)["log(Adult_mass)"][[1]],
+              confint(fit, parm = "log(Adult_mass)", verbose = FALSE)$interval)
+    stats <- rbind(elevation, scale)
     colnames(stats) <- c("estimate", "lower", "upper")
+    if (!is.null(fit$phylo)) {
+      lambda <- confint_lambda(fit)
+      stats <- rbind(stats, lambda)
+    }
+  } else {
+    stop("model class not recognized")
   }
   
   round(stats, digits = digits) 
