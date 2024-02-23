@@ -158,9 +158,12 @@ extract_fit_summary <- function(fit, digits = 3) {
   }
   
   rownames(stats)[rownames(stats) == "intercept_transformed"] <- "10^intercept"
-
-  signif(as.data.frame(stats), digits = digits) 
+  rows <- rownames(stats)
+  res <- do.call("data.frame", lapply(as.data.frame(stats), \(x) sprintf('%#.3g', signif(x, digits = digits))))
+  rownames(res) <- rows
+  res
 }
+
 
 ## This functions extract the r-squared value associated with the model
 ## Note: We compute it as the squared coefficient for the Pearson correlation between prediction and observations at the log scale

@@ -91,7 +91,7 @@ plot(log(MI_models$Litter_mass, 10), predict(fit_PLMM_models, re.form = NA, type
 extract_fit_summary(fit_PLMM_models)
 #              estimate  lower upper
 # intercept      -0.197 -0.599 0.206
-# 10^intercept    0.636  0.252 1.610
+# 10^intercept    0.636  0.252  1.61
 # slope           0.758  0.725 0.792
 # lambda          0.777  0.630 0.873
 compure_r2(fit_PLMM_models) ## same as above!
@@ -135,10 +135,10 @@ plot(fit_MSLR_models, ask = FALSE, which = "mean")    ## diagnostics (good!)
 plot(fit_MSLR_models, ask = FALSE, which = "predict") ## diagnostics (good!)
 extract_fit_summary(fit_MSLR_models)
 #              estimate   lower   upper
-# intercept       0.205 -0.0633  0.4730
-# 10^intercept    1.600  0.8640  2.9700
-# slope           0.801  0.7660  0.8370
-# slope_InvDur   -0.176 -0.3010 -0.0505
+# intercept       0.205 -0.0633   0.473
+# 10^intercept     1.60   0.864    2.97
+# slope           0.801   0.766   0.837
+# slope_InvDur   -0.176  -0.301 -0.0505
 compure_r2(fit_MSLR_models)
 #    estimate lower upper         p
 # r2    0.936  0.96 0.973 2.46e-208
@@ -152,11 +152,11 @@ plot(fit_MPLMM_models, ask = FALSE, which = "predict", re.form = NA) ## diagnost
 plot(log(MI_models$Litter_mass, 10), predict(fit_MPLMM_models, re.form = NA, type = "link")[, 1]) ## diagnostics, excluding ranef (good!)
 extract_fit_summary(fit_MPLMM_models)
 #              estimate   lower upper
-# intercept      -0.453 -1.0200 0.110
-# 10^intercept    0.353  0.0965 1.290
-# slope           0.737  0.6900 0.783
+# intercept      -0.453   -1.02 0.110
+# 10^intercept    0.353  0.0965  1.29
+# slope           0.737   0.690 0.783
 # slope_InvDur    0.127 -0.0600 0.314
-# lambda          0.796  0.6540 0.885
+# lambda          0.796   0.654 0.885
 compure_r2(fit_MPLMM_models)
 #    estimate lower upper         p
 # r2    0.932 0.957 0.972 1.22e-203
