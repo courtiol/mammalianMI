@@ -24,29 +24,25 @@ MI_raw <- read.csv2("data/MI.csv", dec = ".", na.strings = "")
 MI_full <- prepare_df_MIfull(MI_raw)
 nrow(MI_full) # 1349
 
-### Prepare main subsample used to prepare each subsample used
-MI_clean <- droplevels(MI_full[!is.na(MI_full$Adult_mass) &
-                               !is.na(MI_full$Litter_mass) &
-                               MI_full$Key %in% tree[["tip.label"]], ])
-nrow(MI_clean) # 370
-str(MI_clean)
-
-### Prepare subsample with no missing data for modelling
-MI_models <- droplevels(MI_clean[!is.na(MI_clean$Investment_duration), ])
-nrow(MI_models) # 348
-str(MI_models)
-
 ### Prepare subsample with for comparison between subclasses
-MI_subclasses <- droplevels(MI_clean[MI_clean$Subclass != "Monotremata", ])
-nrow(MI_subclasses) # 368
+MI_subclasses <- droplevels(MI_full[!is.na(MI_full$Adult_mass) &
+                            !is.na(MI_full$Litter_mass) &
+                            MI_full$Key %in% tree[["tip.label"]], ])
+nrow(MI_subclasses) # 370
+str(MI_subclasses)
 
 ### Prepare subsample with for comparison between orders
-orders_vs_N    <- aggregate(MI_clean[, "Key", drop = FALSE], list(Order = MI_clean$Order), length)
+orders_vs_N    <- aggregate(MI_subclasses[, "Key", drop = FALSE], list(Order = MI_subclasses$Order), length)
 orders_to_keep <- as.character(orders_vs_N$Order[orders_vs_N$Key >= 15])
 MI_orders <- droplevels(MI_subclasses[MI_subclasses$Order %in% orders_to_keep, ])
 unique(MI_orders$Order) # [1] Cetartiodactyla Carnivora Dasyuromorphia Diprotodontia Eulipotyphla Primates Rodentia    
 nrow(MI_orders) # 327
 str(MI_orders)
+
+### Prepare subsample with no missing data for modelling
+MI_models <- droplevels(MI_subclasses[!is.na(MI_subclasses$Investment_duration), ])
+nrow(MI_models) # 348
+str(MI_models)
 
 ### Prepare subsample for the 20 indicator species
 indicator_species <- c("Tailess tenrec", "Red fox", "Blue whale", "Eurasian shrew",
@@ -54,7 +50,7 @@ indicator_species <- c("Tailess tenrec", "Red fox", "Blue whale", "Eurasian shre
                        "Tammar wallaby", "Tiger", "Gray seal", "Chimpanzee",
                        "Central American spider monkey", "Southern hairy-nosed wombat", "European hare",
                        "Red kangaroo", "Greater short-nosed fruit bat", "Short-beaked echidna", "Tasmanian devil")
-MI_indicators <- droplevels(MI_clean[MI_clean$Name %in% indicator_species, ])
+MI_indicators <- droplevels(MI_subclasses[MI_subclasses$Name %in% indicator_species, ])
 nrow(MI_indicators) # 20
 str(MI_indicators)
 
@@ -65,9 +61,16 @@ str(MI_indicators)
 
 fit_SLR_models <- fitme(log(Litter_mass) ~ log(Adult_mass), data = MI_models)
 extract_fit_summary(fit_SLR_models)
+#         estimate  lower  upper
+# elev    -0.389 -0.458 -0.320
+# scale    0.762  0.741  0.783
 
+## Fitting PLMM models for method comparison
 
-
-
-
-
+fit_SLRPLMM_models <- fitme_phylo_lambdafree(formula = log(Litter_mass) ~ log(Adult_mass) + corrMatrix(1|Key),
+                                             data = MI_models, tree = tree)
+extract_fit_summary(fit_SLRPLMM_models)
+#             estimate  lower upper
+# elevation   -0.453 -1.379 0.473
+# scale        0.758  0.725 0.792
+# lambda       0.777  0.630 0.873
