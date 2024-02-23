@@ -8,7 +8,7 @@ check_dependencies_all()
 # Data preparation --------------------------------------------------------
 
 ## Import the phylogenetic tree
-tree_full <- ape::read.tree("data/RAxML_bipartitions.result_FIN4_raw_rooted_wBoots_4098mam1out_OK.newick")
+tree <- ape::read.tree("data/RAxML_bipartitions.result_FIN4_raw_rooted_wBoots_4098mam1out_OK.newick")
 
 
 ## Preparation of the Maternal Investment dataset
@@ -18,11 +18,37 @@ MI_raw <- read.csv2("data/MI.csv", dec = ".", na.strings = "")
 
 ### Format the full dataset (see functions.R for details)
 MI_full <- prepare_df_MIfull(MI_raw)
+nrow(MI_full) # 1349
+
+### Prepare main subsample used to prepare each subsample used
+MI_clean <- droplevels(MI_full[!is.na(MI_full$Adult_mass) &
+                               !is.na(MI_full$Litter_mass) &
+                               MI_full$Key %in% tree[["tip.label"]], ])
+nrow(MI_clean) # 370
+str(MI_clean)
 
 ### Prepare subsample with no missing data for modelling
-
-### Prepare subsample with for comparison between orders
+MI_models <- droplevels(MI_clean[!is.na(MI_clean$Investment_duration), ])
+nrow(MI_models) # 348
+str(MI_models)
 
 ### Prepare subsample with for comparison between subclasses
+MI_subclasses <- droplevels(MI_clean[MI_clean$Subclass != "Monotremata", ])
+nrow(MI_subclasses) # 368
+
+### Prepare subsample with for comparison between orders
+orders_vs_N    <- aggregate(MI_clean[, "Key", drop = FALSE], list(Order = MI_clean$Order), length)
+orders_to_keep <- as.character(orders_vs_N$Order[orders_vs_N$Key >= 15])
+MI_orders <- droplevels(MI_subclasses[MI_subclasses$Order %in% orders_to_keep, ])
+nrow(MI_orders) # 327
+str(MI_orders)
 
 ### Prepare subsample for the 20 indicator species
+indicator_species <- c("Tailess tenrec", "Red fox", "Blue whale", "Eurasian shrew",
+                       "American bison", "Rat", "African bush elephant", "Impala", "Red panda",
+                       "Tammar wallaby", "Tiger", "Gray seal", "Chimpanzee",
+                       "Central American spider monkey", "Southern hairy-nosed wombat", "European hare",
+                       "Red kangaroo", "Greater short-nosed fruit bat", "Short-beaked echidna", "Tasmanian devil")
+MI_indicators <- droplevels(MI_clean[MI_clean$Name %in% indicator_species, ])
+nrow(MI_indicators) # 20
+str(MI_indicators)
