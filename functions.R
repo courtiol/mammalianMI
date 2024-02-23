@@ -132,12 +132,12 @@ extract_fit_summary <- function(fit, digits = 3) {
     if (!is.null(fit$phylo)) corM <<- fit$phylo$corM ## to circumvent spaMM scoping issue in confint()
     elevation <- c(estimate = fixef(fit)["(Intercept)"][[1]],
                    confint(fit, parm = "(Intercept)", verbose = FALSE)$interval)
-    slope <- c(estimate = fixef(fit)["log(Adult_mass)"][[1]],
-              confint(fit, parm = "log(Adult_mass)", verbose = FALSE)$interval)
+    slope <- c(estimate = fixef(fit)["log(Adult_mass, 10)"][[1]],
+              confint(fit, parm = "log(Adult_mass, 10)", verbose = FALSE)$interval)
     stats <- rbind(elevation, slope)
     if (grepl(pattern = ".*Investment_duration", x = as.character(formula(fit))[3])) {
-      slope_InvDur <- c(estimate = fixef(fit)["log(Investment_duration)"][[1]],
-                       confint(fit, parm = "log(Investment_duration)", verbose = FALSE)$interval)
+      slope_InvDur <- c(estimate = fixef(fit)["log(Investment_duration, 10)"][[1]],
+                       confint(fit, parm = "log(Investment_duration, 10)", verbose = FALSE)$interval)
       stats <- rbind(stats, slope_InvDur)
     }
     colnames(stats) <- c("estimate", "lower", "upper")
@@ -164,7 +164,7 @@ compure_r2 <- function(fit, digits = 3) {
   obs  <- fit$data$Litter_mass
 
   if (inherits(fit, what = "HLfit")) {
-    obs <- log(obs)
+    obs <- log(obs, 10)
     pred <- predict(fit, re.form = NA)[, 1]
   } else if (inherits(fit, what = "sma")) {
     pred <- fitted(fit)
@@ -183,3 +183,40 @@ compure_r2 <- function(fit, digits = 3) {
 
 
 
+# Figures -----------------------------------------------------------------
+
+## This function draws figure 1
+
+draw_figure_1 <- function(data_models, fit_SLR, fit_PLMM, fit_SMA, fit_MA, fit_MSLR, fit_MPLMM) {
+  
+  data_pred <- data.frame(Adult_mass = c(0.001, 1e6),
+                          Investment_duration = median(data_models$Investment_duration))
+  data_pred$SLR   <- 10^(predict(fit_SLR, newdata = data_pred)[, 1])
+  data_pred$PLMM  <- 10^(predict(fit_PLMM, newdata = data_pred, re.form = NA)[, 1])
+  data_pred$SMA   <- 10^as.numeric(as.matrix(cbind(1, log(data_pred[, "Adult_mass", drop = FALSE], 10))) %*% matrix(coef(fit_SMA)))
+  data_pred$MA    <- 10^as.numeric(as.matrix(cbind(1, log(data_pred[, "Adult_mass", drop = FALSE], 10))) %*% matrix(coef(fit_MA)))
+  data_pred$MSLR  <- 10^(predict(fit_MSLR, newdata = data_pred)[, 1])
+  data_pred$MPLMM <- 10^(predict(fit_MPLMM, newdata = data_pred, re.form = NA)[, 1])
+  
+  data_pred <- tidyr::pivot_longer(data_pred, cols = SLR:MPLMM, names_to = "Method", values_to = "Predict")
+  data_pred$Method <- factor(data_pred$Method, levels = c("SLR", "PLMM", "SMA", "MA", "MSLR", "MPLMM"))
+  
+  fig <- ggplot2::ggplot(data = data_models, ggplot2::aes(Adult_mass, Litter_mass)) + 
+    ggplot2::scale_x_continuous(trans = "log10", breaks = c(0.1, 1, 10, 100, 1000, 10000, 100000), 
+                                labels = scales::number_format(accuracy = 0.1), expand = c(0, 0)) + 
+    ggplot2::scale_y_continuous(trans = "log10",
+                                breaks = c(0.1, 1, 10, 100, 1000, 10000),
+                                labels = scales::number_format(accuracy = 0.1), expand = c(0, 0)) +
+    ggplot2::scale_shape_manual(values = 21:23) +
+    ggplot2::scale_fill_manual(values = c("steelblue", "darkred", "#FCC501")) +
+    ggplot2::scale_color_viridis_d() +
+    ggplot2::geom_point(ggplot2::aes(shape = Subclass, fill = Subclass), alpha = 0.3, size = 2) +
+    ggplot2::geom_line(ggplot2::aes(y = Predict, x = Adult_mass, colour = Method), data = data_pred,
+                       linewidth = 0.7, alpha = 0.8, inherit.aes = FALSE) +
+    ggplot2::xlab('Adult mass (kg)') +
+    ggplot2::ylab('Litter mass at weaning age (kg)') +
+    ggplot2::theme_classic() +
+    ggplot2::theme(legend.position = "right")
+    
+    print(fig)
+  }

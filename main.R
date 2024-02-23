@@ -3,7 +3,7 @@
 source("functions.R")
 
 # Checking dependencies ---------------------------------------------------
-check_dependencies_all(c("ape", "nlme", "smatr", "spaMM"))
+check_dependencies_all(c("ape", "ggplot2", "nlme", "scales", "smatr", "spaMM", "tidyr"))
 
 
 # Load dependencies -------------------------------------------------------
@@ -24,12 +24,10 @@ MI_raw <- read.csv2("data/MI.csv", dec = ".", na.strings = "")
 
 ### Format the full dataset (see functions.R for details)
 MI_full <- prepare_df_MIfull(MI_raw)
-nrow(MI_full) # 1349
+nrow(MI_full) # 382
 
 ### Prepare subsample with for comparison between subclasses
-MI_subclasses <- droplevels(MI_full[!is.na(MI_full$Adult_mass) &
-                            !is.na(MI_full$Litter_mass) &
-                            MI_full$Key %in% tree[["tip.label"]], ])
+MI_subclasses <- droplevels(MI_full[MI_full$Key %in% tree[["tip.label"]], ])
 nrow(MI_subclasses) # 370
 str(MI_subclasses)
 
@@ -57,32 +55,41 @@ nrow(MI_indicators) # 20
 str(MI_indicators)
 
 
+# Descriptive statistics --------------------------------------------------
+
+cor_global <- cor.test(log(MI_full$Adult_mass), log(MI_full$Litter_mass))
+round(cor_global$estimate, digits = 3)[[1]] # correlation estimate
+# [1] 0.966
+signif(cor_global$p.value, digits = 3) # pvalue
+# [1] 2.17e-226
+
+
 # Fitting regression models -----------------------------------------------
 
 ## Fitting SLR model for method comparison
 
-fit_SLR_models <- fitme(log(Litter_mass) ~ log(Adult_mass), data = MI_models)
+fit_SLR_models <- fitme(log(Litter_mass, 10) ~ log(Adult_mass, 10), data = MI_models)
 plot(fit_SLR_models, ask = FALSE, which = "mean")    ## diagnostics (good!)
 plot(fit_SLR_models, ask = FALSE, which = "predict") ## diagnostics (good!)
 extract_fit_summary(fit_SLR_models)
-#       estimate  lower  upper
-# elev    -0.389 -0.458 -0.320
-# slope    0.762  0.741  0.783
+#           estimate  lower  upper
+# elevation   -0.169 -0.199 -0.139
+# slope        0.762  0.741  0.783
 compure_r2(fit_SLR_models)
 #    estimate lower upper         p
 # r2    0.934 0.959 0.973 1.04e-206
 
 ## Fitting PLMM model for method comparison
 
-fit_PLMM_models <- fitme_phylo_lambdafree(formula = log(Litter_mass) ~ log(Adult_mass) + corrMatrix(1|Key),
+fit_PLMM_models <- fitme_phylo_lambdafree(formula = log(Litter_mass, 10) ~ log(Adult_mass, 10) + corrMatrix(1|Key),
                                           data = MI_models, tree = tree)
 plot(fit_PLMM_models, ask = FALSE, which = "mean")  ## diagnostics (good!)
 plot(fit_PLMM_models, ask = FALSE, which = "ranef") ## diagnostics (good!)
 plot(fit_PLMM_models, ask = FALSE, which = "predict") ## diagnostics (bad: residual variance captured by random variance)
-plot(log(MI_models$Litter_mass), predict(fit_PLMM_models, re.form = NA, type = "link")[, 1]) ## diagnostics, excluding ranef (good!)
+plot(log(MI_models$Litter_mass, 10), predict(fit_PLMM_models, re.form = NA, type = "link")[, 1]) ## diagnostics, excluding ranef (good!)
 extract_fit_summary(fit_PLMM_models)
 #           estimate  lower upper
-# elevation   -0.453 -1.379 0.473
+# elevation   -0.197 -0.599 0.206
 # slope        0.758  0.725 0.792
 # lambda       0.777  0.630 0.873
 compure_r2(fit_PLMM_models) ## same as above!
@@ -119,12 +126,12 @@ compure_r2(fit_MA_models)
 
 ## Fitting MSLR model for method comparison
 
-fit_MSLR_models <- fitme(log(Litter_mass) ~ log(Adult_mass) + log(Investment_duration), data = MI_models)
+fit_MSLR_models <- fitme(log(Litter_mass, 10) ~ log(Adult_mass, 10) + log(Investment_duration, 10), data = MI_models)
 plot(fit_MSLR_models, ask = FALSE, which = "mean")    ## diagnostics (good!)
 plot(fit_MSLR_models, ask = FALSE, which = "predict") ## diagnostics (good!)
 extract_fit_summary(fit_MSLR_models)
 #              estimate  lower  upper
-# elevation       0.472 -0.146  1.090
+# elevation       0.205 -0.063  0.473
 # slope           0.801  0.766  0.837
 # slope_InvDur   -0.176 -0.301 -0.051
 compure_r2(fit_MSLR_models)
@@ -132,18 +139,28 @@ compure_r2(fit_MSLR_models)
 # r2    0.936  0.96 0.973 2.46e-208
 
 ## Fitting MPLMM model for method comparison
-fit_MPLMM_models <- fitme_phylo_lambdafree(formula = log(Litter_mass) ~ log(Adult_mass) + log(Investment_duration) + corrMatrix(1|Key),
+fit_MPLMM_models <- fitme_phylo_lambdafree(formula = log(Litter_mass, 10) ~ log(Adult_mass, 10) + log(Investment_duration, 10) + corrMatrix(1|Key),
                                            data = MI_models, tree = tree)
 plot(fit_MPLMM_models, ask = FALSE, which = "mean")  ## diagnostics (good!)
 plot(fit_MPLMM_models, ask = FALSE, which = "ranef") ## diagnostics (good!)
 plot(fit_MPLMM_models, ask = FALSE, which = "predict", re.form = NA) ## diagnostics (bad: residual variance captured by random variance)
-plot(log(MI_models$Litter_mass), predict(fit_MPLMM_models, re.form = NA, type = "link")[, 1]) ## diagnostics, excluding ranef (good!)
+plot(log(MI_models$Litter_mass, 10), predict(fit_MPLMM_models, re.form = NA, type = "link")[, 1]) ## diagnostics, excluding ranef (good!)
 extract_fit_summary(fit_MPLMM_models)
 #              estimate  lower upper
-# elevation      -1.042 -2.338 0.253
+# elevation      -0.453 -1.015 0.110
 # slope           0.737  0.690 0.783
 # slope_InvDur    0.127 -0.060 0.314
 # lambda          0.796  0.654 0.885
 compure_r2(fit_MPLMM_models)
 #    estimate lower upper         p
 # r2    0.932 0.957 0.972 1.22e-203
+
+
+# Figure 1 ----------------------------------------------------------------
+
+draw_figure_1(data_models = MI_models,
+              fit_SLR = fit_SLR_models, fit_PLMM = fit_PLMM_models,
+              fit_SMA = fit_SMA_models, fit_MA = fit_MA_models,
+              fit_MSLR = fit_MSLR_models, fit_MPLMM = fit_MPLMM_models)
+ggplot2::ggsave(filename = "figures/Fig1.pdf", scale = 0.6)
+ggplot2::ggsave(filename = "figures/Fig1.png", scale = 0.6)
