@@ -198,3 +198,27 @@ range(corMI, na.rm = TRUE)
 quade.test(as.matrix(MI_models[, c("MI_SLR", "MI_SMA", "MI_MA", "MI_MSLR")]))
 # data:  as.matrix(MI_models[, c("MI_SLR", "MI_SMA", "MI_MA", "MI_MSLR")])
 # Quade F = 0.082349, num df = 3, denom df = 1041, p-value = 0.9696
+
+## Comparison between phylogenetic and non-phylogenetic counterpart
+
+univariate_phylo_test <- data.frame(LRT = unname(-2*(logLik(fit_SLR_models) - logLik(fit_PLMM_models))))
+univariate_phylo_test$df <- 1
+univariate_phylo_test$p <- with(univariate_phylo_test, pchisq(LRT, df, lower.tail = FALSE))
+univariate_phylo_test
+#        LRT df            p
+# 1 103.1932  1 3.040137e-24
+
+multivariate_phylo_test <- data.frame(LRT = unname(-2*(logLik(fit_MSLR_models) - logLik(fit_MPLMM_models))))
+multivariate_phylo_test$df <- 1
+multivariate_phylo_test$p <- with(multivariate_phylo_test, pchisq(LRT, df, lower.tail = FALSE))
+multivariate_phylo_test
+#        LRT df            p
+# 1 97.35548  1 5.793413e-23
+
+## Comparison between the 2 PLMMs
+anova(fit_PLMM_models, fit_MPLMM_models)
+# chi2_LR df  p_value
+# p_v 1.679484  1 0.194993
+
+
+
