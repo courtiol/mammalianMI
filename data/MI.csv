@@ -5,7 +5,7 @@ Animalia;Chordata;Mammalia;Eutheria;Afrosoricida;Tenrecidae;Hemicentetes;semispi
 Animalia;Chordata;Mammalia;Eutheria;Afrosoricida;Tenrecidae;Microgale;dobsoni;Dobson's shrew tenrec;61;29;2.67;;37.8;AFROSORICIDA;TENRECIDAE;Microgale_dobsoni_TENRECIDAE_AFROSORICIDA
 Animalia;Chordata;Mammalia;Eutheria;Afrosoricida;Tenrecidae;Microgale;talazaci;Talazac's shrew tenrec;61;29;2;;50;AFROSORICIDA;TENRECIDAE;Microgale_talazaci_TENRECIDAE_AFROSORICIDA
 Animalia;Chordata;Mammalia;Eutheria;Afrosoricida;Tenrecidae;Setifer;setosus;Greater hedgehog tenrec;54;24;3;;225;AFROSORICIDA;TENRECIDAE;Setifer_setosus_TENRECIDAE_AFROSORICIDA
-Animalia;Chordata;Mammalia;Eutheria;Afrosoricida;Tenrecidae;Tenrec;ecaudatus;Tailess tenrec;58;27;18;225;900;AFROSORICIDA;TENRECIDAE;Tenrec_ecaudatus_TENRECIDAE_AFROSORICIDA
+Animalia;Chordata;Mammalia;Eutheria;Afrosoricida;Tenrecidae;Tenrec;ecaudatus;Tailless tenrec;58;27;18;225;900;AFROSORICIDA;TENRECIDAE;Tenrec_ecaudatus_TENRECIDAE_AFROSORICIDA
 Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Antilocapridae;Antilocapra;americana;Pronghorn;235;91;2;8900;46100;CETARTIODACTYLA;ANTILOCAPRIDAE;Antilocapra_americana_ANTILOCAPRIDAE_CETARTIODACTYLA
 Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Bovidae;Addax;nasomaculatus;Addax;282;198;1;;92500;CETARTIODACTYLA;BOVIDAE;Addax_nasomaculatus_BOVIDAE_CETARTIODACTYLA
 Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Bovidae;Aepyceros;melampus;Impala;198;167;1;15900;52500;CETARTIODACTYLA;BOVIDAE;Aepyceros_melampus_BOVIDAE_CETARTIODACTYLA
@@ -332,7 +332,7 @@ Animalia;Chordata;Mammalia;Eutheria;Carnivora;Otariidae;Phocarctos;hookeri;New Z
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Otariidae;Zalophus;californianus;California sea lion;259;315;1.2;25000;180000;CARNIVORA;OTARIIDAE;Zalophus_californianus_OTARIIDAE_CARNIVORA
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Phocidae;Cystophora;cristata;Hooded seal;240;7;1;43300;405000;CARNIVORA;PHOCIDAE;Cystophora_cristata_PHOCIDAE_CARNIVORA
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Phocidae;Erignathus;barbatus;Bearded seal;259;28;1;75750;373000;CARNIVORA;PHOCIDAE;Erignathus_barbatus_PHOCIDAE_CARNIVORA
-Animalia;Chordata;Mammalia;Eutheria;Carnivora;Phocidae;Halichoerus;grypus;Gray seal;240;19;1;41450;268000;CARNIVORA;PHOCIDAE;Halichoerus_grypus_PHOCIDAE_CARNIVORA
+Animalia;Chordata;Mammalia;Eutheria;Carnivora;Phocidae;Halichoerus;grypus;Grey seal;240;19;1;41450;268000;CARNIVORA;PHOCIDAE;Halichoerus_grypus_PHOCIDAE_CARNIVORA
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Phocidae;Histriophoca;fasciata;Ribbon seal;274;25;1;30000;90000;CARNIVORA;PHOCIDAE;Histriophoca_fasciata_PHOCIDAE_CARNIVORA
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Phocidae;Hydrurga;leptonyx;Leopard seal;274;30;1;;367750;CARNIVORA;PHOCIDAE;Hydrurga_leptonyx_PHOCIDAE_CARNIVORA
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Phocidae;Leptonychotes;weddellii;Weddell seal;304;40;1;115900;425000;CARNIVORA;PHOCIDAE;Leptonychotes_weddellii_PHOCIDAE_CARNIVORA
@@ -782,7 +782,7 @@ Animalia;Chordata;Mammalia;Eutheria;Primates;Atelidae;Alouatta;seniculus;Red how
 Animalia;Chordata;Mammalia;Eutheria;Primates;Atelidae;Ateles;belzebuth;White-bellied spider monkey;184;;1;;7535;PRIMATES;ATELIDAE;Ateles_belzebuth_ATELIDAE_PRIMATES
 Animalia;Chordata;Mammalia;Eutheria;Primates;Atelidae;Ateles;chamek;Chamek spider monkey;204;;;;6000;PRIMATES;ATELIDAE;Ateles_chamek_ATELIDAE_PRIMATES
 Animalia;Chordata;Mammalia;Eutheria;Primates;Atelidae;Ateles;fusciceps;Brown-headed spider monkey;227;410;1;;7000;PRIMATES;ATELIDAE;Ateles_fusciceps_ATELIDAE_PRIMATES
-Animalia;Chordata;Mammalia;Eutheria;Primates;Atelidae;Ateles;geoffroyi;Central American spider monkey;232;821;1;2000;7267.5;PRIMATES;ATELIDAE;Ateles_geoffroyi_ATELIDAE_PRIMATES
+Animalia;Chordata;Mammalia;Eutheria;Primates;Atelidae;Ateles;geoffroyi;Geoffroy's spider monkey;232;821;1;2000;7267.5;PRIMATES;ATELIDAE;Ateles_geoffroyi_ATELIDAE_PRIMATES
 Animalia;Chordata;Mammalia;Eutheria;Primates;Atelidae;Ateles;marginatus;White-whiskered spider monkey;141;;;;6000;PRIMATES;ATELIDAE;Ateles_marginatus_ATELIDAE_PRIMATES
 Animalia;Chordata;Mammalia;Eutheria;Primates;Atelidae;Ateles;paniscus;Black spider monkey;229;795;1;3790;7887.5;PRIMATES;ATELIDAE;Ateles_paniscus_ATELIDAE_PRIMATES
 Animalia;Chordata;Mammalia;Eutheria;Primates;Atelidae;Brachyteles;arachnoides;Southern muriqui, or Woolly spider monkey, or Muriqui;232;662;1;;11170;PRIMATES;ATELIDAE;Brachyteles_arachnoides_ATELIDAE_PRIMATES
