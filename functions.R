@@ -123,18 +123,21 @@ confint_lambda <- function(bestfit) {
 
 extract_fit_summary <- function(fit, digits = 3) {
 
-  if ("HLfit" %in% class(fit)) {
+  if (inherits(fit, what = "HLfit")) {
     if (!is.null(fit$phylo)) corM <<- fit$phylo$corM ## to circumvent spaMM scoping issue in confint()
     elevation <- c(estimate = fixef(fit)["(Intercept)"][[1]],
                    confint(fit, parm = "(Intercept)", verbose = FALSE)$interval)
-    scale <- c(estimate = fixef(fit)["log(Adult_mass)"][[1]],
+    slope <- c(estimate = fixef(fit)["log(Adult_mass)"][[1]],
               confint(fit, parm = "log(Adult_mass)", verbose = FALSE)$interval)
-    stats <- rbind(elevation, scale)
+    stats <- rbind(elevation, slope)
     colnames(stats) <- c("estimate", "lower", "upper")
     if (!is.null(fit$phylo)) {
       lambda <- confint_lambda(fit)
       stats <- rbind(stats, lambda)
     }
+  } else if (inherits(fit, what = "sma")) {
+    stats <- fit$coef[[1]]
+    colnames(stats) <- c("estimate", "lower", "upper")
   } else {
     stop("model class not recognized")
   }

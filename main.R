@@ -3,11 +3,12 @@
 source("functions.R")
 
 # Checking dependencies ---------------------------------------------------
-check_dependencies_all(c("ape", "nlme", "spaMM"))
+check_dependencies_all(c("ape", "nlme", "smatr", "spaMM"))
 
 
 # Load dependencies -------------------------------------------------------
 library(spaMM)
+library(smatr)
 
 # Data preparation --------------------------------------------------------
 
@@ -61,16 +62,34 @@ str(MI_indicators)
 
 fit_SLR_models <- fitme(log(Litter_mass) ~ log(Adult_mass), data = MI_models)
 extract_fit_summary(fit_SLR_models)
-#         estimate  lower  upper
+#       estimate  lower  upper
 # elev    -0.389 -0.458 -0.320
-# scale    0.762  0.741  0.783
+# slope    0.762  0.741  0.783
 
-## Fitting PLMM models for method comparison
+## Fitting PLMM model for method comparison
 
-fit_SLRPLMM_models <- fitme_phylo_lambdafree(formula = log(Litter_mass) ~ log(Adult_mass) + corrMatrix(1|Key),
-                                             data = MI_models, tree = tree)
-extract_fit_summary(fit_SLRPLMM_models)
-#             estimate  lower upper
+fit_PLMM_models <- fitme_phylo_lambdafree(formula = log(Litter_mass) ~ log(Adult_mass) + corrMatrix(1|Key),
+                                          data = MI_models, tree = tree)
+extract_fit_summary(fit_PLMM_models)
+#           estimate  lower upper
 # elevation   -0.453 -1.379 0.473
-# scale        0.758  0.725 0.792
+# slope        0.758  0.725 0.792
 # lambda       0.777  0.630 0.873
+
+## Fitting SMA model for method comparison
+
+fit_SMA_models <- sma(Litter_mass ~ Adult_mass, data = MI_models, log = "xy", method = "SMA")
+extract_fit_summary(fit_SMA_models)
+#           estimate  lower  upper
+# elevation   -0.171 -0.202 -0.141
+# slope        0.788  0.767  0.810
+
+## Fitting MA model for method comparison
+
+fit_MA_models <- sma(Litter_mass ~ Adult_mass, data = MI_models, log = "xy", method = "MA")
+extract_fit_summary(fit_MA_models)
+#           estimate  lower  upper
+# elevation   -0.171 -0.201 -0.141
+# slope        0.782  0.760  0.804
+
+
