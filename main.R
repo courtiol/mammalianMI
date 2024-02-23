@@ -3,7 +3,7 @@
 source("functions.R")
 
 # Checking dependencies ---------------------------------------------------
-check_dependencies_all(c("ape", "spaMM"))
+check_dependencies_all(c("ape", "nlme", "spaMM"))
 
 
 # Load dependencies -------------------------------------------------------
