@@ -61,6 +61,8 @@ str(MI_indicators)
 ## Fitting SLR model for method comparison
 
 fit_SLR_models <- fitme(log(Litter_mass) ~ log(Adult_mass), data = MI_models)
+plot(fit_SLR_models, ask = FALSE, which = "mean")    ## diagnostics (good!)
+plot(fit_SLR_models, ask = FALSE, which = "predict") ## diagnostics (good!)
 extract_fit_summary(fit_SLR_models)
 #       estimate  lower  upper
 # elev    -0.389 -0.458 -0.320
@@ -70,6 +72,10 @@ extract_fit_summary(fit_SLR_models)
 
 fit_PLMM_models <- fitme_phylo_lambdafree(formula = log(Litter_mass) ~ log(Adult_mass) + corrMatrix(1|Key),
                                           data = MI_models, tree = tree)
+plot(fit_PLMM_models, ask = FALSE, which = "mean")  ## diagnostics (good!)
+plot(fit_PLMM_models, ask = FALSE, which = "ranef") ## diagnostics (good!)
+plot(fit_PLMM_models, ask = FALSE, which = "predict", re.form = NA) ## diagnostics (bad: residual variance captured by random variance)
+plot(log(MI_models$Litter_mass), predict(fit_PLMM_models, re.form = NA, type = "link")[, 1]) ## diagnostics, excluding ranef (good!)
 extract_fit_summary(fit_PLMM_models)
 #           estimate  lower upper
 # elevation   -0.453 -1.379 0.473
@@ -79,6 +85,9 @@ extract_fit_summary(fit_PLMM_models)
 ## Fitting SMA model for method comparison
 
 fit_SMA_models <- sma(Litter_mass ~ Adult_mass, data = MI_models, log = "xy", method = "SMA")
+plot(fit_SMA_models,which = "default") ## diagnostics (good!)
+plot(fit_SMA_models,which = "residual") ## diagnostics (good!)
+plot(fit_SMA_models,which = "qq") ## diagnostics (good!)
 extract_fit_summary(fit_SMA_models)
 #           estimate  lower  upper
 # elevation   -0.171 -0.202 -0.141
@@ -87,9 +96,21 @@ extract_fit_summary(fit_SMA_models)
 ## Fitting MA model for method comparison
 
 fit_MA_models <- sma(Litter_mass ~ Adult_mass, data = MI_models, log = "xy", method = "MA")
+plot(fit_MA_models,which = "default") ## diagnostics (good!)
+plot(fit_MA_models,which = "residual") ## diagnostics (good!)
+plot(fit_MA_models,which = "qq") ## diagnostics (good!)
 extract_fit_summary(fit_MA_models)
 #           estimate  lower  upper
 # elevation   -0.171 -0.201 -0.141
 # slope        0.782  0.760  0.804
 
+## Fitting MSLR model for method comparison
 
+fit_MSLR_models <- fitme(log(Litter_mass) ~ log(Adult_mass) + log(Investment_duration), data = MI_models)
+plot(fit_MSLR_models, ask = FALSE, which = "mean")    ## diagnostics (good!)
+plot(fit_MSLR_models, ask = FALSE, which = "predict") ## diagnostics (good!)
+extract_fit_summary(fit_MSLR_models)
+#              estimate  lower  upper
+# elevation       0.472 -0.146  1.090
+# slope           0.801  0.766  0.837
+# slope_InvDur   -0.176 -0.301 -0.051

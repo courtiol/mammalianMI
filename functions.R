@@ -130,6 +130,11 @@ extract_fit_summary <- function(fit, digits = 3) {
     slope <- c(estimate = fixef(fit)["log(Adult_mass)"][[1]],
               confint(fit, parm = "log(Adult_mass)", verbose = FALSE)$interval)
     stats <- rbind(elevation, slope)
+    if (grepl(pattern = ".*Investment_duration", x = as.character(formula(fit))[3])) {
+      slope_InvDur <- c(estimate = fixef(fit)["log(Investment_duration)"][[1]],
+                       confint(fit, parm = "log(Investment_duration)", verbose = FALSE)$interval)
+      stats <- rbind(stats, slope_InvDur)
+    }
     colnames(stats) <- c("estimate", "lower", "upper")
     if (!is.null(fit$phylo)) {
       lambda <- confint_lambda(fit)
