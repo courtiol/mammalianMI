@@ -121,6 +121,8 @@ confint_lambda <- function(bestfit) {
 
 # Extract information from fits -------------------------------------------
 
+## This functions extract parameters and their 95% confidence intervals
+
 extract_fit_summary <- function(fit, digits = 3) {
 
   if (inherits(fit, what = "HLfit")) {
@@ -144,8 +146,37 @@ extract_fit_summary <- function(fit, digits = 3) {
     stats <- fit$coef[[1]]
     colnames(stats) <- c("estimate", "lower", "upper")
   } else {
-    stop("model class not recognized")
+    stop("object class not recognized")
   }
   
-  round(stats, digits = digits) 
+  round(as.data.frame(stats), digits = digits) 
 }
+
+## This functions extract the r-squared value associated with the model
+## Note: We compute it as the squared coefficient for the Pearson correlation between prediction and observations at the log scale
+##       For mixed modes, we do not account for the random effect when computing the predictions
+
+compure_r2 <- function(fit, digits = 3) {
+  
+  obs  <- fit$data$Litter_mass
+
+  if (inherits(fit, what = "HLfit")) {
+    obs <- log(obs)
+    pred <- predict(fit, re.form = NA)[, 1]
+  } else if (inherits(fit, what = "sma")) {
+    pred <- fitted(fit)
+  } else {
+    stop("object class not recognized")
+  }
+  
+  cor_res <- cor.test(pred, obs)
+  stats <- data.frame(estimate = round(cor_res$estimate^2, digits = digits),
+                      lower = round(cor_res$conf.int[1][[1]], digits = digits),
+                      upper = round(cor_res$conf.int[2][[1]], digits = digits),
+                      p = signif(cor_res$p.value, digits = digits))
+  rownames(stats) <- "r2"
+  stats
+}
+
+
+

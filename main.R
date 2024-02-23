@@ -10,6 +10,7 @@ check_dependencies_all(c("ape", "nlme", "smatr", "spaMM"))
 library(spaMM)
 library(smatr)
 
+
 # Data preparation --------------------------------------------------------
 
 ## Import the phylogenetic tree
@@ -67,6 +68,9 @@ extract_fit_summary(fit_SLR_models)
 #       estimate  lower  upper
 # elev    -0.389 -0.458 -0.320
 # slope    0.762  0.741  0.783
+compure_r2(fit_SLR_models)
+#    estimate lower upper         p
+# r2    0.934 0.959 0.973 1.04e-206
 
 ## Fitting PLMM model for method comparison
 
@@ -74,13 +78,16 @@ fit_PLMM_models <- fitme_phylo_lambdafree(formula = log(Litter_mass) ~ log(Adult
                                           data = MI_models, tree = tree)
 plot(fit_PLMM_models, ask = FALSE, which = "mean")  ## diagnostics (good!)
 plot(fit_PLMM_models, ask = FALSE, which = "ranef") ## diagnostics (good!)
-plot(fit_PLMM_models, ask = FALSE, which = "predict", re.form = NA) ## diagnostics (bad: residual variance captured by random variance)
+plot(fit_PLMM_models, ask = FALSE, which = "predict") ## diagnostics (bad: residual variance captured by random variance)
 plot(log(MI_models$Litter_mass), predict(fit_PLMM_models, re.form = NA, type = "link")[, 1]) ## diagnostics, excluding ranef (good!)
 extract_fit_summary(fit_PLMM_models)
 #           estimate  lower upper
 # elevation   -0.453 -1.379 0.473
 # slope        0.758  0.725 0.792
 # lambda       0.777  0.630 0.873
+compure_r2(fit_PLMM_models) ## same as above!
+#    estimate lower upper         p
+# r2    0.934 0.959 0.973 1.04e-206
 
 ## Fitting SMA model for method comparison
 
@@ -92,6 +99,9 @@ extract_fit_summary(fit_SMA_models)
 #           estimate  lower  upper
 # elevation   -0.171 -0.202 -0.141
 # slope        0.788  0.767  0.810
+compure_r2(fit_SMA_models)
+#    estimate lower upper         p
+# r2    0.983  0.99 0.993 1.29e-309
 
 ## Fitting MA model for method comparison
 
@@ -103,6 +113,9 @@ extract_fit_summary(fit_MA_models)
 #           estimate  lower  upper
 # elevation   -0.171 -0.201 -0.141
 # slope        0.782  0.760  0.804
+compure_r2(fit_MA_models)
+#    estimate lower upper         p
+# r2    0.974 0.984  0.99 1.09e-277
 
 ## Fitting MSLR model for method comparison
 
@@ -114,6 +127,9 @@ extract_fit_summary(fit_MSLR_models)
 # elevation       0.472 -0.146  1.090
 # slope           0.801  0.766  0.837
 # slope_InvDur   -0.176 -0.301 -0.051
+compure_r2(fit_MSLR_models)
+#    estimate lower upper         p
+# r2    0.936  0.96 0.973 2.46e-208
 
 ## Fitting MPLMM model for method comparison
 fit_MPLMM_models <- fitme_phylo_lambdafree(formula = log(Litter_mass) ~ log(Adult_mass) + log(Investment_duration) + corrMatrix(1|Key),
@@ -128,3 +144,6 @@ extract_fit_summary(fit_MPLMM_models)
 # slope           0.737  0.690 0.783
 # slope_InvDur    0.127 -0.060 0.314
 # lambda          0.796  0.654 0.885
+compure_r2(fit_MPLMM_models)
+#    estimate lower upper         p
+# r2    0.932 0.957 0.972 1.22e-203
