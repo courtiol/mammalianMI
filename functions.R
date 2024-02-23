@@ -130,11 +130,13 @@ extract_fit_summary <- function(fit, digits = 3) {
 
   if (inherits(fit, what = "HLfit")) {
     if (!is.null(fit$phylo)) corM <<- fit$phylo$corM ## to circumvent spaMM scoping issue in confint()
-    elevation <- c(estimate = fixef(fit)["(Intercept)"][[1]],
+    intercept <- c(estimate = fixef(fit)["(Intercept)"][[1]],
                    confint(fit, parm = "(Intercept)", verbose = FALSE)$interval)
+    intercept_transformed <- c(estimate = 10^fixef(fit)["(Intercept)"][[1]],
+                               10^confint(fit, parm = "(Intercept)", verbose = FALSE)$interval)
     slope <- c(estimate = fixef(fit)["log(Adult_mass, 10)"][[1]],
               confint(fit, parm = "log(Adult_mass, 10)", verbose = FALSE)$interval)
-    stats <- rbind(elevation, slope)
+    stats <- rbind(intercept, intercept_transformed, slope)
     if (grepl(pattern = ".*Investment_duration", x = as.character(formula(fit))[3])) {
       slope_InvDur <- c(estimate = fixef(fit)["log(Investment_duration, 10)"][[1]],
                        confint(fit, parm = "log(Investment_duration, 10)", verbose = FALSE)$interval)
@@ -147,12 +149,17 @@ extract_fit_summary <- function(fit, digits = 3) {
     }
   } else if (inherits(fit, what = "sma")) {
     stats <- fit$coef[[1]]
+    rownames(stats)[1] <- "intercept"
+    stats <- rbind(intercept_transformed = 10^stats[1, ], stats)
+    stats <- stats[c("intercept", "intercept_transformed", "slope"),]
     colnames(stats) <- c("estimate", "lower", "upper")
   } else {
     stop("object class not recognized")
   }
   
-  round(as.data.frame(stats), digits = digits) 
+  rownames(stats)[rownames(stats) == "intercept_transformed"] <- "10^intercept"
+
+  signif(as.data.frame(stats), digits = digits) 
 }
 
 ## This functions extract the r-squared value associated with the model

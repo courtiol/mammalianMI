@@ -72,9 +72,10 @@ fit_SLR_models <- fitme(log(Litter_mass, 10) ~ log(Adult_mass, 10), data = MI_mo
 plot(fit_SLR_models, ask = FALSE, which = "mean")    ## diagnostics (good!)
 plot(fit_SLR_models, ask = FALSE, which = "predict") ## diagnostics (good!)
 extract_fit_summary(fit_SLR_models)
-#           estimate  lower  upper
-# elevation   -0.169 -0.199 -0.139
-# slope        0.762  0.741  0.783
+#              estimate  lower  upper
+# intercept      -0.169 -0.199 -0.139
+# 10^intercept    0.678  0.632  0.726
+# slope           0.762  0.741  0.783
 compure_r2(fit_SLR_models)
 #    estimate lower upper         p
 # r2    0.934 0.959 0.973 1.04e-206
@@ -88,10 +89,11 @@ plot(fit_PLMM_models, ask = FALSE, which = "ranef") ## diagnostics (good!)
 plot(fit_PLMM_models, ask = FALSE, which = "predict") ## diagnostics (bad: residual variance captured by random variance)
 plot(log(MI_models$Litter_mass, 10), predict(fit_PLMM_models, re.form = NA, type = "link")[, 1]) ## diagnostics, excluding ranef (good!)
 extract_fit_summary(fit_PLMM_models)
-#           estimate  lower upper
-# elevation   -0.197 -0.599 0.206
-# slope        0.758  0.725 0.792
-# lambda       0.777  0.630 0.873
+#              estimate  lower upper
+# intercept      -0.197 -0.599 0.206
+# 10^intercept    0.636  0.252 1.610
+# slope           0.758  0.725 0.792
+# lambda          0.777  0.630 0.873
 compure_r2(fit_PLMM_models) ## same as above!
 #    estimate lower upper         p
 # r2    0.934 0.959 0.973 1.04e-206
@@ -103,9 +105,10 @@ plot(fit_SMA_models,which = "default") ## diagnostics (good!)
 plot(fit_SMA_models,which = "residual") ## diagnostics (good!)
 plot(fit_SMA_models,which = "qq") ## diagnostics (good!)
 extract_fit_summary(fit_SMA_models)
-#           estimate  lower  upper
-# elevation   -0.171 -0.202 -0.141
-# slope        0.788  0.767  0.810
+#              estimate  lower  upper
+# intercept      -0.171 -0.202 -0.141
+# 10^intercept    0.674  0.628  0.723
+# slope           0.788  0.767  0.810
 compure_r2(fit_SMA_models)
 #    estimate lower upper         p
 # r2    0.983  0.99 0.993 1.29e-309
@@ -117,9 +120,10 @@ plot(fit_MA_models,which = "default") ## diagnostics (good!)
 plot(fit_MA_models,which = "residual") ## diagnostics (good!)
 plot(fit_MA_models,which = "qq") ## diagnostics (good!)
 extract_fit_summary(fit_MA_models)
-#           estimate  lower  upper
-# elevation   -0.171 -0.201 -0.141
-# slope        0.782  0.760  0.804
+#              estimate  lower  upper
+# intercept      -0.171 -0.201 -0.141
+# 10^intercept    0.675  0.629  0.724
+# slope           0.782  0.760  0.804
 compure_r2(fit_MA_models)
 #    estimate lower upper         p
 # r2    0.974 0.984  0.99 1.09e-277
@@ -130,10 +134,11 @@ fit_MSLR_models <- fitme(log(Litter_mass, 10) ~ log(Adult_mass, 10) + log(Invest
 plot(fit_MSLR_models, ask = FALSE, which = "mean")    ## diagnostics (good!)
 plot(fit_MSLR_models, ask = FALSE, which = "predict") ## diagnostics (good!)
 extract_fit_summary(fit_MSLR_models)
-#              estimate  lower  upper
-# elevation       0.205 -0.063  0.473
-# slope           0.801  0.766  0.837
-# slope_InvDur   -0.176 -0.301 -0.051
+#              estimate   lower   upper
+# intercept       0.205 -0.0633  0.4730
+# 10^intercept    1.600  0.8640  2.9700
+# slope           0.801  0.7660  0.8370
+# slope_InvDur   -0.176 -0.3010 -0.0505
 compure_r2(fit_MSLR_models)
 #    estimate lower upper         p
 # r2    0.936  0.96 0.973 2.46e-208
@@ -146,11 +151,12 @@ plot(fit_MPLMM_models, ask = FALSE, which = "ranef") ## diagnostics (good!)
 plot(fit_MPLMM_models, ask = FALSE, which = "predict", re.form = NA) ## diagnostics (bad: residual variance captured by random variance)
 plot(log(MI_models$Litter_mass, 10), predict(fit_MPLMM_models, re.form = NA, type = "link")[, 1]) ## diagnostics, excluding ranef (good!)
 extract_fit_summary(fit_MPLMM_models)
-#              estimate  lower upper
-# elevation      -0.453 -1.015 0.110
-# slope           0.737  0.690 0.783
-# slope_InvDur    0.127 -0.060 0.314
-# lambda          0.796  0.654 0.885
+#              estimate   lower upper
+# intercept      -0.453 -1.0200 0.110
+# 10^intercept    0.353  0.0965 1.290
+# slope           0.737  0.6900 0.783
+# slope_InvDur    0.127 -0.0600 0.314
+# lambda          0.796  0.6540 0.885
 compure_r2(fit_MPLMM_models)
 #    estimate lower upper         p
 # r2    0.932 0.957 0.972 1.22e-203
