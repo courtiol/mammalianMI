@@ -114,3 +114,17 @@ extract_fit_summary(fit_MSLR_models)
 # elevation       0.472 -0.146  1.090
 # slope           0.801  0.766  0.837
 # slope_InvDur   -0.176 -0.301 -0.051
+
+## Fitting MPLMM model for method comparison
+fit_MPLMM_models <- fitme_phylo_lambdafree(formula = log(Litter_mass) ~ log(Adult_mass) + log(Investment_duration) + corrMatrix(1|Key),
+                                           data = MI_models, tree = tree)
+plot(fit_MPLMM_models, ask = FALSE, which = "mean")  ## diagnostics (good!)
+plot(fit_MPLMM_models, ask = FALSE, which = "ranef") ## diagnostics (good!)
+plot(fit_MPLMM_models, ask = FALSE, which = "predict", re.form = NA) ## diagnostics (bad: residual variance captured by random variance)
+plot(log(MI_models$Litter_mass), predict(fit_MPLMM_models, re.form = NA, type = "link")[, 1]) ## diagnostics, excluding ranef (good!)
+extract_fit_summary(fit_MPLMM_models)
+#              estimate  lower upper
+# elevation      -1.042 -2.338 0.253
+# slope           0.737  0.690 0.783
+# slope_InvDur    0.127 -0.060 0.314
+# lambda          0.796  0.654 0.885
