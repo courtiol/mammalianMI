@@ -170,3 +170,31 @@ draw_figure_1(data_models = MI_models,
               fit_MSLR = fit_MSLR_models, fit_MPLMM = fit_MPLMM_models)
 ggplot2::ggsave(filename = "figures/Fig1.pdf", scale = 0.6)
 ggplot2::ggsave(filename = "figures/Fig1.png", scale = 0.6)
+
+
+# Models comparison -------------------------------------------------------
+
+## Computation of MI metrics
+MI_models$MI_SLR   <- residuals(fit_SLR_models)
+                      # same as: log(MI_models$Litter_mass / ((10^fixef(fit_SLR_models)["(Intercept)"]) * MI_models$Adult_mass^fixef(fit_SLR_models)["log(Adult_mass, 10)"]), base = 10)
+MI_models$MI_PLMM  <- log(MI_models$Litter_mass, base = 10) - predict(fit_PLMM_models, re.form = NA, type = "link")[, 1]
+                      # same as: log(MI_models$Litter_mass / ((10^fixef(fit_PLMM_models)["(Intercept)"]) * MI_models$Adult_mass^fixef(fit_PLMM_models)["log(Adult_mass, 10)"]), base = 10)
+MI_models$MI_SMA   <- residuals(fit_SMA_models)
+                      # same as: log(MI_models$Litter_mass / ((10^coef(fit_SMA_models) ["elevation"]) * MI_models$Adult_mass^coef(fit_SMA_models)["slope"]), base = 10)
+MI_models$MI_MA    <- residuals(fit_MA_models)
+                      # same as: log(MI_models$Litter_mass / ((10^coef(fit_MA_models) ["elevation"]) * MI_models$Adult_mass^coef(fit_MA_models)["slope"]), base = 10)
+MI_models$MI_MSLR  <- residuals(fit_MSLR_models)
+                      # same as: log(MI_models$Litter_mass / ((10^fixef(fit_MSLR_models)["(Intercept)"]) * MI_models$Adult_mass^fixef(fit_MSLR_models)["log(Adult_mass, 10)"] * MI_models$Investment_duration^fixef(fit_MSLR_models)["log(Investment_duration, 10)"]), base = 10)
+MI_models$MI_MPLMM <- log(MI_models$Litter_mass, base = 10) - predict(fit_MPLMM_models, re.form = NA, type = "link")[, 1]
+                      # same as: log(MI_models$Litter_mass / ((10^fixef(fit_MPLMM_models)["(Intercept)"]) * MI_models$Adult_mass^fixef(fit_MPLMM_models)["log(Adult_mass, 10)"] * MI_models$Investment_duration^fixef(fit_MPLMM_models)["log(Investment_duration, 10)"]), base = 10)
+
+## Comparison of non phylogenetic methods
+corMI <- cor(MI_models[, c("MI_SLR", "MI_SMA", "MI_MA", "MI_MSLR")])
+diag(corMI) <- NA
+corMI
+range(corMI, na.rm = TRUE)
+# [1] 0.9809685 0.9995226
+
+quade.test(as.matrix(MI_models[, c("MI_SLR", "MI_SMA", "MI_MA", "MI_MSLR")]))
+# data:  as.matrix(MI_models[, c("MI_SLR", "MI_SMA", "MI_MA", "MI_MSLR")])
+# Quade F = 0.082349, num df = 3, denom df = 1041, p-value = 0.9696
