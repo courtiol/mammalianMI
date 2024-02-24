@@ -61,7 +61,7 @@ cor_global <- cor.test(log(MI_full$Adult_mass), log(MI_full$Litter_mass))
 round(cor_global$estimate, digits = 3)[[1]] # correlation estimate
 # [1] 0.966
 signif(cor_global$p.value, digits = 3) # pvalue
-# [1] 2.17e-226
+# [1] 0
 
 
 # Fitting regression models -----------------------------------------------
@@ -73,12 +73,12 @@ plot(fit_SLR_models, ask = FALSE, which = "mean")    ## diagnostics (good!)
 plot(fit_SLR_models, ask = FALSE, which = "predict") ## diagnostics (good!)
 extract_fit_summary(fit_SLR_models)
 #              estimate  lower  upper
-# intercept      -0.169 -0.199 -0.139
-# 10^intercept    0.678  0.632  0.726
-# slope           0.762  0.741  0.783
+# intercept      -0.194 -0.214 -0.174
+# 10^intercept    0.639  0.610  0.669
+# slope           0.780  0.766  0.793
 compure_r2(fit_SLR_models)
-#    estimate lower upper         p
-# r2    0.934 0.959 0.973 1.04e-206
+#    estimate lower upper p
+# r2    0.945 0.968 0.976 0
 
 ## Fitting PLMM model for method comparison
 
@@ -90,13 +90,13 @@ plot(fit_PLMM_models, ask = FALSE, which = "predict") ## diagnostics (bad: resid
 plot(log(MI_models$Litter_mass, 10), predict(fit_PLMM_models, re.form = NA, type = "link")[, 1]) ## diagnostics, excluding ranef (good!)
 extract_fit_summary(fit_PLMM_models)
 #              estimate  lower upper
-# intercept      -0.197 -0.599 0.206
-# 10^intercept    0.636  0.252  1.61
-# slope           0.758  0.725 0.792
-# lambda          0.777  0.630 0.873
+# intercept      -0.173 -0.710 0.364
+# 10^intercept    0.671  0.195  2.31
+# slope           0.791  0.760 0.822
+# lambda          0.945  0.913 0.966
 compure_r2(fit_PLMM_models) ## same as above!
-#    estimate lower upper         p
-# r2    0.934 0.959 0.973 1.04e-206
+#    estimate lower upper p
+# r2    0.945 0.968 0.976 0
 
 ## Fitting SMA model for method comparison
 
@@ -106,12 +106,12 @@ plot(fit_SMA_models,which = "residual") ## diagnostics (good!)
 plot(fit_SMA_models,which = "qq") ## diagnostics (good!)
 extract_fit_summary(fit_SMA_models)
 #              estimate  lower  upper
-# intercept      -0.171 -0.202 -0.141
-# 10^intercept    0.674  0.628  0.723
-# slope           0.788  0.767  0.810
+# intercept      -0.188 -0.208 -0.168
+# 10^intercept    0.648  0.619  0.679
+# slope           0.802  0.789  0.816
 compure_r2(fit_SMA_models)
-#    estimate lower upper         p
-# r2    0.983  0.99 0.993 1.29e-309
+#    estimate lower upper p
+# r2    0.986 0.992 0.994 0
 
 ## Fitting MA model for method comparison
 
@@ -121,12 +121,12 @@ plot(fit_MA_models,which = "residual") ## diagnostics (good!)
 plot(fit_MA_models,which = "qq") ## diagnostics (good!)
 extract_fit_summary(fit_MA_models)
 #              estimate  lower  upper
-# intercept      -0.171 -0.201 -0.141
-# 10^intercept    0.675  0.629  0.724
-# slope           0.782  0.760  0.804
+# intercept      -0.190 -0.210 -0.169
+# 10^intercept    0.646  0.617  0.677
+# slope           0.797  0.783  0.811
 compure_r2(fit_MA_models)
-#    estimate lower upper         p
-# r2    0.974 0.984  0.99 1.09e-277
+#    estimate lower upper p
+# r2    0.979 0.988 0.991 0
 
 ## Fitting MSLR model for method comparison
 
@@ -135,13 +135,13 @@ plot(fit_MSLR_models, ask = FALSE, which = "mean")    ## diagnostics (good!)
 plot(fit_MSLR_models, ask = FALSE, which = "predict") ## diagnostics (good!)
 extract_fit_summary(fit_MSLR_models)
 #              estimate   lower   upper
-# intercept       0.205 -0.0633   0.473
-# 10^intercept     1.60   0.864    2.97
-# slope           0.801   0.766   0.837
-# slope_InvDur   -0.176  -0.301 -0.0505
+# intercept       0.642  0.485  0.800
+# 10^intercept     4.39   3.06   6.30
+# slope           0.865  0.845  0.886
+# slope_InvDur   -0.387 -0.459 -0.315
 compure_r2(fit_MSLR_models)
-#    estimate lower upper         p
-# r2    0.936  0.96 0.973 2.46e-208
+#    estimate lower upper p
+# r2    0.952 0.972 0.979 0
 
 ## Fitting MPLMM model for method comparison
 fit_MPLMM_models <- fitme_phylo_lambdafree(formula = log(Litter_mass, 10) ~ log(Adult_mass, 10) + log(Investment_duration, 10) + corrMatrix(1|Key),
@@ -152,14 +152,14 @@ plot(fit_MPLMM_models, ask = FALSE, which = "predict", re.form = NA) ## diagnost
 plot(log(MI_models$Litter_mass, 10), predict(fit_MPLMM_models, re.form = NA, type = "link")[, 1]) ## diagnostics, excluding ranef (good!)
 extract_fit_summary(fit_MPLMM_models)
 #              estimate   lower upper
-# intercept      -0.453   -1.02 0.110
-# 10^intercept    0.353  0.0965  1.29
-# slope           0.737   0.690 0.783
-# slope_InvDur    0.127 -0.0600 0.314
-# lambda          0.796   0.654 0.885
+# intercept      -0.553  -1.18 0.0756
+# 10^intercept    0.280 0.0657   1.19
+# slope           0.763  0.726  0.801
+# slope_InvDur    0.197 0.0439  0.351
+# lambda          0.952  0.924  0.971
 compure_r2(fit_MPLMM_models)
-#    estimate lower upper         p
-# r2    0.932 0.957 0.972 1.22e-203
+#    estimate lower upper p
+# r2    0.936 0.963 0.972 0
 
 
 # Figure 1 ----------------------------------------------------------------
@@ -168,8 +168,8 @@ draw_figure_1(data_models = MI_models,
               fit_SLR = fit_SLR_models, fit_PLMM = fit_PLMM_models,
               fit_SMA = fit_SMA_models, fit_MA = fit_MA_models,
               fit_MSLR = fit_MSLR_models, fit_MPLMM = fit_MPLMM_models)
-ggplot2::ggsave(filename = "figures/Fig1.pdf", scale = 0.6)
-ggplot2::ggsave(filename = "figures/Fig1.png", scale = 0.6)
+ggplot2::ggsave(filename = "figures/Fig1.pdf", scale = 1)
+ggplot2::ggsave(filename = "figures/Fig1.png", scale = 1)
 
 
 # Models comparison -------------------------------------------------------
@@ -193,11 +193,11 @@ corMI <- cor(MI_models[, c("MI_SLR", "MI_SMA", "MI_MA", "MI_MSLR")])
 diag(corMI) <- NA
 corMI
 range(corMI, na.rm = TRUE)
-# [1] 0.9809685 0.9995226
+# [1] 0.9268376 0.9996569
 
 quade.test(as.matrix(MI_models[, c("MI_SLR", "MI_SMA", "MI_MA", "MI_MSLR")]))
 # data:  as.matrix(MI_models[, c("MI_SLR", "MI_SMA", "MI_MA", "MI_MSLR")])
-# Quade F = 0.082349, num df = 3, denom df = 1041, p-value = 0.9696
+# Quade F = 0.87625, num df = 3, denom df = 2247, p-value = 0.4526
 
 ## Comparison between phylogenetic and non-phylogenetic counterpart
 
@@ -205,20 +205,20 @@ univariate_phylo_test <- data.frame(LRT = unname(-2*(logLik(fit_SLR_models) - lo
 univariate_phylo_test$df <- 1
 univariate_phylo_test$p <- with(univariate_phylo_test, pchisq(LRT, df, lower.tail = FALSE))
 univariate_phylo_test
-#        LRT df            p
-# 1 103.1932  1 3.040137e-24
+#        LRT df             p
+# 1 547.0137  1 5.618796e-121
 
 multivariate_phylo_test <- data.frame(LRT = unname(-2*(logLik(fit_MSLR_models) - logLik(fit_MPLMM_models))))
 multivariate_phylo_test$df <- 1
 multivariate_phylo_test$p <- with(multivariate_phylo_test, pchisq(LRT, df, lower.tail = FALSE))
 multivariate_phylo_test
-#        LRT df            p
-# 1 97.35548  1 5.793413e-23
+#        LRT df             p
+# 1 449.6248  1 8.704853e-100
 
 ## Comparison between the 2 PLMMs
 anova(fit_PLMM_models, fit_MPLMM_models)
-# chi2_LR df  p_value
-# p_v 1.679484  1 0.194993
+#      chi2_LR df    p_value
+# p_v 6.027052  1 0.01408824
 
 
 
