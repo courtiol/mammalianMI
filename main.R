@@ -24,24 +24,24 @@ MI_raw <- read.csv2("data/MI.csv", dec = ".", na.strings = "")
 
 ### Format the full dataset (see functions.R for details)
 MI_full <- prepare_df_MIfull(MI_raw)
-nrow(MI_full) # 382
+nrow(MI_full) # 1056
 
 ### Prepare subsample with for comparison between subclasses
 MI_subclasses <- droplevels(MI_full[MI_full$Key %in% tree[["tip.label"]], ])
-nrow(MI_subclasses) # 370
+nrow(MI_subclasses) # 814
 str(MI_subclasses)
 
 ### Prepare subsample with for comparison between orders
 orders_vs_N    <- aggregate(MI_subclasses[, "Key", drop = FALSE], list(Order = MI_subclasses$Order), length)
 orders_to_keep <- as.character(orders_vs_N$Order[orders_vs_N$Key >= 15])
 MI_orders <- droplevels(MI_subclasses[MI_subclasses$Order %in% orders_to_keep, ])
-unique(MI_orders$Order) # [1] Cetartiodactyla Carnivora Dasyuromorphia Diprotodontia Eulipotyphla Primates Rodentia    
-nrow(MI_orders) # 327
+unique(MI_orders$Order) # [1] Carnivora Cetartiodactyla Chiroptera Dasyuromorphia Didelphimorphia Diprotodontia Eulipotyphla Lagomorpha Primates Rodentia    
+nrow(MI_orders) # 785
 str(MI_orders)
 
 ### Prepare subsample with no missing data for modelling
 MI_models <- droplevels(MI_subclasses[!is.na(MI_subclasses$Investment_duration), ])
-nrow(MI_models) # 348
+nrow(MI_models) # 750
 str(MI_models)
 
 ### Prepare subsample for the 20 indicator species
