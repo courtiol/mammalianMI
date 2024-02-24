@@ -46,7 +46,7 @@ Animalia;Chordata;Mammalia;Eutheria;Afrosoricida;Tenrecidae;Oryzorictes;hova;Mol
 Animalia;Chordata;Mammalia;Eutheria;Afrosoricida;Tenrecidae;Oryzorictes;tetradactylus;Four-toed Rice Tenrec; ; ; ; ;35.99;AFROSORICIDA;TENRECIDAE;Oryzorictes_tetradactylus_TENRECIDAE_AFROSORICIDA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Afrosoricida;Tenrecidae;Potamogale;velox;Giant Otter Shrew; ; ;2.065; ;716.345;AFROSORICIDA;TENRECIDAE;Potamogale_velox_TENRECIDAE_AFROSORICIDA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Afrosoricida;Tenrecidae;Setifer;setosus;Greater Hedgehog Tenrec;57.52404;24;3.04; ;304.11;AFROSORICIDA;TENRECIDAE;Setifer_setosus_TENRECIDAE_AFROSORICIDA; ; ;427.6
-Animalia;Chordata;Mammalia;Eutheria;Afrosoricida;Tenrecidae;Tenrec;ecaudatus;Tail-less Tenrec;60.24;27;16.89;225;885.795;AFROSORICIDA;TENRECIDAE;Tenrec_ecaudatus_TENRECIDAE_AFROSORICIDA; ; ;650
+Animalia;Chordata;Mammalia;Eutheria;Afrosoricida;Tenrecidae;Tenrec;ecaudatus;Tailless tenrec;60.24;27;16.89;225;885.795;AFROSORICIDA;TENRECIDAE;Tenrec_ecaudatus_TENRECIDAE_AFROSORICIDA; ; ;650
 Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Antilocapridae;Antilocapra;americana;Pronghorn;247.44468;91;1.89;8900;45375;CETARTIODACTYLA;ANTILOCAPRIDAE;Antilocapra_americana_ANTILOCAPRIDAE_CETARTIODACTYLA; ;61700;34779.3
 Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Bovidae;Addax;nasomaculatus;Addax;276;198;1; ;94288.68;CETARTIODACTYLA;BOVIDAE;Addax_nasomaculatus_BOVIDAE_CETARTIODACTYLA;75000;112500; 
 Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Bovidae;Aepyceros;melampus;Impala;196.74;167;1;15900;52500;CETARTIODACTYLA;BOVIDAE;Aepyceros_melampus_BOVIDAE_CETARTIODACTYLA; ;62500; 
@@ -58,7 +58,7 @@ Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Bovidae;Ammotragus;lervia;Ba
 Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Bovidae;Antidorcas;marsupialis;Springbok;169.49;122.96144;1; ;33571.24;CETARTIODACTYLA;BOVIDAE;Antidorcas_marsupialis_BOVIDAE_CETARTIODACTYLA;33500;41000; 
 Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Bovidae;Antilope;cervicapra;Blackbuck;167.699;60;1; ;37500;CETARTIODACTYLA;BOVIDAE;Antilope_cervicapra_BOVIDAE_CETARTIODACTYLA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Bovidae;Beatragus;hunteri;Hunter's Hartebeest;238; ;1; ;119000;CETARTIODACTYLA;BOVIDAE;Beatragus_hunteri_BOVIDAE_CETARTIODACTYLA; ; ; 
-Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Bovidae;Bison;bison;American Bison;274;273.16;1;158000;624577.07;CETARTIODACTYLA;BOVIDAE;Bison_bison_BOVIDAE_CETARTIODACTYLA; ;731400; 
+Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Bovidae;Bison;bison;American bison;274;273.16;1;158000;624577.07;CETARTIODACTYLA;BOVIDAE;Bison_bison_BOVIDAE_CETARTIODACTYLA; ;731400; 
 Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Bovidae;Bison;bonasus;European Bison;274;273.16;1;158000;624577.07;CETARTIODACTYLA;BOVIDAE;Bison_bonasus_BOVIDAE_CETARTIODACTYLA; ;731400; 
 Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Bovidae;Bos;frontalis;Gaur;274.76636;137;1.17; ;812571.525;CETARTIODACTYLA;BOVIDAE;Bos_frontalis_BOVIDAE_CETARTIODACTYLA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Bovidae;Bos;grunniens;Yak;272.01084;228;1; ;583500;CETARTIODACTYLA;BOVIDAE;Bos_grunniens_BOVIDAE_CETARTIODACTYLA;350000;1.00E+06; 
@@ -279,7 +279,7 @@ Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Tragulidae;Tragulus;kanchil;
 Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Tragulidae;Tragulus;napu;Greater Mouse-deer;153.62;86.86656;1; ;3850;CETARTIODACTYLA;TRAGULIDAE;Tragulus_napu_TRAGULIDAE_CETARTIODACTYLA; ; ;1615.5
 Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Tragulidae;Tragulus;nigricans;Philippine Mouse-deer;153.62;86.86656;1; ;3850;CETARTIODACTYLA;TRAGULIDAE;Tragulus_nigricans_TRAGULIDAE_CETARTIODACTYLA; ; ;1615.5
 Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Tragulidae;Tragulus;williamsoni;Williamson's Mouse-deer;153.62;86.86656;1; ;3850;CETARTIODACTYLA;TRAGULIDAE;Tragulus_williamsoni_TRAGULIDAE_CETARTIODACTYLA; ; ;1615.5
-Animalia;Chordata;Mammalia;Eutheria;Carnivora;Ailuridae;Ailurus;fulgens;Red Panda;123.4374;136.935;2;1140;4747.54;CARNIVORA;AILURIDAE;Ailurus_fulgens_AILURIDAE_CARNIVORA; ; ;5740
+Animalia;Chordata;Mammalia;Eutheria;Carnivora;Ailuridae;Ailurus;fulgens;Red panda;123.4374;136.935;2;1140;4747.54;CARNIVORA;AILURIDAE;Ailurus_fulgens_AILURIDAE_CARNIVORA; ; ;5740
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Canidae;Atelocynus;microtis;Short-eared Dog; ; ; ; ;9500;CARNIVORA;CANIDAE;Atelocynus_microtis_CANIDAE_CARNIVORA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Canidae;Canis;adustus;Side-striped Jackal;63.5;61.3;4.16; ;10321.245;CARNIVORA;CANIDAE;Canis_adustus_CANIDAE_CARNIVORA; ;10000; 
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Canidae;Canis;aureus;Golden Jackal;62.3938;69.74704;3.95; ;11000;CARNIVORA;CANIDAE;Canis_aureus_CANIDAE_CARNIVORA; ;10000; 
@@ -313,7 +313,7 @@ Animalia;Chordata;Mammalia;Eutheria;Carnivora;Canidae;Vulpes;macrotis;Kit Fox;53
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Canidae;Vulpes;pallida;Pale Fox;62.0669;54.91932;5.49;1517;10148.9;CARNIVORA;CANIDAE;Vulpes_pallida_CANIDAE_CARNIVORA; ;10600;10148.9
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Canidae;Vulpes;rueppellii;Rueppell's Fox;53;121.76;3; ;3200;CARNIVORA;CANIDAE;Vulpes_rueppellii_CANIDAE_CARNIVORA;1700;1700; 
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Canidae;Vulpes;velox;Swift Fox;53.7;47.08;4.44; ;2088;CARNIVORA;CANIDAE;Vulpes_velox_CANIDAE_CARNIVORA; ; ;1769
-Animalia;Chordata;Mammalia;Eutheria;Carnivora;Canidae;Vulpes;vulpes;Red Fox;52.3525;49.71;4.7325;1397;4580.3;CARNIVORA;CANIDAE;Vulpes_vulpes_CANIDAE_CARNIVORA; ;6260;4580.3
+Animalia;Chordata;Mammalia;Eutheria;Carnivora;Canidae;Vulpes;vulpes;Red fox;52.3525;49.71;4.7325;1397;4580.3;CARNIVORA;CANIDAE;Vulpes_vulpes_CANIDAE_CARNIVORA; ;6260;4580.3
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Canidae;Vulpes;zerda;Fennec Fox;51;66;2.36; ;1207.5;CARNIVORA;CANIDAE;Vulpes_zerda_CANIDAE_CARNIVORA; ; ;1159.2
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Eupleridae;Cryptoprocta;ferox;Fossa;91.308;129;3;5251.93;9500;CARNIVORA;EUPLERIDAE;Cryptoprocta_ferox_EUPLERIDAE_CARNIVORA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Eupleridae;Eupleres;goudotii;Falanouc;93.86;63.90934;1.25; ;2881.67;CARNIVORA;EUPLERIDAE;Eupleres_goudotii_EUPLERIDAE_CARNIVORA; ; ; 
@@ -489,7 +489,7 @@ Animalia;Chordata;Mammalia;Eutheria;Carnivora;Otariidae;Zalophus;japonicus;Japan
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Otariidae;Zalophus;wollebaeki;Galapagos Sea Lion;334.84;323.0985;1;25000;158597.43;CARNIVORA;OTARIIDAE;Zalophus_wollebaeki_OTARIIDAE_CARNIVORA;95500;332500; 
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Phocidae;Cystophora;cristata;Hooded Seal;334.58;9.1308;1;44038.545;245448.405;CARNIVORA;PHOCIDAE;Cystophora_cristata_PHOCIDAE_CARNIVORA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Phocidae;Erignathus;barbatus;Bearded Seal;275.16878;18;1;75335.34;283333.33;CARNIVORA;PHOCIDAE;Erignathus_barbatus_PHOCIDAE_CARNIVORA; ; ; 
-Animalia;Chordata;Mammalia;Eutheria;Carnivora;Phocidae;Halichoerus;grypus;Gray Seal;291.225;18.78298;1;42148.54;197570.01;CARNIVORA;PHOCIDAE;Halichoerus_grypus_PHOCIDAE_CARNIVORA; ; ; 
+Animalia;Chordata;Mammalia;Eutheria;Carnivora;Phocidae;Halichoerus;grypus;Grey Seal;291.225;18.78298;1;42148.54;197570.01;CARNIVORA;PHOCIDAE;Halichoerus_grypus_PHOCIDAE_CARNIVORA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Phocidae;Histriophoca;fasciata;Ribbon Seal;299.18;25;1;28077.14;68250;CARNIVORA;PHOCIDAE;Histriophoca_fasciata_PHOCIDAE_CARNIVORA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Phocidae;Hydrurga;leptonyx;Leopard seal;289.142;30.423;0.98;52308.57;375671.075;CARNIVORA;PHOCIDAE;Hydrurga_leptonyx_PHOCIDAE_CARNIVORA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Phocidae;Leptonychotes;weddellii;Weddell Seal;312.01;43.35;1;113958.565;410833.335;CARNIVORA;PHOCIDAE;Leptonychotes_weddellii_PHOCIDAE_CARNIVORA; ; ; 
@@ -570,7 +570,7 @@ Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Balaenopteridae;Balaenoptera
 Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Balaenopteridae;Balaenoptera;bonaerensis;Antarctic Minke Whale;304.4;167.34;1; ;7.50E+06;CETARTIODACTYLA;BALAENOPTERIDAE;Balaenoptera_bonaerensis_BALAENOPTERIDAE_CETARTIODACTYLA; ; ;9072000
 Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Balaenopteridae;Balaenoptera;borealis;Sei Whale;345.9852;230.09616;1.01; ;2.00E+07;CETARTIODACTYLA;BALAENOPTERIDAE;Balaenoptera_borealis_BALAENOPTERIDAE_CETARTIODACTYLA; ; ;20865000
 Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Balaenopteridae;Balaenoptera;edeni;Bryde's Whale;376;273.924;1; ;2.00E+07;CETARTIODACTYLA;BALAENOPTERIDAE;Balaenoptera_edeni_BALAENOPTERIDAE_CETARTIODACTYLA; ; ;16330000
-Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Balaenopteridae;Balaenoptera;musculus;Blue Whale;326.97;212.36;1;1.70E+07;1.49E+08;CETARTIODACTYLA;BALAENOPTERIDAE;Balaenoptera_musculus_BALAENOPTERIDAE_CETARTIODACTYLA; ; ;136000000
+Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Balaenopteridae;Balaenoptera;musculus;Blue whale;326.97;212.36;1;1.70E+07;1.49E+08;CETARTIODACTYLA;BALAENOPTERIDAE;Balaenoptera_musculus_BALAENOPTERIDAE_CETARTIODACTYLA; ; ;136000000
 Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Balaenopteridae;Balaenoptera;physalus;Fin Whale;342;216.917;1;6.40E+06;3.88E+07;CETARTIODACTYLA;BALAENOPTERIDAE;Balaenoptera_physalus_BALAENOPTERIDAE_CETARTIODACTYLA; ; ;4.94E+07
 Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Balaenopteridae;Megaptera;novaeangliae;Humpback Whale;348.83674;290.32944;1; ;3.00E+07;CETARTIODACTYLA;BALAENOPTERIDAE;Megaptera_novaeangliae_BALAENOPTERIDAE_CETARTIODACTYLA; ; ;40824000
 Animalia;Chordata;Mammalia;Eutheria;Cetartiodactyla;Delphinidae;Cephalorhynchus;commersonii;Commerson's Dolphin;365.232;304.4;1; ;68700;CETARTIODACTYLA;DELPHINIDAE;Cephalorhynchus_commersonii_DELPHINIDAE_CETARTIODACTYLA; ; ;54000
@@ -1076,7 +1076,7 @@ Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Pteropodidae;Cynopterus;brachyoti
 Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Pteropodidae;Cynopterus;horsfieldii;Horsfield's Fruit Bat;152.2;40;2; ;56.955;CHIROPTERA;PTEROPODIDAE;Cynopterus_horsfieldii_PTEROPODIDAE_CHIROPTERA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Pteropodidae;Cynopterus;luzoniensis;Peters's Fruit Bat;120;45.495;1;25;37.2;CHIROPTERA;PTEROPODIDAE;Cynopterus_luzoniensis_PTEROPODIDAE_CHIROPTERA;42.05;34.45;37.2
 Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Pteropodidae;Cynopterus;minutus;Minute Fruit Bat;120;42;1.1;25;37.3;CHIROPTERA;PTEROPODIDAE;Cynopterus_minutus_PTEROPODIDAE_CHIROPTERA;42.05;34.45;37.2
-Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Pteropodidae;Cynopterus;sphinx;Greater Short-nosed Fruit Bat;120;42;1.1;25;37.4;CHIROPTERA;PTEROPODIDAE;Cynopterus_sphinx_PTEROPODIDAE_CHIROPTERA;42.05;34.45;37.2
+Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Pteropodidae;Cynopterus;sphinx;Greater short-nosed fruit bat;120;42;1.1;25;37.4;CHIROPTERA;PTEROPODIDAE;Cynopterus_sphinx_PTEROPODIDAE_CHIROPTERA;42.05;34.45;37.2
 Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Pteropodidae;Cynopterus;titthaecheilus;Indonesian Short-nosed Fruit Bat;120;42;1;25;41.055;CHIROPTERA;PTEROPODIDAE;Cynopterus_titthaecheilus_PTEROPODIDAE_CHIROPTERA;42.05;34.45;37.2
 Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Pteropodidae;Dobsonia;anderseni;Andersen's Naked-backed Fruit Bat;156.43;173.1;0.99;162;312.4;CHIROPTERA;PTEROPODIDAE;Dobsonia_anderseni_PTEROPODIDAE_CHIROPTERA; ; ;312.4
 Animalia;Chordata;Mammalia;Eutheria;Chiroptera;Pteropodidae;Dobsonia;beauforti;Beaufort's Naked-backed Fruit Bat; ; ;0.99; ;165.35;CHIROPTERA;PTEROPODIDAE;Dobsonia_beauforti_PTEROPODIDAE_CHIROPTERA; ; ; 
@@ -1760,7 +1760,7 @@ Animalia;Chordata;Mammalia;Metatheria;Dasyuromorphia;Dasyuridae;Pseudantechinus;
 Animalia;Chordata;Mammalia;Metatheria;Dasyuromorphia;Dasyuridae;Pseudantechinus;mimulus;Alexandria False Antechinus;44.36;106;5.94; ;39.99;DASYUROMORPHIA;DASYURIDAE;Pseudantechinus_mimulus_DASYURIDAE_DASYUROMORPHIA;30;26;43.1
 Animalia;Chordata;Mammalia;Metatheria;Dasyuromorphia;Dasyuridae;Pseudantechinus;ningbing;Ningbing False Antechinus;46.71;111.68;4; ;20.74;DASYUROMORPHIA;DASYURIDAE;Pseudantechinus_ningbing_DASYURIDAE_DASYUROMORPHIA;17.5;23; 
 Animalia;Chordata;Mammalia;Metatheria;Dasyuromorphia;Dasyuridae;Pseudantechinus;woolleyae;Woolley's False Antechinus; ; ;5.995; ;40.615;DASYUROMORPHIA;DASYURIDAE;Pseudantechinus_woolleyae_DASYURIDAE_DASYUROMORPHIA; ; ; 
-Animalia;Chordata;Mammalia;Metatheria;Dasyuromorphia;Dasyuridae;Sarcophilus;harrisii;Tasmanian Devil;26;243.33;2.94;850;6500;DASYUROMORPHIA;DASYURIDAE;Sarcophilus_harrisii_DASYURIDAE_DASYUROMORPHIA;7000;9000;6126.8
+Animalia;Chordata;Mammalia;Metatheria;Dasyuromorphia;Dasyuridae;Sarcophilus;harrisii;Tasmanian devil;26;243.33;2.94;850;6500;DASYUROMORPHIA;DASYURIDAE;Sarcophilus_harrisii_DASYURIDAE_DASYUROMORPHIA;7000;9000;6126.8
 Animalia;Chordata;Mammalia;Metatheria;Dasyuromorphia;Dasyuridae;Sminthopsis;aitkeni;Kangaroo Island Dunnart; ; ; ; ;21.25;DASYUROMORPHIA;DASYURIDAE;Sminthopsis_aitkeni_DASYURIDAE_DASYUROMORPHIA; ;18; 
 Animalia;Chordata;Mammalia;Metatheria;Dasyuromorphia;Dasyuridae;Sminthopsis;archeri;Chestnut Dunnart; ; ;8.15; ;16;DASYUROMORPHIA;DASYURIDAE;Sminthopsis_archeri_DASYURIDAE_DASYUROMORPHIA; ; ; 
 Animalia;Chordata;Mammalia;Metatheria;Dasyuromorphia;Dasyuridae;Sminthopsis;bindi;Kakadu Dunnart; ; ; ; ; ;DASYUROMORPHIA;DASYURIDAE;Sminthopsis_bindi_DASYURIDAE_DASYUROMORPHIA; ;15.3; 
@@ -1905,7 +1905,7 @@ Animalia;Chordata;Mammalia;Metatheria;Diprotodontia;Macropodidae;Macropus;agilis
 Animalia;Chordata;Mammalia;Metatheria;Diprotodontia;Macropodidae;Macropus;antilopinus;Antilopine Kangaroo;34;395.49;1;3621.705;29647.9;DIPROTODONTIA;MACROPODIDAE;Macropus_antilopinus_MACROPODIDAE_DIPROTODONTIA; ; ;29647.9
 Animalia;Chordata;Mammalia;Metatheria;Diprotodontia;Macropodidae;Macropus;bernardus;Woodward's Wallaroo;33.5;182.64;1; ;17500;DIPROTODONTIA;MACROPODIDAE;Macropus_bernardus_MACROPODIDAE_DIPROTODONTIA; ; ; 
 Animalia;Chordata;Mammalia;Metatheria;Diprotodontia;Macropodidae;Macropus;dorsalis;Black-striped Wallaby;34.98; ;1;1000;11249.96;DIPROTODONTIA;MACROPODIDAE;Macropus_dorsalis_MACROPODIDAE_DIPROTODONTIA; ; ; 
-Animalia;Chordata;Mammalia;Metatheria;Diprotodontia;Macropodidae;Macropus;eugenii;Tammar Wallaby;28.945;320;1.005;2024.4;5037.24;DIPROTODONTIA;MACROPODIDAE;Macropus_eugenii_MACROPODIDAE_DIPROTODONTIA; ; ;4796
+Animalia;Chordata;Mammalia;Metatheria;Diprotodontia;Macropodidae;Macropus;eugenii;Tammar wallaby;28.945;320;1.005;2024.4;5037.24;DIPROTODONTIA;MACROPODIDAE;Macropus_eugenii_MACROPODIDAE_DIPROTODONTIA; ; ;4796
 Animalia;Chordata;Mammalia;Metatheria;Diprotodontia;Macropodidae;Macropus;fuliginosus;Western Grey Kangaroo;30.4;529.335;1;9389.085;26907.35;DIPROTODONTIA;MACROPODIDAE;Macropus_fuliginosus_MACROPODIDAE_DIPROTODONTIA; ; ; 
 Animalia;Chordata;Mammalia;Metatheria;Diprotodontia;Macropodidae;Macropus;giganteus;Eastern Grey Kangaroo;36.28;414.91;1;6062.015;41454.945;DIPROTODONTIA;MACROPODIDAE;Macropus_giganteus_MACROPODIDAE_DIPROTODONTIA; ; ; 
 Animalia;Chordata;Mammalia;Metatheria;Diprotodontia;Macropodidae;Macropus;greyi;Toolache Wallaby; ; ;1; ;10000;DIPROTODONTIA;MACROPODIDAE;Macropus_greyi_MACROPODIDAE_DIPROTODONTIA; ; ; 
@@ -1914,7 +1914,7 @@ Animalia;Chordata;Mammalia;Metatheria;Diprotodontia;Macropodidae;Macropus;parma;
 Animalia;Chordata;Mammalia;Metatheria;Diprotodontia;Macropodidae;Macropus;parryi;Pretty-faced Wallaby;37.14;443.42;1; ;12629.83;DIPROTODONTIA;MACROPODIDAE;Macropus_parryi_MACROPODIDAE_DIPROTODONTIA; ; ; 
 Animalia;Chordata;Mammalia;Metatheria;Diprotodontia;Macropodidae;Macropus;robustus;Wallaroo;33.295;358.595;1;3621.705;29647.9;DIPROTODONTIA;MACROPODIDAE;Macropus_robustus_MACROPODIDAE_DIPROTODONTIA; ; ;29647.9
 Animalia;Chordata;Mammalia;Metatheria;Diprotodontia;Macropodidae;Macropus;rufogriseus;Red-necked Wallaby;29.5;306.61;1.005;2341.255;16525;DIPROTODONTIA;MACROPODIDAE;Macropus_rufogriseus_MACROPODIDAE_DIPROTODONTIA; ; ; 
-Animalia;Chordata;Mammalia;Metatheria;Diprotodontia;Macropodidae;Macropus;rufus;Red Kangaroo;33;360;1;5000;35729.195;DIPROTODONTIA;MACROPODIDAE;Macropus_rufus_MACROPODIDAE_DIPROTODONTIA; ; ;28500
+Animalia;Chordata;Mammalia;Metatheria;Diprotodontia;Macropodidae;Macropus;rufus;Red kangaroo;33;360;1;5000;35729.195;DIPROTODONTIA;MACROPODIDAE;Macropus_rufus_MACROPODIDAE_DIPROTODONTIA; ; ;28500
 Animalia;Chordata;Mammalia;Metatheria;Diprotodontia;Macropodidae;Onychogalea;fraenata;Bridled Nail-tail Wallaby;23;164.765;1;1566.44;5226.025;DIPROTODONTIA;MACROPODIDAE;Onychogalea_fraenata_MACROPODIDAE_DIPROTODONTIA; ; ; 
 Animalia;Chordata;Mammalia;Metatheria;Diprotodontia;Macropodidae;Onychogalea;lunata;Crescent Nail-tail Wallaby; ; ;1; ;3499.99;DIPROTODONTIA;MACROPODIDAE;Onychogalea_lunata_MACROPODIDAE_DIPROTODONTIA; ; ; 
 Animalia;Chordata;Mammalia;Metatheria;Diprotodontia;Macropodidae;Onychogalea;unguifera;Northern Nail-tail Wallaby; ; ;1; ;5800;DIPROTODONTIA;MACROPODIDAE;Onychogalea_unguifera_MACROPODIDAE_DIPROTODONTIA; ; ; 
@@ -2003,7 +2003,7 @@ Animalia;Chordata;Mammalia;Metatheria;Diprotodontia;Pseudocheiridae;Pseudochirul
 Animalia;Chordata;Mammalia;Metatheria;Diprotodontia;Pseudocheiridae;Pseudochirulus;schlegeli;Vogelkop Ringtail; ; ;1.26; ;447.3;DIPROTODONTIA;PSEUDOCHEIRIDAE;Pseudochirulus_schlegeli_PSEUDOCHEIRIDAE_DIPROTODONTIA; ; ; 
 Animalia;Chordata;Mammalia;Metatheria;Diprotodontia;Tarsipedidae;Tarsipes;rostratus;Honey possum;61.27;89.74;2.965;3.005;10;DIPROTODONTIA;TARSIPEDIDAE;Tarsipes_rostratus_TARSIPEDIDAE_DIPROTODONTIA; ; ;15
 Animalia;Chordata;Mammalia;Metatheria;Diprotodontia;Vombatidae;Lasiorhinus;krefftii;Northern Hairy-nosed Wombat;20.87;326.07;1;3816.5;28632.6;DIPROTODONTIA;VOMBATIDAE;Lasiorhinus_krefftii_VOMBATIDAE_DIPROTODONTIA; ; ;27348.2
-Animalia;Chordata;Mammalia;Metatheria;Diprotodontia;Vombatidae;Lasiorhinus;latifrons;Southern Hairy-nosed Wombat;20.87;319.035;1;3816.5;26163.8;DIPROTODONTIA;VOMBATIDAE;Lasiorhinus_latifrons_VOMBATIDAE_DIPROTODONTIA; ; ;27348.2
+Animalia;Chordata;Mammalia;Metatheria;Diprotodontia;Vombatidae;Lasiorhinus;latifrons;Southern hairy-nosed wombat;20.87;319.035;1;3816.5;26163.8;DIPROTODONTIA;VOMBATIDAE;Lasiorhinus_latifrons_VOMBATIDAE_DIPROTODONTIA; ; ;27348.2
 Animalia;Chordata;Mammalia;Metatheria;Diprotodontia;Vombatidae;Vombatus;ursinus;Common Wombat;28.5;398.725;1;5700;25750;DIPROTODONTIA;VOMBATIDAE;Vombatus_ursinus_VOMBATIDAE_DIPROTODONTIA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Eulipotyphla;Erinaceidae;Atelerix;albiventris;Four-toed Hedgehog;35.495;44;4.49; ;450;EULIPOTYPHLA;ERINACEIDAE;Atelerix_albiventris_ERINACEIDAE_EULIPOTYPHLA; ; ;392.5
 Animalia;Chordata;Mammalia;Eutheria;Eulipotyphla;Erinaceidae;Atelerix;algirus;North African Hedgehog;39.4084;40.08994;3.75; ;824.49;EULIPOTYPHLA;ERINACEIDAE;Atelerix_algirus_ERINACEIDAE_EULIPOTYPHLA; ; ; 
@@ -2046,7 +2046,7 @@ Animalia;Chordata;Mammalia;Eutheria;Lagomorpha;Leporidae;Lepus;castroviejoi;Broo
 Animalia;Chordata;Mammalia;Eutheria;Lagomorpha;Leporidae;Lepus;comus;Yunnan Hare; ; ;2.75; ;2242.055;LAGOMORPHA;LEPORIDAE;Lepus_comus_LEPORIDAE_LAGOMORPHA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Lagomorpha;Leporidae;Lepus;coreanus;Korean Hare; ; ; ; ;2115.185;LAGOMORPHA;LEPORIDAE;Lepus_coreanus_LEPORIDAE_LAGOMORPHA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Lagomorpha;Leporidae;Lepus;corsicanus;Corsican Hare;42;28.80492;2.44;652.495;3673.33;LAGOMORPHA;LEPORIDAE;Lepus_corsicanus_LEPORIDAE_LAGOMORPHA; ; ; 
-Animalia;Chordata;Mammalia;Eutheria;Lagomorpha;Leporidae;Lepus;europaeus;European Hare;42;28.80492;2.44;652.495;3673.33;LAGOMORPHA;LEPORIDAE;Lepus_europaeus_LEPORIDAE_LAGOMORPHA; ; ; 
+Animalia;Chordata;Mammalia;Eutheria;Lagomorpha;Leporidae;Lepus;europaeus;European hare;42;28.80492;2.44;652.495;3673.33;LAGOMORPHA;LEPORIDAE;Lepus_europaeus_LEPORIDAE_LAGOMORPHA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Lagomorpha;Leporidae;Lepus;flavigularis;Tehuantepec Jackrabbit; ; ;2.34; ;2608.16;LAGOMORPHA;LEPORIDAE;Lepus_flavigularis_LEPORIDAE_LAGOMORPHA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Lagomorpha;Leporidae;Lepus;granatensis;Granada Hare;42.60456;30.25044;2.44;929.16;2323.94;LAGOMORPHA;LEPORIDAE;Lepus_granatensis_LEPORIDAE_LAGOMORPHA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Lagomorpha;Leporidae;Lepus;habessinicus;Abyssinian Hare;42.60456;30.25044;2.51;929.16;2047.11;LAGOMORPHA;LEPORIDAE;Lepus_habessinicus_LEPORIDAE_LAGOMORPHA; ; ; 
@@ -2135,7 +2135,7 @@ Animalia;Chordata;Mammalia;Eutheria;Macroscelidea;Macroscelididae;Rhynchocyon;ci
 Animalia;Chordata;Mammalia;Eutheria;Macroscelidea;Macroscelididae;Rhynchocyon;petersi;Black and Rufous Elephant Shrew; ; ;1.93; ;423.99;MACROSCELIDEA;MACROSCELIDIDAE;Rhynchocyon_petersi_MACROSCELIDIDAE_MACROSCELIDEA; ; ; 
 Animalia;Chordata;Mammalia;Metatheria;Microbiotheria;Microbiotheriidae;Dromiciops;gliroides;Monito del Monte; ; ;3; ;27.5;MICROBIOTHERIA;MICROBIOTHERIIDAE;Dromiciops_gliroides_MICROBIOTHERIIDAE_MICROBIOTHERIA; ; ;24.05
 Animalia;Chordata;Mammalia;Monotremata;Monotremata;Ornithorhynchidae;Ornithorhynchus;anatinus;Platypus;14.74;113.485;2; ;1225;MONOTREMATA;ORNITHORHYNCHIDAE;Ornithorhynchus_anatinus_ORNITHORHYNCHIDAE_MONOTREMATA; ; ;1030.3
-Animalia;Chordata;Mammalia;Monotremata;Monotremata;Tachyglossidae;Tachyglossus;aculeatus;Short-beaked Echidna;19.86;185.04;1;510.415;3169.5;MONOTREMATA;TACHYGLOSSIDAE;Tachyglossus_aculeatus_TACHYGLOSSIDAE_MONOTREMATA; ; ;2909
+Animalia;Chordata;Mammalia;Monotremata;Monotremata;Tachyglossidae;Tachyglossus;aculeatus;Short-beaked echidna;19.86;185.04;1;510.415;3169.5;MONOTREMATA;TACHYGLOSSIDAE;Tachyglossus_aculeatus_TACHYGLOSSIDAE_MONOTREMATA; ; ;2909
 Animalia;Chordata;Mammalia;Monotremata;Monotremata;Tachyglossidae;Zaglossus;attenboroughi;Sir David's Long-beaked Echidna; ; ; ; ;3000;MONOTREMATA;TACHYGLOSSIDAE;Zaglossus_attenboroughi_TACHYGLOSSIDAE_MONOTREMATA; ; ; 
 Animalia;Chordata;Mammalia;Monotremata;Monotremata;Tachyglossidae;Zaglossus;bartoni;Eastern Long-beaked Echidna;10;152;1;400;8951.71;MONOTREMATA;TACHYGLOSSIDAE;Zaglossus_bartoni_TACHYGLOSSIDAE_MONOTREMATA; ; ;11848.6
 Animalia;Chordata;Mammalia;Monotremata;Monotremata;Tachyglossidae;Zaglossus;bruijni;Western Long-beaked Echidna;10;152;1;400;10000;MONOTREMATA;TACHYGLOSSIDAE;Zaglossus_bruijni_TACHYGLOSSIDAE_MONOTREMATA; ; ;11848.6
@@ -2223,7 +2223,7 @@ Animalia;Chordata;Mammalia;Eutheria;Primates;Atelidae;Alouatta;seniculus;Venezue
 Animalia;Chordata;Mammalia;Eutheria;Primates;Atelidae;Ateles;belzebuth;White-fronted Spider Monkey;140.91868; ;1; ;6692.42;PRIMATES;ATELIDAE;Ateles_belzebuth_ATELIDAE_PRIMATES; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Primates;Atelidae;Ateles;chamek;Peruvian Spider Monkey;204.46102;795.9014;1;3790;7294.46;PRIMATES;ATELIDAE;Ateles_chamek_ATELIDAE_PRIMATES; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Primates;Atelidae;Ateles;fusciceps;Black-headed Spider Monkey;227;598.51646;1;2000;7267.5;PRIMATES;ATELIDAE;Ateles_fusciceps_ATELIDAE_PRIMATES; ; ; 
-Animalia;Chordata;Mammalia;Eutheria;Primates;Atelidae;Ateles;geoffroyi;Geoffroy's Spider Monkey;229.185;818.675;1;2000;7267.5;PRIMATES;ATELIDAE;Ateles_geoffroyi_ATELIDAE_PRIMATES; ; ; 
+Animalia;Chordata;Mammalia;Eutheria;Primates;Atelidae;Ateles;geoffroyi;Geoffroy's spider monkey;229.185;818.675;1;2000;7267.5;PRIMATES;ATELIDAE;Ateles_geoffroyi_ATELIDAE_PRIMATES; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Primates;Atelidae;Ateles;hybridus;Brown Spider Monkey;140.91868; ;1; ;6692.42;PRIMATES;ATELIDAE;Ateles_hybridus_ATELIDAE_PRIMATES; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Primates;Atelidae;Ateles;marginatus;White-cheeked Spider Monkey;140.91868; ;1; ;6229.28;PRIMATES;ATELIDAE;Ateles_marginatus_ATELIDAE_PRIMATES; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Primates;Atelidae;Ateles;paniscus;Red-faced Spider Monkey;228.18;795.9014;1;3790;7887.5;PRIMATES;ATELIDAE;Ateles_paniscus_ATELIDAE_PRIMATES; ; ; 
@@ -2459,7 +2459,7 @@ Animalia;Chordata;Mammalia;Eutheria;Primates;Hominidae;Gorilla;beringei;Eastern 
 Animalia;Chordata;Mammalia;Eutheria;Primates;Hominidae;Gorilla;gorilla;Western Gorilla;257;834;1.005;12595;126215.495;PRIMATES;HOMINIDAE;Gorilla_gorilla_HOMINIDAE_PRIMATES; ;134000; 
 Animalia;Chordata;Mammalia;Eutheria;Primates;Hominidae;Homo;sapiens;Human;280;639;1;11750;62035;PRIMATES;HOMINIDAE;Homo_sapiens_HOMINIDAE_PRIMATES; ; ;70000
 Animalia;Chordata;Mammalia;Eutheria;Primates;Hominidae;Pan;paniscus;Bonobo;235.3204327;854.74466;1;8325;35119.95;PRIMATES;HOMINIDAE;Pan_paniscus_HOMINIDAE_PRIMATES; ;45000; 
-Animalia;Chordata;Mammalia;Eutheria;Primates;Hominidae;Pan;troglodytes;Common Chimpanzee;229;1112.13144;1.075;8500;44983.5;PRIMATES;HOMINIDAE;Pan_troglodytes_HOMINIDAE_PRIMATES; ;44300; 
+Animalia;Chordata;Mammalia;Eutheria;Primates;Hominidae;Pan;troglodytes;Chimpanzee;229;1112.13144;1.075;8500;44983.5;PRIMATES;HOMINIDAE;Pan_troglodytes_HOMINIDAE_PRIMATES; ;44300; 
 Animalia;Chordata;Mammalia;Eutheria;Primates;Hominidae;Pongo;abelii;Sumatran Orangutan;259.42;1088.8;1.14;11000;53408.29;PRIMATES;HOMINIDAE;Pongo_abelii_HOMINIDAE_PRIMATES; ;74640; 
 Animalia;Chordata;Mammalia;Eutheria;Primates;Hominidae;Pongo;pygmaeus;Bornean Orangutan;259.42;1088.8;1.14;11000;58941.645;PRIMATES;HOMINIDAE;Pongo_pygmaeus_HOMINIDAE_PRIMATES; ;74640; 
 Animalia;Chordata;Mammalia;Eutheria;Primates;Hylobatidae;Bunopithecus;hoolock;Hoolock Gibbon;232.5;709;1; ;6699;PRIMATES;HYLOBATIDAE;Bunopithecus_hoolock_HYLOBATIDAE_PRIMATES; ; ; 
@@ -2568,7 +2568,7 @@ Animalia;Chordata;Mammalia;Eutheria;Primates;Tarsiidae;Tarsius;sangirensis;Sangi
 Animalia;Chordata;Mammalia;Eutheria;Primates;Tarsiidae;Tarsius;syrichta;Philippine Tarsier;179;83;1; ;114.455;PRIMATES;TARSIIDAE;Tarsius_syrichta_TARSIIDAE_PRIMATES; ; ;113
 Animalia;Chordata;Mammalia;Eutheria;Primates;Tarsiidae;Tarsius;tarsier;Spectral Tarsier;176.37016;68.34986;1; ;173;PRIMATES;TARSIIDAE;Tarsius_tarsier_TARSIIDAE_PRIMATES; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Proboscidea;Elephantidae;Elephas;maximus;Asian Elephant;642.84;548;1; ;3.22E+06;PROBOSCIDEA;ELEPHANTIDAE;Elephas_maximus_ELEPHANTIDAE_PROBOSCIDEA; ;4545000;3.67E+06
-Animalia;Chordata;Mammalia;Eutheria;Proboscidea;Elephantidae;Loxodonta;africana;African Bush Elephant;669.68;1088.8;1;600000;4.50E+06;PROBOSCIDEA;ELEPHANTIDAE;Loxodonta_africana_ELEPHANTIDAE_PROBOSCIDEA; ;4365000; 
+Animalia;Chordata;Mammalia;Eutheria;Proboscidea;Elephantidae;Loxodonta;africana;African bush elephant;669.68;1088.8;1;600000;4.50E+06;PROBOSCIDEA;ELEPHANTIDAE;Loxodonta_africana_ELEPHANTIDAE_PROBOSCIDEA; ;4365000; 
 Animalia;Chordata;Mammalia;Eutheria;Proboscidea;Elephantidae;Loxodonta;cyclotis;African Forest Elephant;669.68;1088.8;1;600000;4.63E+06;PROBOSCIDEA;ELEPHANTIDAE;Loxodonta_cyclotis_ELEPHANTIDAE_PROBOSCIDEA; ;4365000; 
 Animalia;Chordata;Mammalia;Eutheria;Rodentia;Abrocomidae;Abrocoma;bennettii;Bennett's Chinchilla Rat; ; ;3; ;265.5;RODENTIA;ABROCOMIDAE;Abrocoma_bennettii_ABROCOMIDAE_RODENTIA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Rodentia;Abrocomidae;Abrocoma;boliviensis;Bolivian Chinchilla Rat; ; ; ; ;158;RODENTIA;ABROCOMIDAE;Abrocoma_boliviensis_ABROCOMIDAE_RODENTIA; ; ; 
@@ -4143,7 +4143,7 @@ Animalia;Chordata;Mammalia;Eutheria;Rodentia;Muridae;Rattus;omichlodes;Arianus' 
 Animalia;Chordata;Mammalia;Eutheria;Rodentia;Muridae;Rattus;pococki;Pocock's New Guinea Highland Rat; ; ;2.15; ;54.77;RODENTIA;MURIDAE;Rattus_pococki_MURIDAE_RODENTIA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Rodentia;Muridae;Rattus;praetor;Large New Guinea Spiny Rat;22.827;25.26188;3.5;105.19;194.43;RODENTIA;MURIDAE;Rattus_praetor_MURIDAE_RODENTIA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Rodentia;Muridae;Rattus;pyctoris;Himalayan Rat; ; ;4.23; ; ;RODENTIA;MURIDAE;Rattus_pyctoris_MURIDAE_RODENTIA; ; ; 
-Animalia;Chordata;Mammalia;Eutheria;Rodentia;Muridae;Rattus;rattus;Roof Rat;22.26132;26.08748;5.95;39.69;200;RODENTIA;MURIDAE;Rattus_rattus_MURIDAE_RODENTIA; ; ;117
+Animalia;Chordata;Mammalia;Eutheria;Rodentia;Muridae;Rattus;rattus;Rat;22.26132;26.08748;5.95;39.69;200;RODENTIA;MURIDAE;Rattus_rattus_MURIDAE_RODENTIA; ; ;117
 Animalia;Chordata;Mammalia;Eutheria;Rodentia;Muridae;Rattus;richardsoni;Richardson's New Guinea Mountain Rat; ; ;2.15; ;64.29;RODENTIA;MURIDAE;Rattus_richardsoni_MURIDAE_RODENTIA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Rodentia;Muridae;Rattus;sanila;New Ireland Forest Rat;22.827;25.26188;3.45;105.19;200.89;RODENTIA;MURIDAE;Rattus_sanila_MURIDAE_RODENTIA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Rodentia;Muridae;Rattus;satarae;Sahyadris Forest Rat;22.26132;26.08748;5.95;39.69;200;RODENTIA;MURIDAE;Rattus_satarae_MURIDAE_RODENTIA; ; ;117
@@ -4819,7 +4819,7 @@ Animalia;Chordata;Mammalia;Eutheria;Eulipotyphla;Soricidae;Solisorex;pearsoni;Pe
 Animalia;Chordata;Mammalia;Eutheria;Eulipotyphla;Soricidae;Sorex;alaskanus;Glacier Bay Water Shrew;21.9135; ;5.58; ;13.07;EULIPOTYPHLA;SORICIDAE;Sorex_alaskanus_SORICIDAE_EULIPOTYPHLA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Eulipotyphla;Soricidae;Sorex;alpinus;Alpine Shrew; ; ;5.95; ;7.9;EULIPOTYPHLA;SORICIDAE;Sorex_alpinus_SORICIDAE_EULIPOTYPHLA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Eulipotyphla;Soricidae;Sorex;antinorii;Valais Shrew;21.00042;25;6.56;8.5;8.195;EULIPOTYPHLA;SORICIDAE;Sorex_antinorii_SORICIDAE_EULIPOTYPHLA; ; ;8.4
-Animalia;Chordata;Mammalia;Eutheria;Eulipotyphla;Soricidae;Sorex;araneus;Common Shrew;21.00042;25;6.56;8.5;8.195;EULIPOTYPHLA;SORICIDAE;Sorex_araneus_SORICIDAE_EULIPOTYPHLA; ; ;8.4
+Animalia;Chordata;Mammalia;Eutheria;Eulipotyphla;Soricidae;Sorex;araneus;Eurasian shrew;21.00042;25;6.56;8.5;8.195;EULIPOTYPHLA;SORICIDAE;Sorex_araneus_SORICIDAE_EULIPOTYPHLA; ; ;8.4
 Animalia;Chordata;Mammalia;Eutheria;Eulipotyphla;Soricidae;Sorex;arcticus;Arctic Shrew;17; ;6.63; ;8.195;EULIPOTYPHLA;SORICIDAE;Sorex_arcticus_SORICIDAE_EULIPOTYPHLA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Eulipotyphla;Soricidae;Sorex;arizonae;Arizona Shrew; ; ; ; ;2.7;EULIPOTYPHLA;SORICIDAE;Sorex_arizonae_SORICIDAE_EULIPOTYPHLA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Eulipotyphla;Soricidae;Sorex;asper;Tien Shan Shrew; ; ; ; ;8.94;EULIPOTYPHLA;SORICIDAE;Sorex_asper_SORICIDAE_EULIPOTYPHLA; ; ; 
