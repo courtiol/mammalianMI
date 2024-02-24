@@ -72,7 +72,13 @@ prepare_df_MIfull <- function(raw_df) {
   raw_df <- raw_df[, c("Key", "Subclass", "Order", "Name", "Adult_mass", "Litter_mass", "Investment_duration")]
   
   ## Drop row for which critical information is missing
-  raw_df[!is.na(raw_df$Adult_mass) & !is.na(raw_df$Litter_mass), ]
+  raw_df <- raw_df[!is.na(raw_df$Adult_mass) & !is.na(raw_df$Litter_mass), ]
+  
+  ## Final cleaning
+  raw_df <- droplevels(raw_df)
+  rownames(raw_df) <- NULL
+  
+  raw_df
 }
 
 
