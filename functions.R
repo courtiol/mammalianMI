@@ -44,6 +44,9 @@ prepare_df_MIfull <- function(raw_df) {
   raw_df$Weaning_mass <- raw_df$Weaning_mass_g/1000
   raw_df$Litter_mass <- raw_df$Weaning_mass*raw_df$Litter.Clutch.size
   raw_df$Investment_duration <- raw_df$Gestation_days + raw_df$Lactation_days
+  raw_df$Adult_mass_log10 <- log(raw_df$Adult_mass, base = 10)
+  raw_df$Litter_mass_log10 <- log(raw_df$Litter_mass, base = 10)
+  raw_df$Investment_duration_log10 <-  log(raw_df$Investment_duration, base = 10)
   
   ## Format character-columns into factors
   raw_df$Subclass <- as.factor(raw_df$Subclass)
@@ -69,7 +72,10 @@ prepare_df_MIfull <- function(raw_df) {
   raw_df$Litter.Clutch.size <- NULL
   
   ## Reorder columns
-  raw_df <- raw_df[, c("Key", "Subclass", "Order", "Name", "Adult_mass", "Litter_mass", "Investment_duration")]
+  raw_df <- raw_df[, c("Key", "Subclass", "Order", "Name",
+                       "Adult_mass", "Adult_mass_log10",
+                       "Litter_mass", "Litter_mass_log10",
+                       "Investment_duration", "Investment_duration_log10")]
   
   ## Drop row for which critical information is missing
   raw_df <- raw_df[!is.na(raw_df$Adult_mass) & !is.na(raw_df$Litter_mass), ]
@@ -140,12 +146,12 @@ extract_fit_summary <- function(fit, digits = 3) {
                    confint(fit, parm = "(Intercept)", verbose = FALSE)$interval)
     intercept_transformed <- c(estimate = 10^fixef(fit)["(Intercept)"][[1]],
                                10^confint(fit, parm = "(Intercept)", verbose = FALSE)$interval)
-    slope <- c(estimate = fixef(fit)["log(Adult_mass, 10)"][[1]],
-              confint(fit, parm = "log(Adult_mass, 10)", verbose = FALSE)$interval)
+    slope <- c(estimate = fixef(fit)["Adult_mass_log10"][[1]],
+              confint(fit, parm = "Adult_mass_log10", verbose = FALSE)$interval)
     stats <- rbind(intercept, intercept_transformed, slope)
     if (grepl(pattern = ".*Investment_duration", x = as.character(formula(fit))[3])) {
-      slope_InvDur <- c(estimate = fixef(fit)["log(Investment_duration, 10)"][[1]],
-                       confint(fit, parm = "log(Investment_duration, 10)", verbose = FALSE)$interval)
+      slope_InvDur <- c(estimate = fixef(fit)["Investment_duration_log10"][[1]],
+                       confint(fit, parm = "Investment_duration_log10", verbose = FALSE)$interval)
       stats <- rbind(stats, slope_InvDur)
     }
     colnames(stats) <- c("estimate", "lower", "upper")
@@ -206,11 +212,12 @@ compure_r2 <- function(fit, digits = 3) {
 draw_figure_1 <- function(data_models, fit_SLR, fit_PLMM, fit_SMA, fit_MA, fit_MSLR, fit_MPLMM) {
   
   data_pred <- data.frame(Adult_mass = c(0.001, 1e6),
-                          Investment_duration = median(data_models$Investment_duration))
+                          Adult_mass_log10 = log(c(0.001, 1e6), base = 10),
+                          Investment_duration_log10 = mean(data_models$Investment_duration_log10))
   data_pred$SLR   <- 10^(predict(fit_SLR, newdata = data_pred)[, 1])
   data_pred$PLMM  <- 10^(predict(fit_PLMM, newdata = data_pred, re.form = NA)[, 1])
-  data_pred$SMA   <- 10^as.numeric(as.matrix(cbind(1, log(data_pred[, "Adult_mass", drop = FALSE], 10))) %*% matrix(coef(fit_SMA)))
-  data_pred$MA    <- 10^as.numeric(as.matrix(cbind(1, log(data_pred[, "Adult_mass", drop = FALSE], 10))) %*% matrix(coef(fit_MA)))
+  data_pred$SMA   <- 10^as.numeric(as.matrix(cbind(1, data_pred[, "Adult_mass_log10", drop = FALSE])) %*% matrix(coef(fit_SMA)))
+  data_pred$MA    <- 10^as.numeric(as.matrix(cbind(1, data_pred[, "Adult_mass_log10", drop = FALSE])) %*% matrix(coef(fit_MA)))
   data_pred$MSLR  <- 10^(predict(fit_MSLR, newdata = data_pred)[, 1])
   data_pred$MPLMM <- 10^(predict(fit_MPLMM, newdata = data_pred, re.form = NA)[, 1])
   

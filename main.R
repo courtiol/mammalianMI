@@ -35,7 +35,9 @@ str(MI_subclasses)
 orders_vs_N    <- aggregate(MI_subclasses[, "Key", drop = FALSE], list(Order = MI_subclasses$Order), length)
 orders_to_keep <- as.character(orders_vs_N$Order[orders_vs_N$Key >= 15])
 MI_orders <- droplevels(MI_subclasses[MI_subclasses$Order %in% orders_to_keep, ])
-unique(MI_orders$Order) # [1] Carnivora Cetartiodactyla Chiroptera Dasyuromorphia Didelphimorphia Diprotodontia Eulipotyphla Lagomorpha Primates Rodentia    
+sort(unique(MI_orders$Order))
+# [1] Carnivora       Cetartiodactyla Chiroptera      Dasyuromorphia  Didelphimorphia Diprotodontia   Eulipotyphla    Lagomorpha     
+# [9] Primates        Rodentia 
 nrow(MI_orders) # 785
 str(MI_orders)
 
@@ -57,10 +59,10 @@ str(MI_indicators)
 
 # Descriptive statistics --------------------------------------------------
 
-cor_global <- cor.test(log(MI_full$Adult_mass), log(MI_full$Litter_mass))
+cor_global <- cor.test(MI_full$Adult_mass_log10, MI_full$Litter_mass_log10)
 round(cor_global$estimate, digits = 3)[[1]] # correlation estimate
 # [1] 0.966
-signif(cor_global$p.value, digits = 3) # pvalue
+cor_global$p.value # pvalue
 # [1] 0
 
 
@@ -68,7 +70,7 @@ signif(cor_global$p.value, digits = 3) # pvalue
 
 ## Fitting SLR model for method comparison
 
-fit_SLR_models <- fitme(log(Litter_mass, 10) ~ log(Adult_mass, 10), data = MI_models)
+fit_SLR_models <- fitme(Litter_mass_log10 ~ Adult_mass_log10, data = MI_models)
 plot(fit_SLR_models, ask = FALSE, which = "mean")    ## diagnostics (good!)
 plot(fit_SLR_models, ask = FALSE, which = "predict") ## diagnostics (good!)
 extract_fit_summary(fit_SLR_models)
@@ -82,12 +84,13 @@ compure_r2(fit_SLR_models)
 
 ## Fitting PLMM model for method comparison
 
-fit_PLMM_models <- fitme_phylo_lambdafree(formula = log(Litter_mass, 10) ~ log(Adult_mass, 10) + corrMatrix(1|Key),
+fit_PLMM_models <- fitme_phylo_lambdafree(formula = Litter_mass_log10 ~ Adult_mass_log10 + corrMatrix(1|Key),
+                                          #resid.model =  ~ Adult_mass_log10,
                                           data = MI_models, tree = tree)
-plot(fit_PLMM_models, ask = FALSE, which = "mean")  ## diagnostics (good!)
-plot(fit_PLMM_models, ask = FALSE, which = "ranef") ## diagnostics (good!)
+plot(fit_PLMM_models, ask = FALSE, which = "mean")  ## diagnostics (okish)
+plot(fit_PLMM_models, ask = FALSE, which = "ranef") ## diagnostics (okish)
 plot(fit_PLMM_models, ask = FALSE, which = "predict") ## diagnostics (bad: residual variance captured by random variance)
-plot(log(MI_models$Litter_mass, 10), predict(fit_PLMM_models, re.form = NA, type = "link")[, 1]) ## diagnostics, excluding ranef (good!)
+plot(MI_models$Litter_mass_log10, predict(fit_PLMM_models, re.form = NA, type = "link")[, 1]) ## diagnostics, excluding ranef (good!)
 extract_fit_summary(fit_PLMM_models)
 #              estimate  lower upper
 # intercept      -0.173 -0.710 0.364
@@ -100,10 +103,10 @@ compure_r2(fit_PLMM_models) ## same as above!
 
 ## Fitting SMA model for method comparison
 
-fit_SMA_models <- sma(Litter_mass ~ Adult_mass, data = MI_models, log = "xy", method = "SMA")
-plot(fit_SMA_models,which = "default") ## diagnostics (good!)
-plot(fit_SMA_models,which = "residual") ## diagnostics (good!)
-plot(fit_SMA_models,which = "qq") ## diagnostics (good!)
+fit_SMA_models <- sma(Litter_mass_log10 ~ Adult_mass_log10, data = MI_models, method = "SMA")
+plot(fit_SMA_models, which = "default") ## diagnostics (good!)
+plot(fit_SMA_models, which = "residual") ## diagnostics (good!)
+plot(fit_SMA_models, which = "qq") ## diagnostics (ok)
 extract_fit_summary(fit_SMA_models)
 #              estimate  lower  upper
 # intercept      -0.188 -0.208 -0.168
@@ -115,10 +118,10 @@ compure_r2(fit_SMA_models)
 
 ## Fitting MA model for method comparison
 
-fit_MA_models <- sma(Litter_mass ~ Adult_mass, data = MI_models, log = "xy", method = "MA")
-plot(fit_MA_models,which = "default") ## diagnostics (good!)
-plot(fit_MA_models,which = "residual") ## diagnostics (good!)
-plot(fit_MA_models,which = "qq") ## diagnostics (good!)
+fit_MA_models <- sma(Litter_mass_log10 ~ Adult_mass_log10, data = MI_models, method = "MA")
+plot(fit_MA_models, which = "default") ## diagnostics (good!)
+plot(fit_MA_models, which = "residual") ## diagnostics (good!)
+plot(fit_MA_models, which = "qq") ## diagnostics (ok)
 extract_fit_summary(fit_MA_models)
 #              estimate  lower  upper
 # intercept      -0.190 -0.210 -0.169
@@ -130,7 +133,7 @@ compure_r2(fit_MA_models)
 
 ## Fitting MSLR model for method comparison
 
-fit_MSLR_models <- fitme(log(Litter_mass, 10) ~ log(Adult_mass, 10) + log(Investment_duration, 10), data = MI_models)
+fit_MSLR_models <- fitme(Litter_mass_log10 ~ Adult_mass_log10 + Investment_duration_log10, data = MI_models)
 plot(fit_MSLR_models, ask = FALSE, which = "mean")    ## diagnostics (good!)
 plot(fit_MSLR_models, ask = FALSE, which = "predict") ## diagnostics (good!)
 extract_fit_summary(fit_MSLR_models)
@@ -144,12 +147,12 @@ compure_r2(fit_MSLR_models)
 # r2    0.952 0.972 0.979 0
 
 ## Fitting MPLMM model for method comparison
-fit_MPLMM_models <- fitme_phylo_lambdafree(formula = log(Litter_mass, 10) ~ log(Adult_mass, 10) + log(Investment_duration, 10) + corrMatrix(1|Key),
+fit_MPLMM_models <- fitme_phylo_lambdafree(formula = Litter_mass_log10 ~ Adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
                                            data = MI_models, tree = tree)
-plot(fit_MPLMM_models, ask = FALSE, which = "mean")  ## diagnostics (good!)
-plot(fit_MPLMM_models, ask = FALSE, which = "ranef") ## diagnostics (good!)
-plot(fit_MPLMM_models, ask = FALSE, which = "predict", re.form = NA) ## diagnostics (bad: residual variance captured by random variance)
-plot(log(MI_models$Litter_mass, 10), predict(fit_MPLMM_models, re.form = NA, type = "link")[, 1]) ## diagnostics, excluding ranef (good!)
+plot(fit_MPLMM_models, ask = FALSE, which = "mean")  ## diagnostics (okish)
+plot(fit_MPLMM_models, ask = FALSE, which = "ranef") ## diagnostics (okish)
+plot(fit_MPLMM_models, ask = FALSE, which = "predict") ## diagnostics (bad: residual variance captured by random variance)
+plot(MI_models$Litter_mass_log10, predict(fit_MPLMM_models, re.form = NA, type = "link")[, 1]) ## diagnostics, excluding ranef (good!)
 extract_fit_summary(fit_MPLMM_models)
 #              estimate   lower upper
 # intercept      -0.553  -1.18 0.0756
@@ -177,7 +180,7 @@ ggplot2::ggsave(filename = "figures/Fig1.png", scale = 1)
 ## Computation of MI metrics
 MI_models$MI_SLR   <- residuals(fit_SLR_models)
                       # same as: log(MI_models$Litter_mass / ((10^fixef(fit_SLR_models)["(Intercept)"]) * MI_models$Adult_mass^fixef(fit_SLR_models)["log(Adult_mass, 10)"]), base = 10)
-MI_models$MI_PLMM  <- log(MI_models$Litter_mass, base = 10) - predict(fit_PLMM_models, re.form = NA, type = "link")[, 1]
+MI_models$MI_PLMM  <- MI_models$Litter_mass_log10 - predict(fit_PLMM_models, re.form = NA, type = "link")[, 1]
                       # same as: log(MI_models$Litter_mass / ((10^fixef(fit_PLMM_models)["(Intercept)"]) * MI_models$Adult_mass^fixef(fit_PLMM_models)["log(Adult_mass, 10)"]), base = 10)
 MI_models$MI_SMA   <- residuals(fit_SMA_models)
                       # same as: log(MI_models$Litter_mass / ((10^coef(fit_SMA_models) ["elevation"]) * MI_models$Adult_mass^coef(fit_SMA_models)["slope"]), base = 10)
@@ -185,7 +188,7 @@ MI_models$MI_MA    <- residuals(fit_MA_models)
                       # same as: log(MI_models$Litter_mass / ((10^coef(fit_MA_models) ["elevation"]) * MI_models$Adult_mass^coef(fit_MA_models)["slope"]), base = 10)
 MI_models$MI_MSLR  <- residuals(fit_MSLR_models)
                       # same as: log(MI_models$Litter_mass / ((10^fixef(fit_MSLR_models)["(Intercept)"]) * MI_models$Adult_mass^fixef(fit_MSLR_models)["log(Adult_mass, 10)"] * MI_models$Investment_duration^fixef(fit_MSLR_models)["log(Investment_duration, 10)"]), base = 10)
-MI_models$MI_MPLMM <- log(MI_models$Litter_mass, base = 10) - predict(fit_MPLMM_models, re.form = NA, type = "link")[, 1]
+MI_models$MI_MPLMM <- MI_models$Litter_mass_log10 - predict(fit_MPLMM_models, re.form = NA, type = "link")[, 1]
                       # same as: log(MI_models$Litter_mass / ((10^fixef(fit_MPLMM_models)["(Intercept)"]) * MI_models$Adult_mass^fixef(fit_MPLMM_models)["log(Adult_mass, 10)"] * MI_models$Investment_duration^fixef(fit_MPLMM_models)["log(Investment_duration, 10)"]), base = 10)
 
 ## Comparison of non phylogenetic methods
@@ -200,6 +203,11 @@ quade.test(as.matrix(MI_models[, c("MI_SLR", "MI_SMA", "MI_MA", "MI_MSLR")]))
 # Quade F = 0.87625, num df = 3, denom df = 2247, p-value = 0.4526
 
 ## Comparison between phylogenetic and non-phylogenetic counterpart
+corMI <- cor(MI_models[, c("MI_PLMM", "MI_MPLMM", "MI_SLR", "MI_SMA", "MI_MA", "MI_MSLR")])
+diag(corMI) <- NA
+corMI
+range(corMI, na.rm = TRUE)
+# [1] 0.8568404 0.9996569
 
 univariate_phylo_test <- data.frame(LRT = unname(-2*(logLik(fit_SLR_models) - logLik(fit_PLMM_models))))
 univariate_phylo_test$df <- 1
@@ -216,9 +224,13 @@ multivariate_phylo_test
 # 1 449.6248  1 8.704853e-100
 
 ## Comparison between the 2 PLMMs
-anova(fit_PLMM_models, fit_MPLMM_models)
+anova(fit_PLMM_models, fit_MPLMM_models) ## asymptotic test
 #      chi2_LR df    p_value
 # p_v 6.027052  1 0.01408824
+
+# spaMM.options(nb_cores = parallel::detectCores() - 1) # optional: for quicker output
+# library(doSNOW) # optional: for quicker output
+# anova(fit_PLMM_models, fit_MPLMM_models, boot.repl = 999, fit_env = list(corM = fit_PLMM_models$phylo$corM)) # very slow
 
 
 
