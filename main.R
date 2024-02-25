@@ -195,8 +195,8 @@ draw_figure_1(data_models = MI_models,
               fit_SLR = fit_SLR_models, fit_PLMM = fit_PLMM_models,
               fit_SMA = fit_SMA_models, fit_MA = fit_MA_models,
               fit_MSLR = fit_MSLR_models, fit_MPLMM = fit_MPLMM_models)
-ggplot2::ggsave(filename = "figures/Fig1.pdf", scale = 0.6)
-ggplot2::ggsave(filename = "figures/Fig1.png", scale = 0.6)
+ggplot2::ggsave(filename = "figures/Fig1.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
+ggplot2::ggsave(filename = "figures/Fig1.png", scale = 1.2, width = 15, height = 10, units = "cm")
 
 
 # Models comparison -------------------------------------------------------
@@ -300,9 +300,9 @@ rbind(default = pretty(c(summary(MI_mass$MI_default), sd = sd(MI_mass$MI_default
 # Figure 2 ----------------------------------------------------------------
 
 draw_figure_2(data_mass = MI_mass, fit_default = fit_PLMM_mass_default, fit_males = fit_PLMM_mass_males, fit_females = fit_PLMM_mass_females)
-ggplot2::ggsave(filename = "figures/Fig2.pdf", scale = 0.6)
-ggplot2::ggsave(filename = "figures/Fig2.png", scale = 0.6)
+ggplot2::ggsave(filename = "figures/Fig2.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
+ggplot2::ggsave(filename = "figures/Fig2.png", scale = 1.2, width = 15, height = 10, units = "cm")
 
 draw_figure_3(data_mass = MI_mass, fit_default = fit_PLMM_mass_default, fit_males = fit_PLMM_mass_males, fit_females = fit_PLMM_mass_females)
-ggplot2::ggsave(filename = "figures/Fig3.pdf", scale = 0.6)
-ggplot2::ggsave(filename = "figures/Fig3.png", scale = 0.6)
+ggplot2::ggsave(filename = "figures/Fig3.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
+ggplot2::ggsave(filename = "figures/Fig3.png", scale = 1.2, width = 15, height = 10, units = "cm")
