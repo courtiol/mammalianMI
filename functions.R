@@ -90,6 +90,26 @@ prepare_df_MIfull <- function(raw_df) {
   
   raw_df <- raw_df[!too_big, ]
   
+  ## Remove species for which the adult default mass is more than 15% heavier than the heaviest adult sex
+  too_big2 <- !is.na(raw_df$Male_adult_mass) & !is.na(raw_df$Female_adult_mass) & 1.15*pmax(raw_df$Male_adult_mass, raw_df$Female_adult_mass) < raw_df$Adult_mass
+  
+  if (length(too_big2) > 0) {
+    message(paste("\nThe following", sum(too_big2),  "species have been discarded since the default adult mass was more than 15% heavier than the heaviest sex in adults:"))
+    message(paste(raw_df$Name[too_big2], collapse = "\n"))
+  }
+  
+  raw_df <- raw_df[!too_big2, ]
+  
+  ## Remove species for which the adult default mass is more than 15% lighter than the lighter adult sex
+  too_small <- !is.na(raw_df$Male_adult_mass) & !is.na(raw_df$Female_adult_mass) & 0.85*pmin(raw_df$Male_adult_mass, raw_df$Female_adult_mass) > raw_df$Adult_mass
+  
+  if (length(too_small) > 0) {
+    message(paste("\nThe following", sum(too_small),  "species have been discarded since the default adult mass was more than 15% lighter than the lightest sex in adults:"))
+    message(paste(raw_df$Name[too_small], collapse = "\n"))
+  }
+  
+  raw_df <- raw_df[!too_small, ]
+
   ## Reorder and select columns
   raw_df <- raw_df[, c("Species", "Key", "Subclass", "Order", "Name",
                        "Adult_mass", "Adult_mass_log10",
@@ -390,7 +410,8 @@ draw_figure_3 <- function(data_mass, fit_default, fit_females) {
   
   fig <- ggplot2::ggplot(data = data_mass, ggplot2::aes(y = females, x = default, shape = Subclass, fill = Subclass)) + 
     ggplot2::geom_point(alpha = 0.8, size = 2) +
-    ggplot2::geom_text(ggplot2::aes(y = females + 0.05, label = Name), data = data_mass[abs(data_mass$females - data_mass$default) > 0.2, ], size = 2) +
+    ggplot2::geom_text(ggplot2::aes(y = females + 0.05, label = Name), data = data_mass[(data_mass$females - data_mass$default) > 0.2, ], size = 2) +
+    ggplot2::geom_text(ggplot2::aes(y = females - 0.05, label = Name), data = data_mass[(data_mass$default - data_mass$females) > 0.2, ], size = 2) +
     ggplot2::geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
     ggplot2::scale_x_continuous(breaks = seq(-0.5, 4, by = 0.5), 
                                 labels = scales::number_format(accuracy = 0.1)) + 

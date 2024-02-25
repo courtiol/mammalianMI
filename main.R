@@ -26,11 +26,11 @@ MI_raw <- read.csv2("data/MI.csv", dec = ".", na.strings = "")
 
 ### Format the full dataset (see functions.R for details)
 MI_full <- prepare_df_MIfull(MI_raw)
-nrow(MI_full) # 1053
+nrow(MI_full) # 1040
 
 ### Prepare subsample with for comparison between subclasses
 MI_subclasses <- droplevels(MI_full[MI_full$Key %in% tree[["tip.label"]], ])
-nrow(MI_subclasses) # 811
+nrow(MI_subclasses) # 799
 str(MI_subclasses)
 
 ### Prepare subsample with for comparison between orders
@@ -38,19 +38,19 @@ orders_vs_N    <- aggregate(MI_subclasses[, "Key", drop = FALSE], list(Order = M
 orders_to_keep <- as.character(orders_vs_N$Order[orders_vs_N$Key >= 15])
 MI_orders <- droplevels(MI_subclasses[MI_subclasses$Order %in% orders_to_keep, ])
 sort(unique(MI_orders$Order))
-# [1] Carnivora       Cetartiodactyla Chiroptera      Dasyuromorphia  Didelphimorphia Diprotodontia   Eulipotyphla    Lagomorpha     
-# [9] Primates        Rodentia 
-nrow(MI_orders) # 768
+# [1] Carnivora       Cetartiodactyla Chiroptera      Dasyuromorphia  Diprotodontia   Eulipotyphla   
+# [7] Lagomorpha      Primates        Rodentia  
+nrow(MI_orders) # 756
 str(MI_orders)
 
 ### Prepare subsample with no missing data for modelling
 MI_models <- droplevels(MI_subclasses[!is.na(MI_subclasses$Investment_duration), ])
-nrow(MI_models) # 748
+nrow(MI_models) # 736
 str(MI_models)
 
 ### Prepare subsample with no missing data for mass proxy comparison
 MI_mass <- droplevels(MI_subclasses[!is.na(MI_subclasses$Male_adult_mass) & !is.na(MI_subclasses$Female_adult_mass), ])
-nrow(MI_mass) # 120
+nrow(MI_mass) # 108
 str(MI_mass)
 
 ### Prepare subsample for the 20 indicator species
@@ -82,9 +82,9 @@ plot(fit_SLR_models, ask = FALSE, which = "mean")    ## diagnostics (good!)
 plot(fit_SLR_models, ask = FALSE, which = "predict") ## diagnostics (good!)
 extract_fit_summary(fit_SLR_models)
 #              estimate  lower  upper
-# intercept      -0.198 -0.218 -0.178
-# 10^intercept    0.634  0.606  0.663
-# slope           0.781  0.768  0.794
+# intercept      -0.195 -0.215 -0.175
+# 10^intercept    0.638  0.610  0.668
+# slope           0.779  0.765  0.792
 compure_r2(fit_SLR_models)
 #    estimate lower upper    p
 # r2    0.948 0.970 0.977 0.00
@@ -109,10 +109,10 @@ plot(fit_PLMM_models, ask = FALSE, which = "predict") ## diagnostics (bad: resid
 plot(MI_models$Litter_mass_log10, predict(fit_PLMM_models, re.form = NA, type = "link")[, 1]) ## diagnostics, excluding ranef (good!)
 extract_fit_summary(fit_PLMM_models)
 #              estimate  lower upper
-# intercept      -0.225 -0.710 0.364 # CI OUTDATED waiting for fix in spaMM
-# 10^intercept    0.595  0.195  2.31 # CI OUTDATED waiting for fix in spaMM
-# slope           0.803  0.760 0.822 # CI OUTDATED waiting for fix in spaMM
-# lambda           1.00  0.999  1.00
+# intercept      -0.215 -0.710 0.364 # CI OUTDATED waiting for fix in spaMM
+# 10^intercept    0.610  0.195  2.31 # CI OUTDATED waiting for fix in spaMM
+# slope           0.807  0.760 0.822 # CI OUTDATED waiting for fix in spaMM
+# lambda           1.00  0.999  1.00 # CI OUTDATED
 compure_r2(fit_PLMM_models) ## same as above!
 #    estimate lower upper    p
 # r2    0.948 0.970 0.977 0.00
@@ -125,9 +125,9 @@ plot(fit_SMA_models, which = "residual") ## diagnostics (good!)
 plot(fit_SMA_models, which = "qq") ## diagnostics (ok)
 extract_fit_summary(fit_SMA_models)
 #              estimate  lower  upper
-# intercept      -0.192 -0.212 -0.173
-# 10^intercept    0.642  0.614  0.672
-# slope           0.802  0.789  0.815
+# intercept      -0.189 -0.209 -0.170
+# 10^intercept    0.646  0.618  0.677
+# slope           0.800  0.787  0.813
 compure_r2(fit_SMA_models)
 #    estimate lower upper    p
 # r2    0.987 0.992 0.994 0.00
@@ -140,9 +140,9 @@ plot(fit_MA_models, which = "residual") ## diagnostics (good!)
 plot(fit_MA_models, which = "qq") ## diagnostics (ok)
 extract_fit_summary(fit_MA_models)
 #              estimate  lower  upper
-# intercept      -0.194 -0.213 -0.174
-# 10^intercept    0.640  0.612  0.670
-# slope           0.797  0.784  0.811
+# intercept      -0.191 -0.211 -0.171
+# 10^intercept    0.645  0.616  0.675
+# slope           0.795  0.781  0.809
 compure_r2(fit_MA_models)
 #    estimate lower upper    p
 # r2    0.980 0.989 0.991 0.00
@@ -154,10 +154,10 @@ plot(fit_MSLR_models, ask = FALSE, which = "mean")    ## diagnostics (good!)
 plot(fit_MSLR_models, ask = FALSE, which = "predict") ## diagnostics (good!)
 extract_fit_summary(fit_MSLR_models)
 #              estimate   lower   upper
-# 10^intercept     4.80   3.39   6.80
-# intercept       0.681  0.530  0.832
-# slope           0.871  0.851  0.891
-# slope_InvDur   -0.407 -0.476 -0.337
+# intercept       0.672  0.519  0.826
+# 10^intercept     4.70   3.30   6.70
+# slope           0.869  0.849  0.889
+# slope_InvDur   -0.401 -0.472 -0.331
 compure_r2(fit_MSLR_models)
 #    estimate lower upper    p
 # r2    0.956 0.974 0.981 0.00
@@ -180,11 +180,11 @@ plot(fit_MPLMM_models, ask = FALSE, which = "predict") ## diagnostics (bad: resi
 plot(MI_models$Litter_mass_log10, predict(fit_MPLMM_models, re.form = NA, type = "link")[, 1]) ## diagnostics, excluding ranef (good!)
 extract_fit_summary(fit_MPLMM_models)
 #              estimate   lower upper
-# intercept       0.112  -1.18 0.0756 # OUTDATED waiting for fix in spaMM
-# 10^intercept     1.29 0.0657   1.19 # OUTDATED waiting for fix in spaMM
-# slope           0.828  0.726  0.801 # OUTDATED waiting for fix in spaMM
-# slope_InvDur   -0.170 0.0439  0.351 # OUTDATED waiting for fix in spaMM
-# lambda           1.00  0.999   1.00
+# intercept       0.173  -1.18 0.0756 # OUTDATED waiting for fix in spaMM
+# 10^intercept     1.49 0.0657   1.19 # OUTDATED waiting for fix in spaMM
+# slope           0.837  0.726  0.801 # OUTDATED waiting for fix in spaMM
+# slope_InvDur   -0.195 0.0439  0.351 # OUTDATED waiting for fix in spaMM
+# lambda           1.00  0.999   1.00 # OUTDATED
 compure_r2(fit_MPLMM_models)
 #    estimate lower upper    p
 # r2    0.953 0.973 0.980 0.00
@@ -220,32 +220,32 @@ corMI <- cor(MI_models[, c("MI_SLR", "MI_SMA", "MI_MA", "MI_MSLR")])
 diag(corMI) <- NA
 corMI
 range(corMI, na.rm = TRUE)
-# [1] 0.9159599 0.9996768
+# [1] 0.9187744 0.9996684
 
 quade.test(as.matrix(MI_models[, c("MI_SLR", "MI_SMA", "MI_MA", "MI_MSLR")]))
 # data:  as.matrix(MI_models[, c("MI_SLR", "MI_SMA", "MI_MA", "MI_MSLR")])
-# Quade F = 0.92467, num df = 3, denom df = 2241, p-value = 0.428
+# Quade F = 0.66567, num df = 3, denom df = 2205, p-value = 0.5731
 
 ## Comparison between phylogenetic and non-phylogenetic counterpart
 corMI <- cor(MI_models[, c("MI_PLMM", "MI_MPLMM", "MI_SLR", "MI_SMA", "MI_MA", "MI_MSLR")])
 diag(corMI) <- NA
 corMI
 range(corMI, na.rm = TRUE)
-# [1] 0.9135543 0.9997825
+# [1] 0.9134880 0.9996684
 
 univariate_phylo_test <- data.frame(LRT = unname(-2*(logLik(fit_SLR_models) - logLik(fit_PLMM_models))))
 univariate_phylo_test$df <- 1 ## that should be more than 1 since there are df for the residual model...
 univariate_phylo_test$p <- with(univariate_phylo_test, pchisq(LRT, df, lower.tail = FALSE))
 univariate_phylo_test
 #        LRT df           p
-# 1 932.2787  1 9.439609e-205
+# 1 932.2787  1 9.439609e-205 # OUTDATED and WRONG
 
 multivariate_phylo_test <- data.frame(LRT = unname(-2*(logLik(fit_MSLR_models) - logLik(fit_MPLMM_models))))
 multivariate_phylo_test$df <- 1 ## that should be more than 1 since there are df for the residual model...
 multivariate_phylo_test$p <- with(multivariate_phylo_test, pchisq(LRT, df, lower.tail = FALSE))
 multivariate_phylo_test
 #       LRT df             p
-# 1 810.2442  1 3.19747e-178
+# 1 810.2442  1 3.19747e-178 # OUTDATED and WRONG
 
 ## Comparison between the 2 PLMMs
 multivariatePLMM_phylo_test <- data.frame(LRT = unname(-2*(logLik(fit_PLMM_models) - logLik(fit_MPLMM_models))))
@@ -253,7 +253,7 @@ multivariatePLMM_phylo_test$df <- 1
 multivariatePLMM_phylo_test$p <- with(multivariatePLMM_phylo_test, pchisq(LRT, df, lower.tail = FALSE))
 multivariatePLMM_phylo_test
 #        LRT df p
-# -0.6251432  1 1 ## there is an issue here, I guess the residual models are too different
+# -0.6251432  1 1 ## OUTDATED and WRONG
 
 
 # Comparison of mass proxies ----------------------------------------------
@@ -281,7 +281,28 @@ MI_mass_long$Sex <- as.factor(MI_mass_long$Sex)
 MI_mass_long$Name <- as.factor(MI_mass_long$Name)
 
 quade.test(as.matrix(MI_mass[, c("MI_default", "MI_females", "MI_males")]))
-# Quade F = 6.0603, num df = 2, denom df = 238, p-value = 0.002709
+# Quade F = 1.6138, num df = 2, denom df = 214, p-value = 0.2015
+
+## Percentage of species for which difference between estimates is < 0.1
+100*mean(abs(MI_mass$MI_females - MI_mass$MI_default) < 0.1)
+# [1] 87.03704
+
+
+# Figure 2 ----------------------------------------------------------------
+
+draw_figure_2(data_mass = MI_mass, fit_default = fit_PLMM_mass_default, fit_males = fit_PLMM_mass_males, fit_females = fit_PLMM_mass_females)
+ggplot2::ggsave(filename = "figures/Fig2.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
+ggplot2::ggsave(filename = "figures/Fig2.png", scale = 1.2, width = 15, height = 10, units = "cm")
+
+draw_figure_x(data_mass = MI_mass, fit_default = fit_PLMM_mass_default, fit_males = fit_PLMM_mass_males, fit_females = fit_PLMM_mass_females)
+
+draw_figure_3(data_mass = MI_mass, fit_default = fit_PLMM_mass_default, fit_females = fit_PLMM_mass_females)
+ggplot2::ggsave(filename = "figures/Fig3.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
+ggplot2::ggsave(filename = "figures/Fig3.png", scale = 1.2, width = 15, height = 10, units = "cm")
+
+
+
+# Left over (to probably delete in the end) -------------------------------
 
 coin::wilcoxsign_test(MI_mass$MI_default ~ MI_mass$MI_default_full)
 coin::wilcoxsign_test(MI_mass$MI_females ~ MI_mass$MI_males)
@@ -298,16 +319,3 @@ rbind(default = pretty(c(summary(MI_mass$MI_default), sd = sd(MI_mass$MI_default
       default_full = pretty(c(summary(MI_mass$MI_default_full), sd = sd(MI_mass$MI_default_full))),
       males   = pretty(c(summary(MI_mass$MI_males),   sd = sd(MI_mass$MI_males))),
       females = pretty(c(summary(MI_mass$MI_females), sd = sd(MI_mass$MI_females))))
-
-# Figure 2 ----------------------------------------------------------------
-
-draw_figure_2(data_mass = MI_mass, fit_default = fit_PLMM_mass_default, fit_males = fit_PLMM_mass_males, fit_females = fit_PLMM_mass_females)
-ggplot2::ggsave(filename = "figures/Fig2.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
-ggplot2::ggsave(filename = "figures/Fig2.png", scale = 1.2, width = 15, height = 10, units = "cm")
-
-draw_figure_x(data_mass = MI_mass, fit_default = fit_PLMM_mass_default, fit_males = fit_PLMM_mass_males, fit_females = fit_PLMM_mass_females)
-
-draw_figure_3(data_mass = MI_mass, fit_default = fit_PLMM_mass_default, fit_females = fit_PLMM_mass_females)
-ggplot2::ggsave(filename = "figures/Fig3.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
-ggplot2::ggsave(filename = "figures/Fig3.png", scale = 1.2, width = 15, height = 10, units = "cm")
-
