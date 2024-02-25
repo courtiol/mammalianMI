@@ -106,10 +106,10 @@ fitme_phylo_lambdafixed <- function(lambda = 1, tree, data, cor_fn = ape::corPag
 fitme_phylo_lambdafree <- function(tree, data, cor_fn = ape::corPagel, ...) {
   message("Fitting the P(G)LMM... be patient")
   best_lambda <- optimize(fitme_phylo_lambdafixed, interval = c(0, 1), maximum = TRUE,
-                          fixed = list(phi = 1e-5), tree = tree, data = data, return.fit = FALSE, ...)
+                          tree = tree, data = data, return.fit = FALSE, ...)
   message(paste("estimated lambda =", round(best_lambda$maximum, digits = 3)))
   fit <- fitme_phylo_lambdafixed(lambda = best_lambda$maximum, tree = tree, data = data,
-                                 cor_fn = cor_fn, return.fit = TRUE, fixed = list(phi = 1e-5), ...)
+                                 cor_fn = cor_fn, return.fit = TRUE, ...)
   fit
 }
 
@@ -117,17 +117,35 @@ fitme_phylo_lambdafree <- function(tree, data, cor_fn = ape::corPagel, ...) {
 
 confint_lambda <- function(bestfit) {
   lambda_ref <- bestfit$phylo$lambda
-  CI_fit <- function(x, ...) abs(fitme_phylo_lambdafixed(lambda = x, ...) - (logLik(bestfit) - qchisq(0.95, df = 1)/2)) ## asymptotic
+  CI_fit <- function(x, ...) {
+    message(paste("optimise for Pagel's Lambda =", x))
+    abs(fitme_phylo_lambdafixed(lambda = x, ...) - (logLik(bestfit) - qchisq(0.95, df = 1)/2)) ## asymptotic
+  }
   
-  message("Estimating lower boundary for lambda... be patient")
-  lambda_lwr <- optimize(CI_fit, interval = c(0, lambda_ref),
-                         formula = formula(bestfit), tree = bestfit$phylo$tree, data = bestfit$data, cor_fn = bestfit$phylo$cor_fn,
-                         fixed = list(phi = 1e-5), return.fit = FALSE)$minimum
-  
+  if (is.null(bestfit$residModel)) {
+      fixed <- list(phi = 1e-5)
+    } else {
+      fixed <- list()
+      bestfit$residModel$family <- NULL # to avoid bug in spaMM 
+    }
+
   message("Estimating upper boundary for lambda... be patient")
+  if (lambda_ref == 1) {
+    lambda_upr <- 1 ## no estimation needed since estimate already at parameter boundary
+  } else {
   lambda_upr <- optimize(CI_fit, interval = c(lambda_ref, 1),
                          formula = formula(bestfit), tree = bestfit$phylo$tree, data = bestfit$data, cor_fn = bestfit$phylo$cor_fn,
-                         fixed = list(phi = 1e-5), return.fit = FALSE)$minimum
+                         resid.model = bestfit$residModel, fixed = fixed, return.fit = FALSE)$minimum
+  }
+    
+  message("Estimating lower boundary for lambda... be patient")
+  if (lambda_ref == 0) {
+    lambda_lwr <- 0 ## no estimation needed since estimate already at parameter boundary
+  } else {
+    lambda_lwr <- optimize(CI_fit, interval = c(0, lambda_ref),
+                           formula = formula(bestfit), tree = bestfit$phylo$tree, data = bestfit$data, cor_fn = bestfit$phylo$cor_fn,
+                           resid.model = bestfit$residModel, fixed = fixed, return.fit = FALSE)$minimum
+  }
   
   c(estimate = lambda_ref, lower = lambda_lwr, upper = lambda_upr)
 }
@@ -141,7 +159,10 @@ confint_lambda <- function(bestfit) {
 extract_fit_summary <- function(fit, digits = 3) {
 
   if (inherits(fit, what = "HLfit")) {
-    if (!is.null(fit$phylo)) corM <<- fit$phylo$corM ## to circumvent spaMM scoping issue in confint()
+    if (!is.null(fit$phylo)) {
+      corM <<- fit$phylo$corM ## to circumvent spaMM scoping issue in confint()
+      message("Estimating CI for fixed effects... be patient")
+    }
     intercept <- c(estimate = fixef(fit)["(Intercept)"][[1]],
                    confint(fit, parm = "(Intercept)", verbose = FALSE)$interval)
     intercept_transformed <- c(estimate = 10^fixef(fit)["(Intercept)"][[1]],
@@ -195,10 +216,10 @@ compure_r2 <- function(fit, digits = 3) {
   }
   
   cor_res <- cor.test(pred, obs)
-  stats <- data.frame(estimate = round(cor_res$estimate^2, digits = digits),
-                      lower = round(cor_res$conf.int[1][[1]], digits = digits),
-                      upper = round(cor_res$conf.int[2][[1]], digits = digits),
-                      p = signif(cor_res$p.value, digits = digits))
+  stats <- data.frame(estimate = sprintf('%#.3g', signif(cor_res$estimate^2, digits = digits)),
+                      lower = sprintf('%#.3g', signif(cor_res$conf.int[1][[1]], digits = digits)),
+                      upper = sprintf('%#.3g', signif(cor_res$conf.int[2][[1]], digits = digits)),
+                      p = sprintf('%#.3g', signif(cor_res$p.value, digits = digits)))
   rownames(stats) <- "r2"
   stats
 }
