@@ -1,7 +1,13 @@
 
 # Nice display ------------------------------------------------------------
 
-pretty <- function(x, digits = 3) sprintf('%#.3g', signif(x, digits = digits))
+pretty <- function(x, digits = 3) {
+  names <- names(x)
+  format <- paste0("%#.", digits, "g")
+  res <- sprintf(format, signif(x, digits = digits))
+  names(res) <- names
+  res
+}
 
 
 # Check dependencies ------------------------------------------------------
@@ -28,13 +34,15 @@ check_dependencies_all <- function(pkgs) {
 
 ## This function prepares the data containing information required to compute the Maternal Investment metrics
 
-## It produces a dataset with 12 columns:
+## It produces a dataset with 14 columns:
 ## - Key: a key based on the taxonomy which is used to match the tips in the phylogenetic tree
 ## - Subclass: the mammalian subclass
 ## - Order: the mammalian order
 ## - Name: the vernacular name for the species
 ## - Adult_mass: the adult mass for the species, in kg
 ## - Adult_mass_log10: the log (base 10) adult mass for the species
+## - Male_adult_mass: the feamle adult mass for the species, in kg
+## - Male_adult_mass_log10: the log (base 10) female adult mass for the species
 ## - Female_adult_mass: the feamle adult mass for the species, in kg
 ## - Female_adult_mass_log10: the log (base 10) female adult mass for the species
 ## - Litter_mass: the mass of the litter at weaning age, in kg
@@ -51,11 +59,13 @@ prepare_df_MIfull <- function(raw_df) {
   ## Compute derived columns
   ### Note: all masses are ultimately expressed in kg and duration in days
   raw_df$Adult_mass   <- raw_df$Adult_mass_g/1000
+  raw_df$Male_adult_mass   <- raw_df$Male_adult_mass_g/1000
   raw_df$Female_adult_mass   <- raw_df$Female_adult_mass_g/1000
   raw_df$Weaning_mass <- raw_df$Weaning_mass_g/1000
   raw_df$Litter_mass <- raw_df$Weaning_mass*raw_df$Litter.Clutch.size
   raw_df$Investment_duration <- raw_df$Gestation_days + raw_df$Lactation_days
   raw_df$Adult_mass_log10 <- log(raw_df$Adult_mass, base = 10)
+  raw_df$Male_adult_mass_log10 <- log(raw_df$Male_adult_mass, base = 10)
   raw_df$Female_adult_mass_log10 <- log(raw_df$Female_adult_mass, base = 10)
   raw_df$Litter_mass_log10 <- log(raw_df$Litter_mass, base = 10)
   raw_df$Investment_duration_log10 <-  log(raw_df$Investment_duration, base = 10)
@@ -69,12 +79,13 @@ prepare_df_MIfull <- function(raw_df) {
   ## Reorder and select columns
   raw_df <- raw_df[, c("Key", "Subclass", "Order", "Name",
                        "Adult_mass", "Adult_mass_log10",
+                       "Male_adult_mass", "Male_adult_mass_log10",
                        "Female_adult_mass", "Female_adult_mass_log10",
                        "Litter_mass", "Litter_mass_log10",
                        "Investment_duration", "Investment_duration_log10")]
   
   ## Drop row for which critical information is missing
-  raw_df <- raw_df[!is.na(raw_df$Adult_mass) & !is.na(raw_df$Litter_mass), ]
+  raw_df <- raw_df[!is.na(raw_df$Litter_mass) & !is.na(raw_df$Adult_mass), ]
   
   ## Final cleaning
   raw_df <- droplevels(raw_df)
@@ -253,10 +264,108 @@ draw_figure_1 <- function(data_models, fit_SLR, fit_PLMM, fit_SMA, fit_MA, fit_M
     ggplot2::geom_point(ggplot2::aes(shape = Subclass, fill = Subclass), alpha = 0.3, size = 2) +
     ggplot2::geom_line(ggplot2::aes(y = Predict, x = Adult_mass, colour = Model), data = data_pred,
                        linewidth = 0.7, alpha = 0.8, inherit.aes = FALSE) +
-    ggplot2::xlab('Adult mass (kg)') +
-    ggplot2::ylab('Litter mass at weaning age (kg)') +
+    gggplot2::labs(x = 'Adult mass (kg)', y = 'Litter mass at weaning age (kg)') +
     ggplot2::theme_classic() +
     ggplot2::theme(legend.position = "right")
     
     print(fig)
-  }
+}
+
+## This function draws figure 2
+
+draw_figure_2 <- function(data_mass, fit_default, fit_males, fit_females) {
+  data_pred <- data.frame(Adult_mass = c(0.001, 1e4),
+                          Adult_mass_log10 = log(c(0.001, 1e4), base = 10),
+                          Male_adult_mass = c(0.001, 1e4),
+                          Male_adult_mass_log10 = log(c(0.001, 1e4), base = 10),
+                          Female_adult_mass = c(0.001, 1e4),
+                          Female_adult_mass_log10 = log(c(0.001, 1e4), base = 10))
+  
+  data_pred$default <- 10^(predict(fit_default, newdata = data_pred, re.form = NA)[, 1])
+  data_pred$males   <- 10^(predict(fit_males, newdata = data_pred, re.form = NA)[, 1])
+  data_pred$females <- 10^(predict(fit_females, newdata = data_pred, re.form = NA)[, 1])
+  
+  data_pred <- tidyr::pivot_longer(data_pred, cols = default:females, names_to = "Sex", values_to = "Predict")
+  data_pred$Sex <- factor(data_pred$Sex, levels = c("default", "males", "females"))
+  
+  fig <- ggplot2::ggplot(data = data_mass, ggplot2::aes(x = Adult_mass, y = Litter_mass)) + 
+    ggplot2::scale_x_continuous(trans = "log10", breaks = c(0.1, 1, 10, 100, 1000, 10000, 100000), 
+                                labels = scales::number_format(accuracy = 0.1), expand = c(0, 0)) + 
+    ggplot2::scale_y_continuous(trans = "log10",
+                                breaks = c(0.1, 1, 10, 100, 1000, 10000),
+                                labels = scales::number_format(accuracy = 0.1), expand = c(0, 0)) +
+    ggplot2::scale_shape_manual(values = 21:23) +
+    ggplot2::scale_fill_manual(values = c("steelblue", "darkred", "#FCC501")) +
+    ggplot2::scale_color_viridis_d() +
+    ggplot2::geom_point(ggplot2::aes(shape = Subclass, fill = Subclass), alpha = 0.3, size = 2) +
+    ggplot2::geom_line(ggplot2::aes(y = Predict, x = Adult_mass, colour = Sex), data = data_pred,
+                       linewidth = 0.7, alpha = 0.8, inherit.aes = FALSE) +
+    ggplot2::labs(x = 'Adult mass (kg)', y = 'Litter mass at weaning age (kg)', colour = 'Source for body mass') +
+    ggplot2::theme_classic() +
+    ggplot2::theme(legend.position = "right")
+  
+  print(fig)
+}
+
+draw_figure_2bis <- function(data_mass, fit_default, fit_default_full, fit_males, fit_females) {
+  data_pred <- data.frame(Adult_mass = c(0.001, 1e4),
+                          Adult_mass_log10 = log(c(0.001, 1e4), base = 10),
+                          Male_adult_mass = c(0.001, 1e4),
+                          Male_adult_mass_log10 = log(c(0.001, 1e4), base = 10),
+                          Female_adult_mass = c(0.001, 1e4),
+                          Female_adult_mass_log10 = log(c(0.001, 1e4), base = 10))
+  
+  data_pred$default <- 10^(predict(fit_default, newdata = data_pred, re.form = NA)[, 1])
+  data_pred$`default (larger dataset)` <- 10^(predict(fit_default_full, newdata = data_pred, re.form = NA)[, 1])
+  data_pred$males   <- 10^(predict(fit_males, newdata = data_pred, re.form = NA)[, 1])
+  data_pred$females <- 10^(predict(fit_females, newdata = data_pred, re.form = NA)[, 1])
+
+  data_pred <- tidyr::pivot_longer(data_pred, cols = default:females, names_to = "Sex", values_to = "Predict")
+  data_pred$Sex <- factor(data_pred$Sex, levels = c("default (larger dataset)", "default", "males", "females"))
+  
+  fig <- ggplot2::ggplot(data = data_mass, ggplot2::aes(x = Adult_mass, y = Litter_mass)) + 
+    ggplot2::scale_x_continuous(trans = "log10", breaks = c(0.1, 1, 10, 100, 1000, 10000, 100000), 
+                                labels = scales::number_format(accuracy = 0.1), expand = c(0, 0)) + 
+    ggplot2::scale_y_continuous(trans = "log10",
+                                breaks = c(0.1, 1, 10, 100, 1000, 10000),
+                                labels = scales::number_format(accuracy = 0.1), expand = c(0, 0)) +
+    ggplot2::scale_shape_manual(values = 21:23) +
+    ggplot2::scale_fill_manual(values = c("steelblue", "darkred", "#FCC501")) +
+    ggplot2::scale_color_viridis_d() +
+    ggplot2::geom_point(ggplot2::aes(shape = Subclass, fill = Subclass), alpha = 0.3, size = 2) +
+    ggplot2::geom_line(ggplot2::aes(y = Predict, x = Adult_mass, colour = Sex), data = data_pred,
+                       linewidth = 0.7, alpha = 0.8, inherit.aes = FALSE) +
+    ggplot2::labs(x = 'Adult mass (kg)', y = 'Litter mass at weaning age (kg)', colour = 'Source for body mass') +
+    ggplot2::theme_classic() +
+    ggplot2::theme(legend.position = "right")
+  
+  print(fig)
+}
+
+## This function draws figure 3
+
+draw_figure_3 <- function(data_mass, fit_default, fit_males, fit_females) {
+
+  data_mass$default <- data_mass$Litter_mass_log10 - predict(fit_default, re.form = NA, type = "link")[, 1]
+  data_mass$males   <- data_mass$Litter_mass_log10 - predict(fit_males, re.form = NA, type = "link")[, 1]
+  data_mass$females <- data_mass$Litter_mass_log10 - predict(fit_females, re.form = NA, type = "link")[, 1]
+  
+  data_pred <- tidyr::pivot_longer(data_mass, cols = default:females, names_to = "Sex", values_to = "Predict")
+  data_pred$Sex <- factor(data_pred$Sex, levels = c("default", "males", "females"))
+  
+  fig <- ggplot2::ggplot(data = data_pred, ggplot2::aes(x = Adult_mass, y = Predict, shape = Subclass, fill = Sex)) + 
+    ggplot2::geom_point(alpha = 0.8, size = 2) +
+    ggplot2::geom_text(ggplot2::aes(y = Predict + 0.2, label = Name), data = data_pred[data_pred$Predict > 1, ]) +
+    ggplot2::scale_x_continuous(trans = "log10", breaks = c(0.1, 1, 10, 100, 1000, 10000, 100000), 
+                                labels = scales::number_format(accuracy = 0.1), expand = c(0.1, 0.1)) + 
+    ggplot2::scale_y_continuous(breaks = seq(-0.5, 4, by = 0.5),
+                                labels = scales::number_format(accuracy = 0.1)) +
+    ggplot2::scale_shape_manual(values = 21:23) +
+    ggplot2::scale_fill_manual(values = c("grey", "#1fc3aa", "#8624f5")) +
+    ggplot2::guides(fill = ggplot2::guide_legend(override.aes = list(shape = 21))) +
+    ggplot2::labs(x = 'Adult mass (kg)', y = 'Maternal investment metric (MI)', fill = 'Source for body mass') +
+    ggplot2::theme_classic() +
+    ggplot2::theme(legend.position = "right")
+  
+  print(fig)
+}

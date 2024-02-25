@@ -3,12 +3,14 @@
 source("functions.R")
 
 # Checking dependencies ---------------------------------------------------
-check_dependencies_all(c("ape", "ggplot2", "nlme", "scales", "smatr", "spaMM", "tidyr"))
+check_dependencies_all(c("ape", "coin", "ggplot2", "nlme", "scales", "smatr", "spaMM", "tidyr"))
 
 
 # Load dependencies -------------------------------------------------------
+library(coin)
 library(spaMM)
 library(smatr)
+library(tidyr)
 
 
 # Data preparation --------------------------------------------------------
@@ -45,6 +47,11 @@ str(MI_orders)
 MI_models <- droplevels(MI_subclasses[!is.na(MI_subclasses$Investment_duration), ])
 nrow(MI_models) # 750
 str(MI_models)
+
+### Prepare subsample with no missing data for mass proxy comparison
+MI_mass <- droplevels(MI_subclasses[!is.na(MI_subclasses$Male_adult_mass) & !is.na(MI_subclasses$Female_adult_mass), ])
+nrow(MI_mass) # 121
+str(MI_mass)
 
 ### Prepare subsample for the 20 indicator species
 indicator_species <- c("Tailless tenrec", "Red fox", "Blue whale", "Eurasian shrew",
@@ -249,5 +256,54 @@ multivariatePLMM_phylo_test
 # 1 3.645015  1 0.05623729
 
 
+# Comparison of mass proxies ----------------------------------------------
 
+fit_PLMM_mass_default <- fitme_phylo_lambdafixed(lambda = 1, formula = Litter_mass_log10 ~ Adult_mass_log10 + corrMatrix(1|Key),
+                                                 resid.model =  ~ Adult_mass_log10 + (1|Key),
+                                                 data = MI_mass, tree = tree)
 
+fit_PLMM_mass_males <- fitme_phylo_lambdafixed(lambda = 1, formula = Litter_mass_log10 ~ Male_adult_mass_log10 + corrMatrix(1|Key),
+                                               resid.model =  ~ Male_adult_mass_log10 + (1|Key),
+                                               data = MI_mass, tree = tree)
+
+fit_PLMM_mass_females <- fitme_phylo_lambdafixed(lambda = 1, formula = Litter_mass_log10 ~ Female_adult_mass_log10 + corrMatrix(1|Key),
+                                                 resid.model =  ~ Female_adult_mass_log10 + (1|Key),
+                                                 data = MI_mass, tree = tree)
+
+MI_mass$MI_default  <- MI_mass$Litter_mass_log10 - predict(fit_PLMM_mass_default, re.form = NA, type = "link")[, 1]
+MI_mass$MI_default_full  <- MI_mass$Litter_mass_log10 - predict(fit_PLMM_models, newdata = MI_mass, re.form = NA, type = "link")[, 1]
+MI_mass$MI_females  <- MI_mass$Litter_mass_log10 - predict(fit_PLMM_mass_females, re.form = NA, type = "link")[, 1]
+MI_mass$MI_males    <- MI_mass$Litter_mass_log10 - predict(fit_PLMM_mass_males, re.form = NA, type = "link")[, 1]
+
+MI_mass_long <- as.data.frame(pivot_longer(MI_mass, cols = c("MI_default", "MI_females", "MI_males"), names_to = "Sex", values_to = "MI"))
+MI_mass_long$Sex <- as.factor(MI_mass_long$Sex)
+MI_mass_long$Name <- as.factor(MI_mass_long$Name)
+
+quade.test(as.matrix(MI_mass[, c("MI_default", "MI_females", "MI_males")]))
+
+coin::wilcoxsign_test(MI_mass$MI_default ~ MI_mass$MI_default_full)
+coin::wilcoxsign_test(MI_mass$MI_females ~ MI_mass$MI_males)
+coin::wilcoxsign_test(MI_mass$MI_females ~ MI_mass$MI_default)
+coin::wilcoxsign_test(MI_mass$MI_females ~ MI_mass$MI_default_full)
+coin::wilcoxsign_test(MI_mass$MI_males ~ MI_mass$MI_default)
+coin::wilcoxsign_test(MI_mass$MI_males ~ MI_mass$MI_default_full)
+
+rbind(default = pretty(c(summary(MI_mass$Adult_mass_log10), sd = sd(MI_mass$Adult_mass_log10))),
+      default = pretty(c(summary(MI_models$Adult_mass_log10), sd = sd(MI_models$Adult_mass_log10))),
+      males   = pretty(c(summary(MI_mass$Male_adult_mass_log10),   sd = sd(MI_mass$Male_adult_mass_log10))),
+      females = pretty(c(summary(MI_mass$Female_adult_mass_log10), sd = sd(MI_mass$Female_adult_mass_log10))))
+
+rbind(default = pretty(c(summary(MI_mass$MI_default), sd = sd(MI_mass$MI_default))),
+      default_full = pretty(c(summary(MI_mass$MI_default_full), sd = sd(MI_mass$MI_default_full))),
+      males   = pretty(c(summary(MI_mass$MI_males),   sd = sd(MI_mass$MI_males))),
+      females = pretty(c(summary(MI_mass$MI_females), sd = sd(MI_mass$MI_females))))
+
+# Figure 2 ----------------------------------------------------------------
+
+draw_figure_2(data_mass = MI_mass, fit_default = fit_PLMM_mass_default, fit_males = fit_PLMM_mass_males, fit_females = fit_PLMM_mass_females)
+ggplot2::ggsave(filename = "figures/Fig2.pdf", scale = 0.6)
+ggplot2::ggsave(filename = "figures/Fig2.png", scale = 0.6)
+
+draw_figure_3(data_mass = MI_mass, fit_default = fit_PLMM_mass_default, fit_males = fit_PLMM_mass_males, fit_females = fit_PLMM_mass_females)
+ggplot2::ggsave(filename = "figures/Fig3.pdf", scale = 0.6)
+ggplot2::ggsave(filename = "figures/Fig3.png", scale = 0.6)
