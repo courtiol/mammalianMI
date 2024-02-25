@@ -1,4 +1,9 @@
 
+# Nice display ------------------------------------------------------------
+
+pretty <- function(x, digits = 3) sprintf('%#.3g', signif(x, digits = digits))
+
+
 # Check dependencies ------------------------------------------------------
 
 ## This function checks that all the package dependencies are met
@@ -23,14 +28,19 @@ check_dependencies_all <- function(pkgs) {
 
 ## This function prepares the data containing information required to compute the Maternal Investment metrics
 
-## It produces a dataset with 7 columns:
+## It produces a dataset with 12 columns:
 ## - Key: a key based on the taxonomy which is used to match the tips in the phylogenetic tree
 ## - Subclass: the mammalian subclass
 ## - Order: the mammalian order
 ## - Name: the vernacular name for the species
 ## - Adult_mass: the adult mass for the species, in kg
+## - Adult_mass_log10: the log (base 10) adult mass for the species
+## - Female_adult_mass: the feamle adult mass for the species, in kg
+## - Female_adult_mass_log10: the log (base 10) female adult mass for the species
 ## - Litter_mass: the mass of the litter at weaning age, in kg
+## - Litter_mass_log10: the log (base 10) mass of the litter at weaning age
 ## - Investment_duration: the duration of maternal investment (gestation + lactation), in days
+## - Investment_duration_log10: the log (base 10) duration of maternal investment (gestation + lactation)
 
 prepare_df_MIfull <- function(raw_df) {
   
@@ -41,10 +51,12 @@ prepare_df_MIfull <- function(raw_df) {
   ## Compute derived columns
   ### Note: all masses are ultimately expressed in kg and duration in days
   raw_df$Adult_mass   <- raw_df$Adult_mass_g/1000
+  raw_df$Female_adult_mass   <- raw_df$Female_adult_mass_g/1000
   raw_df$Weaning_mass <- raw_df$Weaning_mass_g/1000
   raw_df$Litter_mass <- raw_df$Weaning_mass*raw_df$Litter.Clutch.size
   raw_df$Investment_duration <- raw_df$Gestation_days + raw_df$Lactation_days
   raw_df$Adult_mass_log10 <- log(raw_df$Adult_mass, base = 10)
+  raw_df$Female_adult_mass_log10 <- log(raw_df$Female_adult_mass, base = 10)
   raw_df$Litter_mass_log10 <- log(raw_df$Litter_mass, base = 10)
   raw_df$Investment_duration_log10 <-  log(raw_df$Investment_duration, base = 10)
   
@@ -54,26 +66,10 @@ prepare_df_MIfull <- function(raw_df) {
   raw_df$Key      <- as.factor(raw_df$Key)
   raw_df$Name     <- as.factor(raw_df$Name)
   
-  ## Remove columns not needed
-  raw_df$Kingdom            <- NULL
-  raw_df$Phylum             <- NULL
-  raw_df$Class              <- NULL
-  raw_df$Family             <- NULL
-  raw_df$Genus              <- NULL
-  raw_df$Species            <- NULL
-  raw_df$OrderC             <- NULL
-  raw_df$FamilyC            <- NULL
-  raw_df$Common.name        <- NULL
-  raw_df$Adult_mass_g       <- NULL
-  raw_df$Weaning_mass_g     <- NULL
-  raw_df$Weaning_mass       <- NULL
-  raw_df$Gestation_days     <- NULL
-  raw_df$Lactation_days     <- NULL
-  raw_df$Litter.Clutch.size <- NULL
-  
-  ## Reorder columns
+  ## Reorder and select columns
   raw_df <- raw_df[, c("Key", "Subclass", "Order", "Name",
                        "Adult_mass", "Adult_mass_log10",
+                       "Female_adult_mass", "Female_adult_mass_log10",
                        "Litter_mass", "Litter_mass_log10",
                        "Investment_duration", "Investment_duration_log10")]
   
@@ -192,7 +188,7 @@ extract_fit_summary <- function(fit, digits = 3) {
   
   rownames(stats)[rownames(stats) == "intercept_transformed"] <- "10^intercept"
   rows <- rownames(stats)
-  res <- do.call("data.frame", lapply(as.data.frame(stats), \(x) sprintf('%#.3g', signif(x, digits = digits))))
+  res <- do.call("data.frame", lapply(as.data.frame(stats), \(x) pretty(x, digits = digits)))
   rownames(res) <- rows
   res
 }
@@ -216,10 +212,10 @@ compure_r2 <- function(fit, digits = 3) {
   }
   
   cor_res <- cor.test(pred, obs)
-  stats <- data.frame(estimate = sprintf('%#.3g', signif(cor_res$estimate^2, digits = digits)),
-                      lower = sprintf('%#.3g', signif(cor_res$conf.int[1][[1]], digits = digits)),
-                      upper = sprintf('%#.3g', signif(cor_res$conf.int[2][[1]], digits = digits)),
-                      p = sprintf('%#.3g', signif(cor_res$p.value, digits = digits)))
+  stats <- data.frame(estimate = pretty(cor_res$estimate^2, digits = digits),
+                      lower = pretty(cor_res$conf.int[1][[1]], digits = digits),
+                      upper = pretty(cor_res$conf.int[2][[1]], digits = digits),
+                      p = pretty(cor_res$p.value, digits = digits))
   rownames(stats) <- "r2"
   stats
 }
