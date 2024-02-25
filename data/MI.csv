@@ -414,7 +414,7 @@ Animalia;Chordata;Mammalia;Eutheria;Carnivora;Mustelidae;Aonyx;capensis;African 
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Mustelidae;Aonyx;cinerea;Oriental Small-clawed Otter;63.00126;81;1.47; ;3000;CARNIVORA;MUSTELIDAE;Aonyx_cinerea_MUSTELIDAE_CARNIVORA; ; ;3100
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Mustelidae;Arctonyx;collaris;Hog Badger;42.89;104.09112;3; ;10500;CARNIVORA;MUSTELIDAE;Arctonyx_collaris_MUSTELIDAE_CARNIVORA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Mustelidae;Eira;barbara;Tayra;66.65484;82.48156;2;1707.5;4134.99;CARNIVORA;MUSTELIDAE;Eira_barbara_MUSTELIDAE_CARNIVORA; ; ;2950
-Animalia;Chordata;Mammalia;Eutheria;Carnivora;Mustelidae;Enhydra;lutris;Sea Otter;216.0956;175.30786;1;12540.745;943.25;CARNIVORA;MUSTELIDAE;Enhydra_lutris_MUSTELIDAE_CARNIVORA;21500;32800;13886.65
+Animalia;Chordata;Mammalia;Eutheria;Carnivora;Mustelidae;Enhydra;lutris;Sea Otter;216.0956;175.30786;1;12540.745;24500;CARNIVORA;MUSTELIDAE;Enhydra_lutris_MUSTELIDAE_CARNIVORA;20000;29000;13886.65
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Mustelidae;Galictis;cuja;Lesser Grison; ; ;3.5; ;1000;CARNIVORA;MUSTELIDAE;Galictis_cuja_MUSTELIDAE_CARNIVORA; ;1225;1625
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Mustelidae;Galictis;vittata;Greater Grison;39.5668; ;2; ;2325;CARNIVORA;MUSTELIDAE;Galictis_vittata_MUSTELIDAE_CARNIVORA; ; ;2629
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Mustelidae;Gulo;gulo;Wolverine;51.4381075;83.64;2.84; ;12792.49;CARNIVORA;MUSTELIDAE;Gulo_gulo_MUSTELIDAE_CARNIVORA; ;14500;12700
@@ -470,7 +470,7 @@ Animalia;Chordata;Mammalia;Eutheria;Carnivora;Mustelidae;Pteronura;brasiliensis;
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Mustelidae;Taxidea;taxus;American Badger;43.8;51.13248;3;3000;8000;CARNIVORA;MUSTELIDAE;Taxidea_taxus_MUSTELIDAE_CARNIVORA; ; ;9000
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Mustelidae;Vormela;peregusna;Marbled Polecat;60.872;30.218;5.76; ;542.5;CARNIVORA;MUSTELIDAE;Vormela_peregusna_MUSTELIDAE_CARNIVORA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Nandiniidae;Nandinia;binotata;African Palm Civet;64.82868;64;2; ;2167.2;CARNIVORA;NANDINIIDAE;Nandinia_binotata_NANDINIIDAE_CARNIVORA; ; ;4270
-Animalia;Chordata;Mammalia;Eutheria;Carnivora;Odobenidae;Odobenus;rosmarus;Walrus;353.702;669.99066;1.18;200000;846498.125;CARNIVORA;ODOBENIDAE;Odobenus_rosmarus_ODOBENIDAE_CARNIVORA;6.4;110.6; 
+Animalia;Chordata;Mammalia;Eutheria;Carnivora;Odobenidae;Odobenus;rosmarus;Walrus;353.702;669.99066;1.18;200000;1200000;CARNIVORA;ODOBENIDAE;Odobenus_rosmarus_ODOBENIDAE_CARNIVORA;900000;1500000; 
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Otariidae;Arctocephalus;australis;South American Fur Seal;241.19;387.943;1;18583.3;67979.43;CARNIVORA;OTARIIDAE;Arctocephalus_australis_OTARIIDAE_CARNIVORA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Otariidae;Arctocephalus;forsteri;Australasian Fur Seal;239.235;360;1;15417.255;67979.43;CARNIVORA;OTARIIDAE;Arctocephalus_forsteri_OTARIIDAE_CARNIVORA; ; ; 
 Animalia;Chordata;Mammalia;Eutheria;Carnivora;Otariidae;Arctocephalus;galapagoensis;Galapagos Fur Seal;235.9395;458.1188;1;15000;45000;CARNIVORA;OTARIIDAE;Arctocephalus_galapagoensis_OTARIIDAE_CARNIVORA; ; ; 
@@ -1811,7 +1811,7 @@ Animalia;Chordata;Mammalia;Metatheria;Didelphimorphia;Didelphidae;Lestodelphys;h
 Animalia;Chordata;Mammalia;Metatheria;Didelphimorphia;Didelphidae;Lutreolina;crassicaudata;Lutrine Opossum;14;91.32;8; ;450;DIDELPHIMORPHIA;DIDELPHIDAE;Lutreolina_crassicaudata_DIDELPHIDAE_DIDELPHIMORPHIA;490.4;661.75;540
 Animalia;Chordata;Mammalia;Metatheria;Didelphimorphia;Didelphidae;Marmosa;andersoni;Heavy-browed Mouse Opossum; ; ;9; ;33;DIDELPHIMORPHIA;DIDELPHIDAE;Marmosa_andersoni_DIDELPHIDAE_DIDELPHIMORPHIA; ; ; 
 Animalia;Chordata;Mammalia;Metatheria;Didelphimorphia;Didelphidae;Marmosa;lepida;Rufous Mouse Opossum; ; ;5; ;16;DIDELPHIMORPHIA;DIDELPHIDAE;Marmosa_lepida_DIDELPHIDAE_DIDELPHIMORPHIA; ; ; 
-Animalia;Chordata;Mammalia;Metatheria;Didelphimorphia;Didelphidae;Marmosa;mexicana;Mexican Mouse Opossum;22;154;5.8;118;60;DIDELPHIMORPHIA;DIDELPHIDAE;Marmosa_mexicana_DIDELPHIDAE_DIDELPHIMORPHIA;46;58.25;1045.5
+Animalia;Chordata;Mammalia;Metatheria;Didelphimorphia;Didelphidae;Marmosa;mexicana;Mexican Mouse Opossum;22;154;5.8;118;54.5;DIDELPHIMORPHIA;DIDELPHIDAE;Marmosa_mexicana_DIDELPHIDAE_DIDELPHIMORPHIA;46;63;1045.5
 Animalia;Chordata;Mammalia;Metatheria;Didelphimorphia;Didelphidae;Marmosa;murina;Linnaeus's Mouse Opossum;30;154;5.5;118;518;DIDELPHIMORPHIA;DIDELPHIDAE;Marmosa_murina_DIDELPHIDAE_DIDELPHIMORPHIA; ;53.5;1045.5
 Animalia;Chordata;Mammalia;Metatheria;Didelphimorphia;Didelphidae;Marmosa;quichua;Quechuan Mouse Opossum;30;154;5.5;118;518;DIDELPHIMORPHIA;DIDELPHIDAE;Marmosa_quichua_DIDELPHIDAE_DIDELPHIMORPHIA; ;53.5;1045.5
 Animalia;Chordata;Mammalia;Metatheria;Didelphimorphia;Didelphidae;Marmosa;robinsoni;Robinson's Mouse Opossum;13.915;66.315;9.75;10.74;98.5;DIDELPHIMORPHIA;DIDELPHIDAE;Marmosa_robinsoni_DIDELPHIDAE_DIDELPHIMORPHIA; ; ;122
