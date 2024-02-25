@@ -353,9 +353,9 @@ draw_figure_2bis <- function(data_mass, fit_default, fit_default_full, fit_males
   print(fig)
 }
 
-## This function draws figure 3
+## This function draws figure x (not used)
 
-draw_figure_3 <- function(data_mass, fit_default, fit_males, fit_females) {
+draw_figure_x <- function(data_mass, fit_default, fit_males, fit_females) {
 
   data_mass$default <- data_mass$Litter_mass_log10 - predict(fit_default, re.form = NA, type = "link")[, 1]
   data_mass$males   <- data_mass$Litter_mass_log10 - predict(fit_males, re.form = NA, type = "link")[, 1]
@@ -380,3 +380,29 @@ draw_figure_3 <- function(data_mass, fit_default, fit_males, fit_females) {
   
   print(fig)
 }
+
+## This function draws figure 3
+
+draw_figure_3 <- function(data_mass, fit_default, fit_females) {
+  
+  data_mass$default <- data_mass$Litter_mass_log10 - predict(fit_default, re.form = NA, type = "link")[, 1]
+  data_mass$females <- data_mass$Litter_mass_log10 - predict(fit_females, re.form = NA, type = "link")[, 1]
+  
+  fig <- ggplot2::ggplot(data = data_mass, ggplot2::aes(y = females, x = default, shape = Subclass, fill = Subclass)) + 
+    ggplot2::geom_point(alpha = 0.8, size = 2) +
+    ggplot2::geom_text(ggplot2::aes(y = females + 0.05, label = Name), data = data_mass[abs(data_mass$females - data_mass$default) > 0.2, ], size = 2) +
+    ggplot2::geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
+    ggplot2::scale_x_continuous(breaks = seq(-0.5, 4, by = 0.5), 
+                                labels = scales::number_format(accuracy = 0.1)) + 
+    ggplot2::scale_y_continuous(breaks = seq(-0.5, 4, by = 0.5),
+                                labels = scales::number_format(accuracy = 0.1)) +
+    ggplot2::scale_shape_manual(values = 21:23) +
+    ggplot2::scale_fill_manual(values = c("steelblue", "darkred", "#FCC501")) +
+    ggplot2::coord_fixed(xlim = c(-0.75, 0.75), ylim = c(-0.75, 0.75)) +
+    ggplot2::labs(y = 'Maternal investment predicted using female adult mass', x = 'Maternal investment predicted using default adult mass') +
+    ggplot2::theme_classic() +
+    ggplot2::theme(legend.position = "right")
+  
+  print(fig)
+}
+

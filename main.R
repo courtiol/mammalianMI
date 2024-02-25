@@ -286,6 +286,8 @@ quade.test(as.matrix(MI_mass[, c("MI_default", "MI_females", "MI_males")]))
 coin::wilcoxsign_test(MI_mass$MI_default ~ MI_mass$MI_default_full)
 coin::wilcoxsign_test(MI_mass$MI_females ~ MI_mass$MI_males)
 coin::wilcoxsign_test(MI_mass$MI_females ~ MI_mass$MI_default)
+sort(abs(MI_mass$MI_females - MI_mass$MI_default)/(0.5*abs(MI_mass$MI_females + MI_mass$MI_default)))
+
 
 rbind(default = pretty(c(summary(MI_mass$Adult_mass_log10), sd = sd(MI_mass$Adult_mass_log10))),
       default_full = pretty(c(summary(MI_models$Adult_mass_log10), sd = sd(MI_models$Adult_mass_log10))),
@@ -303,6 +305,9 @@ draw_figure_2(data_mass = MI_mass, fit_default = fit_PLMM_mass_default, fit_male
 ggplot2::ggsave(filename = "figures/Fig2.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
 ggplot2::ggsave(filename = "figures/Fig2.png", scale = 1.2, width = 15, height = 10, units = "cm")
 
-draw_figure_3(data_mass = MI_mass, fit_default = fit_PLMM_mass_default, fit_males = fit_PLMM_mass_males, fit_females = fit_PLMM_mass_females)
+draw_figure_x(data_mass = MI_mass, fit_default = fit_PLMM_mass_default, fit_males = fit_PLMM_mass_males, fit_females = fit_PLMM_mass_females)
+
+draw_figure_3(data_mass = MI_mass, fit_default = fit_PLMM_mass_default, fit_females = fit_PLMM_mass_females)
 ggplot2::ggsave(filename = "figures/Fig3.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
 ggplot2::ggsave(filename = "figures/Fig3.png", scale = 1.2, width = 15, height = 10, units = "cm")
+
