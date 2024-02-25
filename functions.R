@@ -34,7 +34,8 @@ check_dependencies_all <- function(pkgs) {
 
 ## This function prepares the data containing information required to compute the Maternal Investment metrics
 
-## It produces a dataset with 14 columns:
+## It produces a dataset with 15 columns:
+## - Species: the species name
 ## - Key: a key based on the taxonomy which is used to match the tips in the phylogenetic tree
 ## - Subclass: the mammalian subclass
 ## - Order: the mammalian order
@@ -58,6 +59,7 @@ prepare_df_MIfull <- function(raw_df) {
   
   ## Compute derived columns
   ### Note: all masses are ultimately expressed in kg and duration in days
+  raw_df$Species <- paste(raw_df$Genus, raw_df$Species)
   raw_df$Adult_mass   <- raw_df$Adult_mass_g/1000
   raw_df$Male_adult_mass   <- raw_df$Male_adult_mass_g/1000
   raw_df$Female_adult_mass   <- raw_df$Female_adult_mass_g/1000
@@ -76,16 +78,25 @@ prepare_df_MIfull <- function(raw_df) {
   raw_df$Key      <- as.factor(raw_df$Key)
   raw_df$Name     <- as.factor(raw_df$Name)
   
+  ## Drop row for which critical information is missing
+  raw_df <- raw_df[!is.na(raw_df$Litter_mass) & !is.na(raw_df$Adult_mass), ]
+  
+  ## Remove species for which the offspring are more than 15% heavier than the adult mass
+  too_big <- raw_df$Weaning_mass_g > 1.15*raw_df$Adult_mass_g
+    if (length(too_big) > 0) {
+      message(paste("The following", sum(too_big),  "species have been discarded since the offspring are, at weaning age, more than 15% heavier than adults:"))
+      message(paste(raw_df$Name[too_big], collapse = "\n"))
+    }
+  
+  raw_df <- raw_df[!too_big, ]
+  
   ## Reorder and select columns
-  raw_df <- raw_df[, c("Key", "Subclass", "Order", "Name",
+  raw_df <- raw_df[, c("Species", "Key", "Subclass", "Order", "Name",
                        "Adult_mass", "Adult_mass_log10",
                        "Male_adult_mass", "Male_adult_mass_log10",
                        "Female_adult_mass", "Female_adult_mass_log10",
                        "Litter_mass", "Litter_mass_log10",
                        "Investment_duration", "Investment_duration_log10")]
-  
-  ## Drop row for which critical information is missing
-  raw_df <- raw_df[!is.na(raw_df$Litter_mass) & !is.na(raw_df$Adult_mass), ]
   
   ## Final cleaning
   raw_df <- droplevels(raw_df)
@@ -264,7 +275,7 @@ draw_figure_1 <- function(data_models, fit_SLR, fit_PLMM, fit_SMA, fit_MA, fit_M
     ggplot2::geom_point(ggplot2::aes(shape = Subclass, fill = Subclass), alpha = 0.3, size = 2) +
     ggplot2::geom_line(ggplot2::aes(y = Predict, x = Adult_mass, colour = Model), data = data_pred,
                        linewidth = 0.7, alpha = 0.8, inherit.aes = FALSE) +
-    gggplot2::labs(x = 'Adult mass (kg)', y = 'Litter mass at weaning age (kg)') +
+    ggplot2::labs(x = 'Adult mass (kg)', y = 'Litter mass at weaning age (kg)') +
     ggplot2::theme_classic() +
     ggplot2::theme(legend.position = "right")
     

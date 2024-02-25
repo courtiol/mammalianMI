@@ -26,11 +26,11 @@ MI_raw <- read.csv2("data/MI.csv", dec = ".", na.strings = "")
 
 ### Format the full dataset (see functions.R for details)
 MI_full <- prepare_df_MIfull(MI_raw)
-nrow(MI_full) # 1056
+nrow(MI_full) # 1053
 
 ### Prepare subsample with for comparison between subclasses
 MI_subclasses <- droplevels(MI_full[MI_full$Key %in% tree[["tip.label"]], ])
-nrow(MI_subclasses) # 814
+nrow(MI_subclasses) # 811
 str(MI_subclasses)
 
 ### Prepare subsample with for comparison between orders
@@ -40,17 +40,17 @@ MI_orders <- droplevels(MI_subclasses[MI_subclasses$Order %in% orders_to_keep, ]
 sort(unique(MI_orders$Order))
 # [1] Carnivora       Cetartiodactyla Chiroptera      Dasyuromorphia  Didelphimorphia Diprotodontia   Eulipotyphla    Lagomorpha     
 # [9] Primates        Rodentia 
-nrow(MI_orders) # 785
+nrow(MI_orders) # 768
 str(MI_orders)
 
 ### Prepare subsample with no missing data for modelling
 MI_models <- droplevels(MI_subclasses[!is.na(MI_subclasses$Investment_duration), ])
-nrow(MI_models) # 750
+nrow(MI_models) # 748
 str(MI_models)
 
 ### Prepare subsample with no missing data for mass proxy comparison
 MI_mass <- droplevels(MI_subclasses[!is.na(MI_subclasses$Male_adult_mass) & !is.na(MI_subclasses$Female_adult_mass), ])
-nrow(MI_mass) # 121
+nrow(MI_mass) # 120
 str(MI_mass)
 
 ### Prepare subsample for the 20 indicator species
@@ -68,7 +68,7 @@ str(MI_indicators)
 
 cor_global <- cor.test(MI_full$Adult_mass_log10, MI_full$Litter_mass_log10)
 round(cor_global$estimate, digits = 3)[[1]] # correlation estimate
-# [1] 0.966
+# [1] 0.967
 cor_global$p.value # pvalue
 # [1] 0
 
@@ -82,12 +82,12 @@ plot(fit_SLR_models, ask = FALSE, which = "mean")    ## diagnostics (good!)
 plot(fit_SLR_models, ask = FALSE, which = "predict") ## diagnostics (good!)
 extract_fit_summary(fit_SLR_models)
 #              estimate  lower  upper
-# intercept      -0.194 -0.214 -0.174
-# 10^intercept    0.639  0.610  0.669
-# slope           0.780  0.766  0.793
+# intercept      -0.198 -0.218 -0.178
+# 10^intercept    0.634  0.606  0.663
+# slope           0.781  0.768  0.794
 compure_r2(fit_SLR_models)
 #    estimate lower upper    p
-# r2    0.945 0.968 0.976 0.00
+# r2    0.948 0.970 0.977 0.00
 
 ## Fitting PLMM model for method comparison
 
@@ -115,7 +115,7 @@ extract_fit_summary(fit_PLMM_models)
 # lambda           1.00  0.999  1.00
 compure_r2(fit_PLMM_models) ## same as above!
 #    estimate lower upper    p
-# r2    0.945 0.968 0.976 0.00
+# r2    0.948 0.970 0.977 0.00
 
 ## Fitting SMA model for method comparison
 
@@ -125,12 +125,12 @@ plot(fit_SMA_models, which = "residual") ## diagnostics (good!)
 plot(fit_SMA_models, which = "qq") ## diagnostics (ok)
 extract_fit_summary(fit_SMA_models)
 #              estimate  lower  upper
-# intercept      -0.188 -0.208 -0.168
-# 10^intercept    0.648  0.619  0.679
-# slope           0.802  0.789  0.816
+# intercept      -0.192 -0.212 -0.173
+# 10^intercept    0.642  0.614  0.672
+# slope           0.802  0.789  0.815
 compure_r2(fit_SMA_models)
 #    estimate lower upper    p
-# r2    0.986 0.992 0.994 0.00
+# r2    0.987 0.992 0.994 0.00
 
 ## Fitting MA model for method comparison
 
@@ -140,12 +140,12 @@ plot(fit_MA_models, which = "residual") ## diagnostics (good!)
 plot(fit_MA_models, which = "qq") ## diagnostics (ok)
 extract_fit_summary(fit_MA_models)
 #              estimate  lower  upper
-# intercept      -0.190 -0.210 -0.169
-# 10^intercept    0.646  0.617  0.677
-# slope           0.797  0.783  0.811
+# intercept      -0.194 -0.213 -0.174
+# 10^intercept    0.640  0.612  0.670
+# slope           0.797  0.784  0.811
 compure_r2(fit_MA_models)
 #    estimate lower upper    p
-# r2    0.979 0.988 0.991 0.00
+# r2    0.980 0.989 0.991 0.00
 
 ## Fitting MSLR model for method comparison
 
@@ -154,13 +154,13 @@ plot(fit_MSLR_models, ask = FALSE, which = "mean")    ## diagnostics (good!)
 plot(fit_MSLR_models, ask = FALSE, which = "predict") ## diagnostics (good!)
 extract_fit_summary(fit_MSLR_models)
 #              estimate   lower   upper
-# intercept       0.642  0.485  0.800
-# 10^intercept     4.39   3.06   6.30
-# slope           0.865  0.845  0.886
-# slope_InvDur   -0.387 -0.459 -0.315
+# 10^intercept     4.80   3.39   6.80
+# intercept       0.681  0.530  0.832
+# slope           0.871  0.851  0.891
+# slope_InvDur   -0.407 -0.476 -0.337
 compure_r2(fit_MSLR_models)
 #    estimate lower upper    p
-# r2    0.952 0.972 0.979 0.00
+# r2    0.956 0.974 0.981 0.00
 
 ## Fitting MPLMM model for method comparison
 if (FALSE) { # switch FALSE to TRUE to run
@@ -187,7 +187,7 @@ extract_fit_summary(fit_MPLMM_models)
 # lambda           1.00  0.999   1.00
 compure_r2(fit_MPLMM_models)
 #    estimate lower upper    p
-# r2    0.950 0.971 0.978 0.00
+# r2    0.953 0.973 0.980 0.00
 
 # Figure 1 ----------------------------------------------------------------
 
@@ -220,40 +220,40 @@ corMI <- cor(MI_models[, c("MI_SLR", "MI_SMA", "MI_MA", "MI_MSLR")])
 diag(corMI) <- NA
 corMI
 range(corMI, na.rm = TRUE)
-# [1] 0.9268376 0.9996569
+# [1] 0.9159599 0.9996768
 
 quade.test(as.matrix(MI_models[, c("MI_SLR", "MI_SMA", "MI_MA", "MI_MSLR")]))
 # data:  as.matrix(MI_models[, c("MI_SLR", "MI_SMA", "MI_MA", "MI_MSLR")])
-# Quade F = 0.87625, num df = 3, denom df = 2247, p-value = 0.4526
+# Quade F = 0.92467, num df = 3, denom df = 2241, p-value = 0.428
 
 ## Comparison between phylogenetic and non-phylogenetic counterpart
 corMI <- cor(MI_models[, c("MI_PLMM", "MI_MPLMM", "MI_SLR", "MI_SMA", "MI_MA", "MI_MSLR")])
 diag(corMI) <- NA
 corMI
 range(corMI, na.rm = TRUE)
-# [1] 0.9261806 0.9999831
+# [1] 0.9135543 0.9997825
 
 univariate_phylo_test <- data.frame(LRT = unname(-2*(logLik(fit_SLR_models) - logLik(fit_PLMM_models))))
-univariate_phylo_test$df <- 1
+univariate_phylo_test$df <- 1 ## that should be more than 1 since there are df for the residual model...
 univariate_phylo_test$p <- with(univariate_phylo_test, pchisq(LRT, df, lower.tail = FALSE))
 univariate_phylo_test
 #        LRT df           p
-# 1 983.2568  1 7.8281e-216
+# 1 932.2787  1 9.439609e-205
 
 multivariate_phylo_test <- data.frame(LRT = unname(-2*(logLik(fit_MSLR_models) - logLik(fit_MPLMM_models))))
-multivariate_phylo_test$df <- 1
+multivariate_phylo_test$df <- 1 ## that should be more than 1 since there are df for the residual model...
 multivariate_phylo_test$p <- with(multivariate_phylo_test, pchisq(LRT, df, lower.tail = FALSE))
 multivariate_phylo_test
 #       LRT df             p
-# 1 883.486  1 3.817752e-194
+# 1 810.2442  1 3.19747e-178
 
 ## Comparison between the 2 PLMMs
 multivariatePLMM_phylo_test <- data.frame(LRT = unname(-2*(logLik(fit_PLMM_models) - logLik(fit_MPLMM_models))))
 multivariatePLMM_phylo_test$df <- 1
 multivariatePLMM_phylo_test$p <- with(multivariatePLMM_phylo_test, pchisq(LRT, df, lower.tail = FALSE))
 multivariatePLMM_phylo_test
-# LRT df          p
-# 1 3.645015  1 0.05623729
+#        LRT df p
+# -0.6251432  1 1 ## there is an issue here, I guess the residual models are too different
 
 
 # Comparison of mass proxies ----------------------------------------------
@@ -270,8 +270,9 @@ fit_PLMM_mass_females <- fitme_phylo_lambdafixed(lambda = 1, formula = Litter_ma
                                                  resid.model =  ~ Female_adult_mass_log10 + (1|Key),
                                                  data = MI_mass, tree = tree)
 
-MI_mass$MI_default  <- MI_mass$Litter_mass_log10 - predict(fit_PLMM_mass_default, re.form = NA, type = "link")[, 1]
 MI_mass$MI_default_full  <- MI_mass$Litter_mass_log10 - predict(fit_PLMM_models, newdata = MI_mass, re.form = NA, type = "link")[, 1]
+
+MI_mass$MI_default  <- MI_mass$Litter_mass_log10 - predict(fit_PLMM_mass_default, re.form = NA, type = "link")[, 1]
 MI_mass$MI_females  <- MI_mass$Litter_mass_log10 - predict(fit_PLMM_mass_females, re.form = NA, type = "link")[, 1]
 MI_mass$MI_males    <- MI_mass$Litter_mass_log10 - predict(fit_PLMM_mass_males, re.form = NA, type = "link")[, 1]
 
@@ -280,16 +281,14 @@ MI_mass_long$Sex <- as.factor(MI_mass_long$Sex)
 MI_mass_long$Name <- as.factor(MI_mass_long$Name)
 
 quade.test(as.matrix(MI_mass[, c("MI_default", "MI_females", "MI_males")]))
+# Quade F = 6.0603, num df = 2, denom df = 238, p-value = 0.002709
 
 coin::wilcoxsign_test(MI_mass$MI_default ~ MI_mass$MI_default_full)
 coin::wilcoxsign_test(MI_mass$MI_females ~ MI_mass$MI_males)
 coin::wilcoxsign_test(MI_mass$MI_females ~ MI_mass$MI_default)
-coin::wilcoxsign_test(MI_mass$MI_females ~ MI_mass$MI_default_full)
-coin::wilcoxsign_test(MI_mass$MI_males ~ MI_mass$MI_default)
-coin::wilcoxsign_test(MI_mass$MI_males ~ MI_mass$MI_default_full)
 
 rbind(default = pretty(c(summary(MI_mass$Adult_mass_log10), sd = sd(MI_mass$Adult_mass_log10))),
-      default = pretty(c(summary(MI_models$Adult_mass_log10), sd = sd(MI_models$Adult_mass_log10))),
+      default_full = pretty(c(summary(MI_models$Adult_mass_log10), sd = sd(MI_models$Adult_mass_log10))),
       males   = pretty(c(summary(MI_mass$Male_adult_mass_log10),   sd = sd(MI_mass$Male_adult_mass_log10))),
       females = pretty(c(summary(MI_mass$Female_adult_mass_log10), sd = sd(MI_mass$Female_adult_mass_log10))))
 
