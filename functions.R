@@ -130,9 +130,19 @@ prepare_df_MIfull <- function(raw_df) {
 
 ## This function fits a phylogenetic GLMM given a lambda value using spaMM
 
-fitme_phylo_lambdafixed <- function(lambda = 1, tree, data, cor_fn = ape::corPagel, return.fit = TRUE, ...) {
+fitme_phylo_lambdafixed_old <- function(lambda = 1, tree, data, cor_fn = ape::corPagel, return.fit = TRUE, ...) {
   corM <- nlme::corMatrix(nlme::Initialize(cor_fn(lambda, form = ~ Key, phy = tree), data = data)) 
   fit <- spaMM::fitme(corrMatrix = corM, data = data, ...)
+  fit$phylo <- list(lambda = lambda, tree = tree, cor_fn = cor_fn, corM = corM)
+  if (return.fit) return(fit)
+  logLik(fit)
+}
+
+
+fitme_phylo_lambdafixed <- function(lambda = 1, tree, data, cor_fn = ape::corPagel, return.fit = TRUE, args_spaMM = list()) {
+  corM <- nlme::corMatrix(nlme::Initialize(cor_fn(lambda, form = ~ Key, phy = tree), data = data)) 
+  args_spaMM <- c(args_spaMM, list(corrMatrix = corM, data = data))
+  fit <- do.call(spaMM::fitme, args_spaMM)
   fit$phylo <- list(lambda = lambda, tree = tree, cor_fn = cor_fn, corM = corM)
   if (return.fit) return(fit)
   logLik(fit)
@@ -141,13 +151,13 @@ fitme_phylo_lambdafixed <- function(lambda = 1, tree, data, cor_fn = ape::corPag
 ## This function fits a phylogenetic GLMM using spaMM and estimate the value of the parameter of the correlation structure (lambda)
 ## by outer estimation
 
-fitme_phylo_lambdafree <- function(tree, data, cor_fn = ape::corPagel, ...) {
+fitme_phylo_lambdafree <- function(tree, data, cor_fn = ape::corPagel, args_spaMM = list()) {
   message("Fitting the P(G)LMM... be patient")
   best_lambda <- optimize(fitme_phylo_lambdafixed, interval = c(0, 1), maximum = TRUE,
-                          tree = tree, data = data, return.fit = FALSE, ...)
+                          tree = tree, data = data, return.fit = FALSE, args_spaMM = args_spaMM)
   message(paste("estimated lambda =", round(best_lambda$maximum, digits = 3)))
   fit <- fitme_phylo_lambdafixed(lambda = best_lambda$maximum, tree = tree, data = data,
-                                 cor_fn = cor_fn, return.fit = TRUE, ...)
+                                 cor_fn = cor_fn, return.fit = TRUE, args_spaMM = args_spaMM)
   fit
 }
 

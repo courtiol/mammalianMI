@@ -7,7 +7,6 @@ check_dependencies_all(c("ape", "coin", "ggplot2", "nlme", "scales", "smatr", "s
 
 
 # Load dependencies -------------------------------------------------------
-library(coin)
 library(spaMM)
 library(smatr)
 library(tidyr)
@@ -91,17 +90,19 @@ compure_r2(fit_SLR_models)
 
 ## Fitting PLMM model for method comparison
 
-### Fit with estimation of best Pagel's Lambda (slow)
+### Fit with estimation of best Pagel's Lambda (version 1: very slow)
 if (FALSE) { # switch FALSE to TRUE to run
-  fit_PLMM_models <- fitme_phylo_lambdafree(formula = Litter_mass_log10 ~ Adult_mass_log10 + corrMatrix(1|Key),
-                                             resid.model =  ~ Adult_mass_log10 + (1|Key), # if no resid.model, do add fixed = list(phi = 1e-5)
-                                             data = MI_models, tree = tree)
+  fit_PLMM_models <- fitme_phylo_lambdafree(tree = tree, data = MI_models,
+                                            args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + corrMatrix(1|Key),
+                                                              # fixed = list(phi = 1e-5) ## if no resid.model!
+                                                              resid.model =  ~ Adult_mass_log10 + (1|Key)))
 }
 
+### Fit with estimation of best Pagel's Lambda (version 2: much faster)
 ### Since best Pagel's Lambda is 1 on these data, the same output can be quickly obtained as follows
-fit_PLMM_models <- fitme_phylo_lambdafixed(lambda = 1, formula = Litter_mass_log10 ~ Adult_mass_log10 + corrMatrix(1|Key),
-                                           resid.model =  ~ Adult_mass_log10 + (1|Key),
-                                           data = MI_models, tree = tree)
+fit_PLMM_models <- fitme_phylo_lambdafixed(lambda = 1, data = MI_models, tree = tree,
+                                           args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + corrMatrix(1|Key),
+                                                             resid.model =  ~ Adult_mass_log10 + (1|Key)))
 
 plot(fit_PLMM_models, ask = FALSE, which = "mean")  ## diagnostics (heteroscedastic, but this is accounted for)
 plot(fit_PLMM_models, ask = FALSE, which = "ranef") ## diagnostics (ok)
@@ -164,15 +165,15 @@ compure_r2(fit_MSLR_models)
 
 ## Fitting MPLMM model for method comparison
 if (FALSE) { # switch FALSE to TRUE to run
-  fit_MPLMM_models <- fitme_phylo_lambdafree(formula = Litter_mass_log10 ~ Adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
-                                             resid.model =  ~ Adult_mass_log10 + (1|Key),
-                                             data = MI_models, tree = tree)
+  fit_MPLMM_models <- fitme_phylo_lambdafree(data = MI_models, tree = tree,
+                                             args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
+                                                               resid.model =  ~ Adult_mass_log10 + (1|Key)))
 }
 
 ### Since best Pagel's Lambda is 1 on these data, the same output can be quickly obtained as follows
-fit_MPLMM_models <- fitme_phylo_lambdafixed(lambda = 1, formula = Litter_mass_log10 ~ Adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
-                                            resid.model =  ~ Adult_mass_log10 + (1|Key),
-                                            data = MI_models, tree = tree)
+fit_MPLMM_models <- fitme_phylo_lambdafixed(lambda = 1, data = MI_models, tree = tree,
+                                            args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
+                                                              resid.model =  ~ Adult_mass_log10 + (1|Key)))
 
 plot(fit_MPLMM_models, ask = FALSE, which = "mean")  ## diagnostics (heteroscedastic, but this is accounted for)
 plot(fit_MPLMM_models, ask = FALSE, which = "ranef") ## diagnostics (ok)
@@ -258,17 +259,17 @@ multivariatePLMM_phylo_test
 
 # Comparison of mass proxies ----------------------------------------------
 
-fit_PLMM_mass_default <- fitme_phylo_lambdafixed(lambda = 1, formula = Litter_mass_log10 ~ Adult_mass_log10 + corrMatrix(1|Key),
-                                                 resid.model =  ~ Adult_mass_log10 + (1|Key),
-                                                 data = MI_mass, tree = tree)
+fit_PLMM_mass_default <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_mass, 
+                                                 args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + corrMatrix(1|Key),
+                                                                   resid.model =  ~ Adult_mass_log10 + (1|Key)))
 
-fit_PLMM_mass_males <- fitme_phylo_lambdafixed(lambda = 1, formula = Litter_mass_log10 ~ Male_adult_mass_log10 + corrMatrix(1|Key),
-                                               resid.model =  ~ Male_adult_mass_log10 + (1|Key),
-                                               data = MI_mass, tree = tree)
+fit_PLMM_mass_males <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_mass,
+                                               args_spaMM = list(formula = Litter_mass_log10 ~ Male_adult_mass_log10 + corrMatrix(1|Key),
+                                                                 resid.model =  ~ Male_adult_mass_log10 + (1|Key)))
 
-fit_PLMM_mass_females <- fitme_phylo_lambdafixed(lambda = 1, formula = Litter_mass_log10 ~ Female_adult_mass_log10 + corrMatrix(1|Key),
-                                                 resid.model =  ~ Female_adult_mass_log10 + (1|Key),
-                                                 data = MI_mass, tree = tree)
+fit_PLMM_mass_females <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_mass,
+                                                 args_spaMM = list(formula = Litter_mass_log10 ~ Female_adult_mass_log10 + corrMatrix(1|Key),
+                                                                   resid.model =  ~ Female_adult_mass_log10 + (1|Key)))
 
 MI_mass$MI_default_full  <- MI_mass$Litter_mass_log10 - predict(fit_PLMM_models, newdata = MI_mass, re.form = NA, type = "link")[, 1]
 
@@ -287,6 +288,12 @@ quade.test(as.matrix(MI_mass[, c("MI_default", "MI_females", "MI_males")]))
 pretty(100*mean(abs(MI_mass$MI_females - MI_mass$MI_default) > 0.1))
 # [1] "13.0"
 
+## 0.1 expressed in SD of MI
+pretty(mean(c(0.1/sd(MI_mass$MI_default),
+              0.1/sd(MI_mass$MI_females),
+              0.1/sd(MI_models$MI_PLMM))), digits = 2)
+# [1] "0.35"
+
 
 # Figure 2 ----------------------------------------------------------------
 
@@ -294,28 +301,17 @@ draw_figure_2(data_mass = MI_mass, fit_default = fit_PLMM_mass_default, fit_male
 ggplot2::ggsave(filename = "figures/Fig2.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
 ggplot2::ggsave(filename = "figures/Fig2.png", scale = 1.2, width = 15, height = 10, units = "cm")
 
+
+# Figure 3 ----------------------------------------------------------------
+
 draw_figure_3(data_mass = MI_mass, fit_default = fit_PLMM_mass_default, fit_females = fit_PLMM_mass_females)
 ggplot2::ggsave(filename = "figures/Fig3.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
 ggplot2::ggsave(filename = "figures/Fig3.png", scale = 1.2, width = 15, height = 10, units = "cm")
 
 draw_figure_x(data_mass = MI_mass, fit_default = fit_PLMM_mass_default, fit_males = fit_PLMM_mass_males, fit_females = fit_PLMM_mass_females)
+ggplot2::ggsave(filename = "figures/FigS1.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
+ggplot2::ggsave(filename = "figures/FigS1.png", scale = 1.2, width = 15, height = 10, units = "cm")
+
 draw_figure_xx(data_mass = MI_mass, fit_default = fit_PLMM_mass_default, fit_females = fit_PLMM_mass_females)
-
-
-# Left over (to probably delete in the end) -------------------------------
-
-coin::wilcoxsign_test(MI_mass$MI_default ~ MI_mass$MI_default_full)
-coin::wilcoxsign_test(MI_mass$MI_females ~ MI_mass$MI_males)
-coin::wilcoxsign_test(MI_mass$MI_females ~ MI_mass$MI_default)
-sort(abs(MI_mass$MI_females - MI_mass$MI_default)/(0.5*abs(MI_mass$MI_females + MI_mass$MI_default)))
-
-
-rbind(default = pretty(c(summary(MI_mass$Adult_mass_log10), sd = sd(MI_mass$Adult_mass_log10))),
-      default_full = pretty(c(summary(MI_models$Adult_mass_log10), sd = sd(MI_models$Adult_mass_log10))),
-      males   = pretty(c(summary(MI_mass$Male_adult_mass_log10),   sd = sd(MI_mass$Male_adult_mass_log10))),
-      females = pretty(c(summary(MI_mass$Female_adult_mass_log10), sd = sd(MI_mass$Female_adult_mass_log10))))
-
-rbind(default = pretty(c(summary(MI_mass$MI_default), sd = sd(MI_mass$MI_default))),
-      default_full = pretty(c(summary(MI_mass$MI_default_full), sd = sd(MI_mass$MI_default_full))),
-      males   = pretty(c(summary(MI_mass$MI_males),   sd = sd(MI_mass$MI_males))),
-      females = pretty(c(summary(MI_mass$MI_females), sd = sd(MI_mass$MI_females))))
+ggplot2::ggsave(filename = "figures/FigS2.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
+ggplot2::ggsave(filename = "figures/FigS2.png", scale = 1.2, width = 15, height = 10, units = "cm")
