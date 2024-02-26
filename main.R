@@ -283,9 +283,9 @@ MI_mass_long$Name <- as.factor(MI_mass_long$Name)
 quade.test(as.matrix(MI_mass[, c("MI_default", "MI_females", "MI_males")]))
 # Quade F = 1.6138, num df = 2, denom df = 214, p-value = 0.2015
 
-## Percentage of species for which difference between estimates is < 0.1
-100*mean(abs(MI_mass$MI_females - MI_mass$MI_default) < 0.1)
-# [1] 87.03704
+## Percentage of species for which difference between estimates is > 0.1
+pretty(100*mean(abs(MI_mass$MI_females - MI_mass$MI_default) > 0.1))
+# [1] "13.0"
 
 
 # Figure 2 ----------------------------------------------------------------

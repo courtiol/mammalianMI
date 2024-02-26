@@ -410,8 +410,8 @@ draw_figure_3 <- function(data_mass, fit_default, fit_females) {
   
   fig <- ggplot2::ggplot(data = data_mass, ggplot2::aes(y = females, x = default, shape = Subclass, fill = Subclass)) + 
     ggplot2::geom_point(alpha = 0.8, size = 2) +
-    ggplot2::geom_text(ggplot2::aes(y = females + 0.05, label = Name), data = data_mass[(data_mass$females - data_mass$default) > 0.2, ], size = 2) +
-    ggplot2::geom_text(ggplot2::aes(y = females - 0.05, label = Name), data = data_mass[(data_mass$default - data_mass$females) > 0.2, ], size = 2) +
+    ggplot2::geom_text(ggplot2::aes(y = females, x = default - 0.02, label = Name), hjust = 1, data = data_mass[(data_mass$females - data_mass$default) > 0.1, ], size = 2) +
+    ggplot2::geom_text(ggplot2::aes(y = females, x = default + 0.02, label = Name), hjust = 0, data = data_mass[(data_mass$default - data_mass$females) > 0.1, ], size = 2) +
     ggplot2::geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
     ggplot2::scale_x_continuous(breaks = seq(-0.5, 4, by = 0.5), 
                                 labels = scales::number_format(accuracy = 0.1)) + 
