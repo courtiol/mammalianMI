@@ -427,3 +427,34 @@ draw_figure_3 <- function(data_mass, fit_default, fit_females) {
   print(fig)
 }
 
+
+## This function draws figure xx
+
+draw_figure_xx <- function(data_mass, fit_default, fit_females) {
+  
+  data_mass$default <- data_mass$Litter_mass_log10 - predict(fit_default, re.form = NA, type = "link")[, 1]
+  data_mass$females <- data_mass$Litter_mass_log10 - predict(fit_females, re.form = NA, type = "link")[, 1]
+  data_mass$average_mass <- 0.5*(data_mass$Male_adult_mass + data_mass$Female_adult_mass)
+  data_mass$departure_avg <- abs(data_mass$Adult_mass - data_mass$average_mass)
+  
+  fig <- ggplot2::ggplot(data = data_mass, ggplot2::aes(y = females - default, x = departure_avg, shape = Subclass, fill = Subclass)) + 
+    ggplot2::geom_point(alpha = 0.8, size = 2) +
+    ggplot2::geom_abline(intercept = 0, slope = 0, linetype = "dashed") +
+    ggplot2::geom_text(ggplot2::aes(y = females - default + 0.05, label = Name), data = data_mass[(data_mass$females - data_mass$default) > 0.1, ], size = 2) +
+    ggplot2::geom_text(ggplot2::aes(y = females - default - 0.05, label = Name), data = data_mass[(data_mass$default - data_mass$females) > 0.1, ], size = 2) +
+    ggplot2::scale_x_continuous(trans = "log1p", breaks = c(0.1, 1, 10, 100, 1000, 10000, 100000), 
+                                labels = scales::number_format(accuracy = 0.1)) + 
+    ggplot2::scale_y_continuous(breaks = seq(-0.5, 4, by = 0.5),
+                                labels = scales::number_format(accuracy = 0.1)) +
+    ggplot2::scale_shape_manual(values = 21:23) +
+    ggplot2::scale_fill_manual(values = c("steelblue", "darkred", "#FCC501")) +
+    ggplot2::coord_fixed(ylim = c(-0.75, 0.75)) +
+    ggplot2::labs(y = 'MI (females) - MI (default)', x = 'abs(Adult mass - Average adult mass across sexes)') +
+    ggplot2::theme_classic() +
+    ggplot2::theme(legend.position = "right")
+  
+  print(fig)
+}
+
+
+
