@@ -181,18 +181,18 @@ confint_lambda <- function(bestfit) {
   if (lambda_ref == 1) {
     lambda_upr <- 1 ## no estimation needed since estimate already at parameter boundary
   } else {
-  lambda_upr <- optimize(CI_fit, interval = c(lambda_ref, 1),
-                         formula = formula(bestfit), tree = bestfit$phylo$tree, data = bestfit$data, cor_fn = bestfit$phylo$cor_fn,
-                         resid.model = bestfit$residModel, fixed = fixed, return.fit = FALSE)$minimum
+  lambda_upr <- optimize(CI_fit, interval = c(lambda_ref, 1), tree = bestfit$phylo$tree, data = bestfit$data, cor_fn = bestfit$phylo$cor_fn,
+                         args_spaMM = list(formula = formula(bestfit), resid.model = bestfit$residModel, fixed = fixed),
+                         return.fit = FALSE)$minimum
   }
     
   message("Estimating lower boundary for lambda... be patient")
   if (lambda_ref == 0) {
     lambda_lwr <- 0 ## no estimation needed since estimate already at parameter boundary
   } else {
-    lambda_lwr <- optimize(CI_fit, interval = c(0, lambda_ref),
-                           formula = formula(bestfit), tree = bestfit$phylo$tree, data = bestfit$data, cor_fn = bestfit$phylo$cor_fn,
-                           resid.model = bestfit$residModel, fixed = fixed, return.fit = FALSE)$minimum
+    lambda_lwr <- optimize(CI_fit, interval = c(0, lambda_ref), tree = bestfit$phylo$tree, data = bestfit$data, cor_fn = bestfit$phylo$cor_fn,
+                           args_spaMM = list(formula = formula(bestfit), resid.model = bestfit$residModel, fixed = fixed),
+                           return.fit = FALSE)$minimum
   }
   
   c(estimate = lambda_ref, lower = lambda_lwr, upper = lambda_upr)
