@@ -510,12 +510,13 @@ draw_figure_4 <- function(data_subclasses) {
   
   fig <- ggplot2::ggplot(data = data_subclasses[data_subclasses$Subclass != "Monotremata", ]) +
           ggplot2::aes(x = Subclass, y = MI, col = Subclass, fill = Subclass) + 
-          ggdist::stat_dots(alpha = 0.5, layout = "weave", show.legend = FALSE, dotsize = 1) + 
+          ggdist::stat_dots(alpha = 0.5, layout = "weave", show.legend = FALSE, dotsize = 1, shape = 22) + 
           ggdist::stat_pointinterval(show.legend = FALSE, .width = c(0.5, 0.95),
                                      position = ggplot2::position_nudge(x = -0.05)) +
           ggplot2::geom_point(data = data_subclasses[data_subclasses$Subclass == "Monotremata", ],
                               mapping = ggplot2::aes(y = MI, x = Subclass),
-                              colour = "#FCC501", fill = "#FCC501", alpha = 0.5, size = 1) +
+                              colour = "#FCC501", fill = "#FCC501", alpha = 0.5, size = 1,
+                              shape = 23) +
           ggplot2::geom_text(ggplot2::aes(x = x - 0.02, y = MI, label = as.character(Name)),
                              hjust = 1, data = flagged, show.legend = FALSE, size = 2) +
           ggplot2::labs(y = 'Maternal investment', x = 'Subclass') +
@@ -526,3 +527,49 @@ draw_figure_4 <- function(data_subclasses) {
   
   print(fig)
 }
+
+
+## This function draws figure 5A
+
+draw_figure_5A <- function(data_indicators) {
+
+  fig <- ggplot2::ggplot(data = data_indicators) + 
+         ggplot2::aes(x = ...., y = Litter_mass_log10, col = Subclass, fill = Subclass, shape = 4) +
+         rphylopic::geom_phylopic(aes(x = ...., y = Litter_mass_log10, name = name, col=Subclass), 
+                  size = 0.3, alpha = 0.7, data = data_indicators) +
+         ggplot2::scale_x_continuous(trans = "log10", breaks = c(0.1, 1, 10, 100, 1000, 10000, 100000), 
+                                labels = scales::number_format(accuracy = 0.1), expand = c(0, 0)) + 
+         ggplot2::scale_y_continuous(trans = "log10",
+                                breaks = c(0.1, 1, 10, 100, 1000, 10000),
+                                labels = scales::number_format(accuracy = 0.1), expand = c(0, 0)) +
+         ggplot2::labs(y = 'Actual litter weaning mass (kg)', x = 'Predicted litter weaning mass (kg)') +
+         ggplot2::theme_bw() +
+         ggplot2::theme(legend.position = "NULL") +
+         ggplot2::geom_abline(size=0.8, color="black") +
+         ggplot2::scale_color_manual(values = c("steelblue", "darkred", "#FCC501")) +
+         ggplot2::scale_fill_manual(values = c("steelblue", "darkred", "#FCC501"))
+         
+
+  print(fig)
+}  
+
+
+## This function draws figure 5B
+
+draw_figure_5B <- function(data_indicators) {
+  
+  fig <- ggplot2::ggplot(data = data_indicators) + 
+    geom_phylopic(aes(x = MI, y = reorder(Name, -MI), name = name, col=Subclass), 
+                  size = 0.8) +
+    ggplot2::coord_cartesian(xlim = c(-1.6,2)) +
+    ggplot2::labs(y = 'Species', x = 'Maternal investment') +
+    ggplot2::theme_bw() +
+    ggplot2::theme(legend.position = "NULL") +
+    ggplot2::geom_vline(xintercept=0, size=0.8, color="black") +
+    ggplot2::aes(x=MI, y = Name, color="black", shape = 4) +
+    ggplot2::scale_color_manual(values = c("steelblue", "darkred", "#FCC501")) +
+    ggplot2::scale_fill_manual(values = c("steelblue", "darkred", "#FCC501"))
+  
+  
+  print(fig)
+}  

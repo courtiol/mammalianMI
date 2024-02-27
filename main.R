@@ -385,3 +385,15 @@ ggplot2::ggsave(filename = "figures/Fig4.pdf", scale = 1.2, width = 15, height =
 ggplot2::ggsave(filename = "figures/Fig4.png", scale = 1.2, width = 15, height = 10, units = "cm")
 
 
+
+# 20 Indicator Species
+
+MI_indicators$MI  <- MI_indicators$Litter_mass_log10 - predict(fit_PLMM_models, newdata = MI_indicators, re.form = NA, type = "link")[, 1]
+
+draw_figure_5A(MI_indicators)
+ggplot2::ggsave(filename = "figures/Fig5A.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
+ggplot2::ggsave(filename = "figures/Fig5A.png", scale = 1.2, width = 15, height = 10, units = "cm")
+
+draw_figure_5B(MI_indicators)
+ggplot2::ggsave(filename = "figures/Fig5B.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
+ggplot2::ggsave(filename = "figures/Fig5B.png", scale = 1.2, width = 15, height = 10, units = "cm")
