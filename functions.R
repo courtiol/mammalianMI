@@ -215,15 +215,22 @@ confint_fixef <- function(fit, boot_args = NULL) {
   
   message("Estimating CI for fixed effects... be patient")
   
-  requireNamespace("doSNOW", quietly = TRUE)
+  if (!is.null(boot_args)) requireNamespace("doSNOW", quietly = TRUE)
+  
   params <- names(spaMM::fixef(fit))
   res <- confint(fit, parm = params, verbose = FALSE, boot_args = boot_args, format = "stats")
-  res <- lapply(res, \(block) {
-    colnames(block) <- c("lower", "upper")
-    block
-    })
-  res_wide <- do.call("cbind", res)
-  colnames(res_wide) <- paste0(colnames(res_wide), "_", rep(names(res), each = 2))
+  
+  if ( is.list(res)) {
+    res <- lapply(res, \(block) {
+      colnames(block) <- c("lower", "upper")
+      block
+      })
+    res_wide <- do.call("cbind", res)
+    colnames(res_wide) <- paste0(colnames(res_wide), "_", rep(names(res), each = 2))
+  } else {
+    res_wide <- res
+    colnames(res_wide) <- c("lower_asymptotic", "upper_asymptotic")
+  }
   cbind(estimate = spaMM::fixef(fit), res_wide)
 }
 

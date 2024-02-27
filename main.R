@@ -84,11 +84,11 @@ plot(fit_SLR_models, ask = FALSE, which = "mean")    ## diagnostics (good!)
 plot(fit_SLR_models, ask = FALSE, which = "predict") ## diagnostics (good!)
 
 ### Computing CI for estimates in SLR model
-extract_fit_summary(fit_SLR_models)
-#              estimate  lower  upper
-# intercept      -0.195 -0.215 -0.175
-# 10^intercept    0.638  0.610  0.668
-# slope           0.779  0.765  0.792
+pretty(extract_fit_summary(fit_SLR_models))
+#                  estimate lower_asymptotic upper_asymptotic
+# (Intercept)        -0.195           -0.215           -0.175
+# Adult_mass_log10    0.779            0.765            0.792
+# 10^(Intercept)      0.638            0.610            0.668
 
 ### Computing R2 in SLR model
 compure_r2(fit_SLR_models)
@@ -119,9 +119,10 @@ plot(fit_PLMM_models, ask = FALSE, which = "predict") ## diagnostics (bad: resid
 plot(MI_models$Litter_mass_log10, predict(fit_PLMM_models, re.form = NA, type = "link")[, 1]) ## diagnostics, excluding ranef (good!)
 
 ### Computing CI for estimates in PLMM model (very computationally intensive)
-PLMM_summary <- extract_fit_summary(fit_PLMM_models)
-
-pretty(PLMM_summary$fixef)
+if (FALSE) { # switch FALSE to TRUE to run
+  PLMM_summary <- extract_fit_summary(fit_PLMM_models)
+  pretty(PLMM_summary$fixef)
+}
 #                  estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
 # (Intercept)        -0.215       -0.313       -0.106        -0.326        -0.122      -0.307      -0.103
 # Adult_mass_log10    0.807        0.792        0.828         0.788         0.824       0.791       0.827
@@ -148,7 +149,7 @@ plot(fit_SMA_models, which = "residual") ## diagnostics (good!)
 plot(fit_SMA_models, which = "qq") ## diagnostics (ok)
 
 ### Computing CI for estimates in SMA model
-extract_fit_summary(fit_SMA_models)
+pretty(extract_fit_summary(fit_SMA_models))
 #              estimate  lower  upper
 # intercept      -0.189 -0.209 -0.170
 # 10^intercept    0.646  0.618  0.677
@@ -171,7 +172,7 @@ plot(fit_MA_models, which = "residual") ## diagnostics (good!)
 plot(fit_MA_models, which = "qq") ## diagnostics (ok)
 
 ### Computing CI for estimates in MA model
-extract_fit_summary(fit_MA_models)
+pretty(extract_fit_summary(fit_MA_models))
 #              estimate  lower  upper
 # intercept      -0.191 -0.211 -0.171
 # 10^intercept    0.645  0.616  0.675
@@ -193,12 +194,12 @@ plot(fit_MSLR_models, ask = FALSE, which = "mean")    ## diagnostics (good!)
 plot(fit_MSLR_models, ask = FALSE, which = "predict") ## diagnostics (good!)
 
 ### Computing CI for estimates in MSLR model
-extract_fit_summary(fit_MSLR_models)
-#              estimate   lower   upper
-# intercept       0.672  0.519  0.826
-# 10^intercept     4.70   3.30   6.70
-# slope           0.869  0.849  0.889
-# slope_InvDur   -0.401 -0.472 -0.331
+pretty(extract_fit_summary(fit_MSLR_models))
+#                           estimate lower_asymptotic upper_asymptotic
+# (Intercept)                  0.672            0.519            0.826
+# Adult_mass_log10             0.869            0.849            0.889
+# Investment_duration_log10   -0.401           -0.472           -0.331
+# 10^(Intercept)                4.70             3.30             6.70
 
 ### Computing R2 in MSLR model
 compure_r2(fit_MSLR_models)
@@ -228,9 +229,10 @@ plot(fit_MPLMM_models, ask = FALSE, which = "predict") ## diagnostics (bad: resi
 plot(MI_models$Litter_mass_log10, predict(fit_MPLMM_models, re.form = NA, type = "link")[, 1]) ## diagnostics, excluding ranef (good!)
 
 ### Computing CI for estimates in MPLMM model (very computationally intensive)
-MPLMM_summary <- extract_fit_summary(fit_MPLMM_models)
-
-pretty(MPLMM_summary$fixef)
+if (FALSE) { # switch FALSE to TRUE to run
+  MPLMM_summary <- extract_fit_summary(fit_MPLMM_models)
+  pretty(MPLMM_summary$fixef)
+}
 #                           estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
 # (Intercept)                  0.173       -0.141        0.249        0.0958         0.484      -0.139       0.249
 # Adult_mass_log10             0.837        0.809        0.852         0.821         0.865       0.808       0.852
@@ -371,3 +373,6 @@ ggplot2::ggsave(filename = "figures/FigS1.png", scale = 1.2, width = 15, height 
 draw_figure_xx(data_mass = MI_mass, fit_default = fit_PLMM_mass_default, fit_females = fit_PLMM_mass_females)
 ggplot2::ggsave(filename = "figures/FigS2.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
 ggplot2::ggsave(filename = "figures/FigS2.png", scale = 1.2, width = 15, height = 10, units = "cm")
+
+
+
