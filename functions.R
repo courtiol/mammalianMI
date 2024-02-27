@@ -2,6 +2,8 @@
 # Nice display ------------------------------------------------------------
 
 pretty <- function(x, digits = 3) {
+  # do.call("data.frame", lapply(as.data.frame(stats), \(x) pretty(x, digits = digits))) ## for DF implementation
+  #rownames(res) <- rownames(stats) ## for DF implementation
   names <- names(x)
   format <- paste0("%#.", digits, "g")
   res <- sprintf(format, signif(x, digits = digits))
@@ -241,7 +243,7 @@ extract_fit_summary <- function(fit, digits = 3, boot_args = list(nb_cores = 50,
 
     if (!is.null(fit$phylo) & lambdaCI) {
       lambda_stats <- confint_lambda(fit)
-      stats <- rbind(fixef_stats, lambda_stats)
+      stats <- list(fixef = fixef_stats, Pagel_Lambda = lambda_stats)
     } else {
       stats <- fixef_stats
     }
@@ -256,9 +258,7 @@ extract_fit_summary <- function(fit, digits = 3, boot_args = list(nb_cores = 50,
     stop("object class not recognized")
   }
   
-  res <- do.call("data.frame", lapply(as.data.frame(stats), \(x) pretty(x, digits = digits)))
-  rownames(res) <- rownames(stats)
-  res
+  stats
 }
 
 
