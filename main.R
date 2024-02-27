@@ -76,21 +76,29 @@ cor_global$p.value # pvalue
 
 ## Fitting SLR model for method comparison
 
+### Fitting SLR model
 fit_SLR_models <- fitme(Litter_mass_log10 ~ Adult_mass_log10, data = MI_models)
+
+### Checking SLR model assumptions
 plot(fit_SLR_models, ask = FALSE, which = "mean")    ## diagnostics (good!)
 plot(fit_SLR_models, ask = FALSE, which = "predict") ## diagnostics (good!)
+
+### Computing CI for estimates in SLR model
 extract_fit_summary(fit_SLR_models)
 #              estimate  lower  upper
 # intercept      -0.195 -0.215 -0.175
 # 10^intercept    0.638  0.610  0.668
 # slope           0.779  0.765  0.792
+
+### Computing R2 in SLR model
 compure_r2(fit_SLR_models)
 #    estimate lower upper    p
 # r2    0.948 0.970 0.977 0.00
 
+
 ## Fitting PLMM model for method comparison
 
-### Fit with estimation of best Pagel's Lambda (version 1: very slow)
+### Fitting PLMM model with estimation of best Pagel's Lambda (version 1: very slow)
 if (FALSE) { # switch FALSE to TRUE to run
   fit_PLMM_models <- fitme_phylo_lambdafree(tree = tree, data = MI_models,
                                             args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + corrMatrix(1|Key),
@@ -98,18 +106,19 @@ if (FALSE) { # switch FALSE to TRUE to run
                                                               resid.model =  ~ Adult_mass_log10 + (1|Key)))
 }
 
-### Fit with estimation of best Pagel's Lambda (version 2: much faster)
-### Since best Pagel's Lambda is 1 on these data, the same output can be quickly obtained as follows
+### Fitting PLMM model without estimation of best Pagel's Lambda (version 2: much faster)
+### Note: since best Pagel's Lambda is 1 on these data, the same output can be quickly obtained as follows
 fit_PLMM_models <- fitme_phylo_lambdafixed(lambda = 1, data = MI_models, tree = tree,
                                            args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + corrMatrix(1|Key),
                                                              resid.model =  ~ Adult_mass_log10 + (1|Key)))
 
+### Checking PLMM model assumptions
 plot(fit_PLMM_models, ask = FALSE, which = "mean")  ## diagnostics (heteroscedastic, but this is accounted for)
 plot(fit_PLMM_models, ask = FALSE, which = "ranef") ## diagnostics (ok)
 plot(fit_PLMM_models, ask = FALSE, which = "predict") ## diagnostics (bad: residual variance partially captured by random variance)
 plot(MI_models$Litter_mass_log10, predict(fit_PLMM_models, re.form = NA, type = "link")[, 1]) ## diagnostics, excluding ranef (good!)
 
-### Compute confidence intervals for PLMM models (computationally intensive)
+### Computing CI for estimates in PLMM model (very computationally intensive)
 PLMM_summary <- extract_fit_summary(fit_PLMM_models)
 PLMM_summary
 #              estimate  lower upper
@@ -117,73 +126,104 @@ PLMM_summary
 # 10^intercept    0.610  0.195  2.31 # CI OUTDATED waiting for fix in spaMM
 # slope           0.807  0.760 0.822 # CI OUTDATED waiting for fix in spaMM
 # lambda           1.00  0.999  1.00 # CI OUTDATED
+
+### Computing R2 in PLMM model
 compure_r2(fit_PLMM_models) ## same as above!
 #    estimate lower upper    p
 # r2    0.948 0.970 0.977 0.00
 
+
 ## Fitting SMA model for method comparison
 
+### Fitting SMA model
 fit_SMA_models <- sma(Litter_mass_log10 ~ Adult_mass_log10, data = MI_models, method = "SMA")
+
+### Checking SMA model assumptions
 plot(fit_SMA_models, which = "default") ## diagnostics (good!)
 plot(fit_SMA_models, which = "residual") ## diagnostics (good!)
 plot(fit_SMA_models, which = "qq") ## diagnostics (ok)
+
+### Computing CI for estimates in SMA model
 extract_fit_summary(fit_SMA_models)
 #              estimate  lower  upper
 # intercept      -0.189 -0.209 -0.170
 # 10^intercept    0.646  0.618  0.677
 # slope           0.800  0.787  0.813
+
+### Computing R2 in SMA model
 compure_r2(fit_SMA_models)
 #    estimate lower upper    p
 # r2    0.987 0.992 0.994 0.00
 
+
 ## Fitting MA model for method comparison
 
+### Fitting MA model
 fit_MA_models <- sma(Litter_mass_log10 ~ Adult_mass_log10, data = MI_models, method = "MA")
+
+### Checking MA model assumptions
 plot(fit_MA_models, which = "default") ## diagnostics (good!)
 plot(fit_MA_models, which = "residual") ## diagnostics (good!)
 plot(fit_MA_models, which = "qq") ## diagnostics (ok)
+
+### Computing CI for estimates in MA model
 extract_fit_summary(fit_MA_models)
 #              estimate  lower  upper
 # intercept      -0.191 -0.211 -0.171
 # 10^intercept    0.645  0.616  0.675
 # slope           0.795  0.781  0.809
+
+### Computing R2 in MA model
 compure_r2(fit_MA_models)
 #    estimate lower upper    p
 # r2    0.980 0.989 0.991 0.00
 
+
 ## Fitting MSLR model for method comparison
 
+### Fitting MSLR model
 fit_MSLR_models <- fitme(Litter_mass_log10 ~ Adult_mass_log10 + Investment_duration_log10, data = MI_models)
+
+### Checking MSLR model assumptions
 plot(fit_MSLR_models, ask = FALSE, which = "mean")    ## diagnostics (good!)
 plot(fit_MSLR_models, ask = FALSE, which = "predict") ## diagnostics (good!)
+
+### Computing CI for estimates in MSLR model
 extract_fit_summary(fit_MSLR_models)
 #              estimate   lower   upper
 # intercept       0.672  0.519  0.826
 # 10^intercept     4.70   3.30   6.70
 # slope           0.869  0.849  0.889
 # slope_InvDur   -0.401 -0.472 -0.331
+
+### Computing R2 in MSLR model
 compure_r2(fit_MSLR_models)
 #    estimate lower upper    p
 # r2    0.956 0.974 0.981 0.00
 
+
 ## Fitting MPLMM model for method comparison
+
+### Fitting MPLMM model with estimation of best Pagel's Lambda (version 1: very slow)
 if (FALSE) { # switch FALSE to TRUE to run
   fit_MPLMM_models <- fitme_phylo_lambdafree(data = MI_models, tree = tree,
                                              args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
                                                                resid.model =  ~ Adult_mass_log10 + (1|Key)))
 }
 
-### Since best Pagel's Lambda is 1 on these data, the same output can be quickly obtained as follows
+### Fitting MPLMM model without estimation of best Pagel's Lambda (version 2: much faster)
+### Note: since best Pagel's Lambda is 1 on these data, the same output can be quickly obtained as follows
 fit_MPLMM_models <- fitme_phylo_lambdafixed(lambda = 1, data = MI_models, tree = tree,
                                             args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
                                                               resid.model =  ~ Adult_mass_log10 + (1|Key)))
 
+### Checking MPLMM model assumptions
 plot(fit_MPLMM_models, ask = FALSE, which = "mean")  ## diagnostics (heteroscedastic, but this is accounted for)
 plot(fit_MPLMM_models, ask = FALSE, which = "ranef") ## diagnostics (ok)
 plot(fit_MPLMM_models, ask = FALSE, which = "predict") ## diagnostics (bad: residual variance captured by random variance)
 plot(MI_models$Litter_mass_log10, predict(fit_MPLMM_models, re.form = NA, type = "link")[, 1]) ## diagnostics, excluding ranef (good!)
 
-### Compute confidence intervals for PLMM models (computationally intensive)
+### Computing CI for estimates in MPLMM model (very computationally intensive)
 MPLMM_summary <- extract_fit_summary(fit_MPLMM_models)
 MPLMM_summary
 #              estimate   lower upper
@@ -192,6 +232,8 @@ MPLMM_summary
 # slope           0.837  0.726  0.801 # OUTDATED waiting for fix in spaMM
 # slope_InvDur   -0.195 0.0439  0.351 # OUTDATED waiting for fix in spaMM
 # lambda           1.00  0.999   1.00 # OUTDATED
+
+### Computing R2 in MPLMM model
 compure_r2(fit_MPLMM_models)
 #    estimate lower upper    p
 # r2    0.953 0.973 0.980 0.00

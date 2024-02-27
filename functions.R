@@ -241,7 +241,7 @@ extract_fit_summary <- function(fit, digits = 3, boot_args = list(nb_cores = 50,
 
     if (!is.null(fit$phylo) & lambdaCI) {
       lambda_stats <- confint_lambda(fit)
-      stats <- rbind(stats, lambda_stats)
+      stats <- rbind(fixef_stats, lambda_stats)
     } else {
       stats <- fixef_stats
     }
