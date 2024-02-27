@@ -535,7 +535,7 @@ draw_figure_5A <- function(data_indicators) {
 
   fig <- ggplot2::ggplot(data = data_indicators) + 
          ggplot2::aes(x = ...., y = Litter_mass_log10, col = Subclass, fill = Subclass, shape = 4) +
-         rphylopic::geom_phylopic(aes(x = ...., y = Litter_mass_log10, name = name, col=Subclass), 
+         geom_phylopic(ggplot2::aes(x = ...., y = Litter_mass_log10, name = Name, col=Subclass), 
                   size = 0.3, alpha = 0.7, data = data_indicators) +
          ggplot2::scale_x_continuous(trans = "log10", breaks = c(0.1, 1, 10, 100, 1000, 10000, 100000), 
                                 labels = scales::number_format(accuracy = 0.1), expand = c(0, 0)) + 
@@ -559,7 +559,7 @@ draw_figure_5A <- function(data_indicators) {
 draw_figure_5B <- function(data_indicators) {
   
   fig <- ggplot2::ggplot(data = data_indicators) + 
-    geom_phylopic(aes(x = MI, y = reorder(Name, -MI), name = name, col=Subclass), 
+    geom_phylopic(ggplot2::aes(x = MI, y = reorder(Name, -MI), name = Name, col=Subclass), 
                   size = 0.8) +
     ggplot2::coord_cartesian(xlim = c(-1.6,2)) +
     ggplot2::labs(y = 'Species', x = 'Maternal investment') +
