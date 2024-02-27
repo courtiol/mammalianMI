@@ -3,7 +3,7 @@
 source("functions.R")
 
 # Checking dependencies ---------------------------------------------------
-check_dependencies_all(c("ape", "coin", "ggplot2", "nlme", "scales", "smatr", "spaMM", "tidyr"))
+check_dependencies_all(c("ape", "coin", "doSNOW", "ggplot2", "nlme", "scales", "smatr", "spaMM", "tidyr"))
 
 
 # Load dependencies -------------------------------------------------------
@@ -108,7 +108,9 @@ plot(fit_PLMM_models, ask = FALSE, which = "mean")  ## diagnostics (heteroscedas
 plot(fit_PLMM_models, ask = FALSE, which = "ranef") ## diagnostics (ok)
 plot(fit_PLMM_models, ask = FALSE, which = "predict") ## diagnostics (bad: residual variance partially captured by random variance)
 plot(MI_models$Litter_mass_log10, predict(fit_PLMM_models, re.form = NA, type = "link")[, 1]) ## diagnostics, excluding ranef (good!)
-system.time(PLMM_summary <- extract_fit_summary(fit_PLMM_models))
+
+### Compute confidence intervals for PLMM models (computationally intensive)
+PLMM_summary <- extract_fit_summary(fit_PLMM_models)
 PLMM_summary
 #              estimate  lower upper
 # intercept      -0.215 -0.710 0.364 # CI OUTDATED waiting for fix in spaMM
@@ -180,7 +182,9 @@ plot(fit_MPLMM_models, ask = FALSE, which = "mean")  ## diagnostics (heterosceda
 plot(fit_MPLMM_models, ask = FALSE, which = "ranef") ## diagnostics (ok)
 plot(fit_MPLMM_models, ask = FALSE, which = "predict") ## diagnostics (bad: residual variance captured by random variance)
 plot(MI_models$Litter_mass_log10, predict(fit_MPLMM_models, re.form = NA, type = "link")[, 1]) ## diagnostics, excluding ranef (good!)
-system.time(MPLMM_summary <- extract_fit_summary(fit_MPLMM_models))
+
+### Compute confidence intervals for PLMM models (computationally intensive)
+MPLMM_summary <- extract_fit_summary(fit_MPLMM_models)
 MPLMM_summary
 #              estimate   lower upper
 # intercept       0.173  -1.18 0.0756 # OUTDATED waiting for fix in spaMM

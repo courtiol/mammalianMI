@@ -198,50 +198,66 @@ confint_lambda <- function(bestfit) {
   c(estimate = lambda_ref, lower = lambda_lwr, upper = lambda_upr)
 }
 
+## This function estimates the 95% CI for the fixed effects of models fitted with spaMM
+
+confint_fixef <- function(fit, boot_args = NULL) {
+  
+  if (!is.null(boot_args) && boot_args$nb_cores > parallel::detectCores()) {
+    stop("CI not computed under default settings; this is computationally challenging and therefore is best done on a large computer.")
+  }
+  
+  message("Estimating CI for fixed effects... be patient")
+  
+  requireNamespace("doSNOW", quietly = TRUE)
+  params <- names(spaMM::fixef(fit))
+  res <- confint(fit, parm = params, verbose = FALSE, boot_args = boot_args, format = "stats")
+  res <- lapply(res, \(block) {
+    colnames(block) <- c("lower", "upper")
+    block
+    })
+  res_wide <- do.call("cbind", res)
+  colnames(res_wide) <- paste0(rep(names(res), each = 2), "_", colnames(res_wide))
+  cbind(estimate = spaMM::fixef(fit), res_wide)
+}
 
 
 # Extract information from fits -------------------------------------------
 
 ## This functions extract parameters and their 95% confidence intervals
 
-extract_fit_summary <- function(fit, digits = 3) {
-
+extract_fit_summary <- function(fit, digits = 3, boot_args = list(nb_cores = 50, nsim = 1000, seed = 123), lambdaCI = TRUE) {
+  
   if (inherits(fit, what = "HLfit")) {
+    
     if (!is.null(fit$phylo)) {
       corM <<- fit$phylo$corM ## to circumvent spaMM scoping issue in confint()
-      message("Estimating CI for fixed effects... be patient")
+    } else {
+      message("Simple models, so parametric bootstrap not used.")
+      boot_args <- NULL
     }
-    intercept <- c(estimate = fixef(fit)["(Intercept)"][[1]],
-                   confint(fit, parm = "(Intercept)", verbose = FALSE)$interval)
-    intercept_transformed <- c(estimate = 10^fixef(fit)["(Intercept)"][[1]],
-                               10^confint(fit, parm = "(Intercept)", verbose = FALSE)$interval)
-    slope <- c(estimate = fixef(fit)["Adult_mass_log10"][[1]],
-              confint(fit, parm = "Adult_mass_log10", verbose = FALSE)$interval)
-    stats <- rbind(intercept, intercept_transformed, slope)
-    if (grepl(pattern = ".*Investment_duration", x = as.character(formula(fit))[3])) {
-      slope_InvDur <- c(estimate = fixef(fit)["Investment_duration_log10"][[1]],
-                       confint(fit, parm = "Investment_duration_log10", verbose = FALSE)$interval)
-      stats <- rbind(stats, slope_InvDur)
+    
+    fixef_stats <- confint_fixef(fit, boot_args = boot_args)
+    fixef_stats <- rbind(fixef_stats, "10^(Intercept)" = 10^fixef_stats["(Intercept)", ] )
+
+    if (!is.null(fit$phylo) & lambdaCI) {
+      lambda_stats <- confint_lambda(fit)
+      stats <- rbind(stats, lambda_stats)
+    } else {
+      stats <- fixef_stats
     }
-    colnames(stats) <- c("estimate", "lower", "upper")
-    if (!is.null(fit$phylo)) {
-      lambda <- confint_lambda(fit)
-      stats <- rbind(stats, lambda)
-    }
+    
   } else if (inherits(fit, what = "sma")) {
     stats <- fit$coef[[1]]
     rownames(stats)[1] <- "intercept"
-    stats <- rbind(intercept_transformed = 10^stats[1, ], stats)
-    stats <- stats[c("intercept", "intercept_transformed", "slope"),]
+    stats <- rbind("10^intercept" = 10^stats[1, ], stats)
+    stats <- stats[c("intercept", "10^intercept", "slope"),]
     colnames(stats) <- c("estimate", "lower", "upper")
   } else {
     stop("object class not recognized")
   }
   
-  rownames(stats)[rownames(stats) == "intercept_transformed"] <- "10^intercept"
-  rows <- rownames(stats)
   res <- do.call("data.frame", lapply(as.data.frame(stats), \(x) pretty(x, digits = digits)))
-  rownames(res) <- rows
+  rownames(res) <- rownames(stats)
   res
 }
 
