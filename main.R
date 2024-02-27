@@ -3,7 +3,7 @@
 source("functions.R")
 
 # Checking dependencies ---------------------------------------------------
-check_dependencies_all(c("ape", "coin", "doSNOW", "ggplot2", "nlme", "scales", "smatr", "spaMM", "tidyr"))
+check_dependencies_all(c("ape", "coin", "doSNOW", "ggdist", "ggplot2", "nlme", "scales", "smatr", "spaMM", "tidyr"))
 
 
 # Load dependencies -------------------------------------------------------
@@ -374,5 +374,14 @@ draw_figure_xx(data_mass = MI_mass, fit_default = fit_PLMM_mass_default, fit_fem
 ggplot2::ggsave(filename = "figures/FigS2.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
 ggplot2::ggsave(filename = "figures/FigS2.png", scale = 1.2, width = 15, height = 10, units = "cm")
 
+
+
+# Comparison of Subclasses ------------------------------------------------
+
+MI_subclasses$MI  <- MI_subclasses$Litter_mass_log10 - predict(fit_PLMM_models, newdata = MI_subclasses, re.form = NA, type = "link")[, 1]
+
+draw_figure_4(MI_subclasses)
+ggplot2::ggsave(filename = "figures/Fig4.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
+ggplot2::ggsave(filename = "figures/Fig4.png", scale = 1.2, width = 15, height = 10, units = "cm")
 
 

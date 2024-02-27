@@ -494,5 +494,23 @@ draw_figure_xx <- function(data_mass, fit_default, fit_females) {
   print(fig)
 }
 
+## This function draws figure 4
 
-
+draw_figure_4 <- function(data_subclasses) {
+  
+  fig <- ggplot2::ggplot(data = data_subclasses[data_subclasses$Subclass != "Monotremata", ]) +
+          ggplot2::aes(x = Subclass, y = MI, col = Subclass, fill = Subclass) + 
+          ggdist::stat_dots(alpha = 0.5, layout = "weave", show.legend = FALSE, dotsize = 1) + 
+          ggdist::stat_pointinterval(show.legend = FALSE, .width = c(0.5, 0.95),
+                                     position = ggplot2::position_dodge(width = 0.1, preserve = "single")) +
+          ggplot2::geom_point(data = data_subclasses[data_subclasses$Subclass == "Monotremata", ],
+                              mapping = ggplot2::aes(y = MI, x = Subclass),
+                              colour = "#FCC501", fill = "#FCC501", alpha = 0.5, size = 1.5) +
+          ggplot2::labs(y = 'Maternal investment', x = 'Subclass') +
+          ggplot2::coord_cartesian(xlim = c(0.9, 3.1), expand = FALSE, ylim = c(-1, 1)) +
+          ggplot2::theme_classic() +
+          ggplot2::scale_color_manual(values = c("steelblue", "darkred", "#FCC501")) +
+          ggplot2::scale_fill_manual(values = c("steelblue", "darkred", "#FCC501"))
+  
+  print(fig)
+}
