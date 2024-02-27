@@ -25,11 +25,11 @@ MI_raw <- read.csv2("data/MI.csv", dec = ".", na.strings = "")
 
 ### Format the full dataset (see functions.R for details)
 MI_full <- prepare_df_MIfull(MI_raw)
-nrow(MI_full) # 1040
+nrow(MI_full) # 1041
 
 ### Prepare subsample with for comparison between subclasses
 MI_subclasses <- droplevels(MI_full[MI_full$Key %in% tree[["tip.label"]], ])
-nrow(MI_subclasses) # 799
+nrow(MI_subclasses) # 801
 str(MI_subclasses)
 
 ### Prepare subsample with for comparison between orders
@@ -44,7 +44,7 @@ str(MI_orders)
 
 ### Prepare subsample with no missing data for modelling
 MI_models <- droplevels(MI_subclasses[!is.na(MI_subclasses$Investment_duration), ])
-nrow(MI_models) # 736
+nrow(MI_models) # 738
 str(MI_models)
 
 ### Prepare subsample with no missing data for mass proxy comparison
@@ -86,14 +86,14 @@ plot(fit_SLR_models, ask = FALSE, which = "predict") ## diagnostics (good!)
 ### Computing CI for estimates in SLR model
 pretty(extract_fit_summary(fit_SLR_models))
 #                  estimate lower_asymptotic upper_asymptotic
-# (Intercept)        -0.195           -0.215           -0.175
-# Adult_mass_log10    0.779            0.765            0.792
-# 10^(Intercept)      0.638            0.610            0.668
+# (Intercept)        -0.196           -0.216           -0.176
+# Adult_mass_log10    0.778            0.765            0.791
+# 10^(Intercept)      0.637            0.608            0.666
 
 ### Computing R2 in SLR model
 compure_r2(fit_SLR_models)
 #    estimate lower upper    p
-# r2    0.948 0.970 0.977 0.00
+# r2    0.947 0.969 0.977 0.00
 
 
 ## Fitting PLMM model for method comparison
@@ -124,9 +124,10 @@ if (FALSE) { # switch FALSE to TRUE to run
   pretty(PLMM_summary$fixef)
 }
 #                  estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
-# (Intercept)        -0.215       -0.313       -0.106        -0.326        -0.122      -0.307      -0.103
-# Adult_mass_log10    0.807        0.792        0.828         0.788         0.824       0.791       0.827
-# 10^(Intercept)      0.610        0.486        0.783         0.472         0.755       0.493       0.789
+# (Intercept)        -0.192       -0.293      -0.0712        -0.312       -0.0977      -0.286     -0.0713
+# Adult_mass_log10    0.806        0.791        0.826         0.786         0.822       0.791       0.827
+# 10^(Intercept)      0.643        0.509        0.849         0.488         0.798       0.518       0.849
+
 
 pretty(PLMM_summary$Pagel_Lambda)
 # estimate    lower    upper 
@@ -135,8 +136,7 @@ pretty(PLMM_summary$Pagel_Lambda)
 ### Computing R2 in PLMM model
 compure_r2(fit_PLMM_models) ## same as above!
 #    estimate lower upper    p
-# r2    0.948 0.970 0.977 0.00
-
+# r2    0.947 0.969 0.977 0.00
 
 ## Fitting SMA model for method comparison
 
@@ -151,15 +151,14 @@ plot(fit_SMA_models, which = "qq") ## diagnostics (ok)
 ### Computing CI for estimates in SMA model
 pretty(extract_fit_summary(fit_SMA_models))
 #              estimate  lower  upper
-# intercept      -0.189 -0.209 -0.170
-# 10^intercept    0.646  0.618  0.677
-# slope           0.800  0.787  0.813
+# intercept      -0.190 -0.210 -0.170
+# 10^intercept    0.645  0.616  0.675
+# slope           0.799  0.786  0.813
 
 ### Computing R2 in SMA model
 compure_r2(fit_SMA_models)
 #    estimate lower upper    p
 # r2    0.987 0.992 0.994 0.00
-
 
 ## Fitting MA model for method comparison
 
@@ -174,9 +173,9 @@ plot(fit_MA_models, which = "qq") ## diagnostics (ok)
 ### Computing CI for estimates in MA model
 pretty(extract_fit_summary(fit_MA_models))
 #              estimate  lower  upper
-# intercept      -0.191 -0.211 -0.171
-# 10^intercept    0.645  0.616  0.675
-# slope           0.795  0.781  0.809
+# intercept      -0.192 -0.212 -0.172
+# 10^intercept    0.643  0.614  0.673
+# slope           0.795  0.781  0.808
 
 ### Computing R2 in MA model
 compure_r2(fit_MA_models)
@@ -196,15 +195,15 @@ plot(fit_MSLR_models, ask = FALSE, which = "predict") ## diagnostics (good!)
 ### Computing CI for estimates in MSLR model
 pretty(extract_fit_summary(fit_MSLR_models))
 #                           estimate lower_asymptotic upper_asymptotic
-# (Intercept)                  0.672            0.519            0.826
-# Adult_mass_log10             0.869            0.849            0.889
-# Investment_duration_log10   -0.401           -0.472           -0.331
-# 10^(Intercept)                4.70             3.30             6.70
+# (Intercept)                  0.664            0.508            0.819
+# Adult_mass_log10             0.867            0.847            0.887
+# Investment_duration_log10   -0.398           -0.470           -0.327
+# 10^(Intercept)                4.61             3.22             6.60
 
 ### Computing R2 in MSLR model
 compure_r2(fit_MSLR_models)
 #    estimate lower upper    p
-# r2    0.956 0.974 0.981 0.00
+# r2    0.954 0.973 0.980 0.00
 
 
 ## Fitting MPLMM model for method comparison
@@ -233,11 +232,12 @@ if (FALSE) { # switch FALSE to TRUE to run
   MPLMM_summary <- extract_fit_summary(fit_MPLMM_models)
   pretty(MPLMM_summary$fixef)
 }
+
 #                           estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
-# (Intercept)                  0.173       -0.141        0.249        0.0958         0.484      -0.139       0.249
-# Adult_mass_log10             0.837        0.809        0.852         0.821         0.865       0.808       0.852
-# Investment_duration_log10   -0.195       -0.219      -0.0501        -0.340        -0.170      -0.220     -0.0500
-# 10^(Intercept)                1.49        0.723         1.77          1.25          3.05       0.725        1.78
+# (Intercept)                  0.204       -0.126        0.305         0.104         0.543      -0.135       0.304
+# Adult_mass_log10             0.836        0.808        0.853         0.818         0.864       0.808       0.854
+# Investment_duration_log10   -0.199       -0.227      -0.0481        -0.351        -0.173      -0.225     -0.0473
+# 10^(Intercept)                1.60        0.748         2.02          1.27          3.49       0.733        2.01
 
 pretty(MPLMM_summary$Pagel_Lambda)
 # estimate    lower    upper 
@@ -246,7 +246,7 @@ pretty(MPLMM_summary$Pagel_Lambda)
 ### Computing R2 in MPLMM model
 compure_r2(fit_MPLMM_models)
 #    estimate lower upper    p
-# r2    0.953 0.973 0.980 0.00
+# r2    0.952 0.972 0.979 0.00
 
 # Figure 1 ----------------------------------------------------------------
 
@@ -278,41 +278,41 @@ MI_models$MI_MPLMM <- MI_models$Litter_mass_log10 - predict(fit_MPLMM_models, re
 corMI <- cor(MI_models[, c("MI_SLR", "MI_SMA", "MI_MA", "MI_MSLR")])
 diag(corMI) <- NA
 corMI
-range(corMI, na.rm = TRUE)
-# [1] 0.9187744 0.9996684
+pretty(range(corMI, na.rm = TRUE))
+# [1] "0.921" "1.00" 
 
 quade.test(as.matrix(MI_models[, c("MI_SLR", "MI_SMA", "MI_MA", "MI_MSLR")]))
 # data:  as.matrix(MI_models[, c("MI_SLR", "MI_SMA", "MI_MA", "MI_MSLR")])
-# Quade F = 0.66567, num df = 3, denom df = 2205, p-value = 0.5731
+# Quade F = 0.64218, num df = 3, denom df = 2211, p-value = 0.5879
 
 ## Comparison between phylogenetic and non-phylogenetic counterpart
 corMI <- cor(MI_models[, c("MI_PLMM", "MI_MPLMM", "MI_SLR", "MI_SMA", "MI_MA", "MI_MSLR")])
 diag(corMI) <- NA
 corMI
-range(corMI, na.rm = TRUE)
-# [1] 0.9134880 0.9996684
+pretty(range(corMI, na.rm = TRUE))
+# [1] "0.917" "1.00" 
 
 univariate_phylo_test <- data.frame(LRT = unname(-2*(logLik(fit_SLR_models) - logLik(fit_PLMM_models))))
 univariate_phylo_test$df <- 1 ## that should be more than 1 since there are df for the residual model...
 univariate_phylo_test$p <- with(univariate_phylo_test, pchisq(LRT, df, lower.tail = FALSE))
-univariate_phylo_test
-#        LRT df           p
-# 1 932.2787  1 9.439609e-205 # OUTDATED and WRONG
+pretty(univariate_phylo_test)
+#    LRT   df         p
+# 1 933. 1.00 7.86e-205 # PROBABLY WRONG
 
 multivariate_phylo_test <- data.frame(LRT = unname(-2*(logLik(fit_MSLR_models) - logLik(fit_MPLMM_models))))
 multivariate_phylo_test$df <- 1 ## that should be more than 1 since there are df for the residual model...
 multivariate_phylo_test$p <- with(multivariate_phylo_test, pchisq(LRT, df, lower.tail = FALSE))
-multivariate_phylo_test
-#       LRT df             p
-# 1 810.2442  1 3.19747e-178 # OUTDATED and WRONG
+pretty(multivariate_phylo_test)
+#    LRT   df         p
+# 1 824. 1.00 3.80e-181 # PROBABLY WRONG
 
 ## Comparison between the 2 PLMMs
 multivariatePLMM_phylo_test <- data.frame(LRT = unname(-2*(logLik(fit_PLMM_models) - logLik(fit_MPLMM_models))))
 multivariatePLMM_phylo_test$df <- 1
 multivariatePLMM_phylo_test$p <- with(multivariatePLMM_phylo_test, pchisq(LRT, df, lower.tail = FALSE))
-multivariatePLMM_phylo_test
-#        LRT df p
-# -0.6251432  1 1 ## OUTDATED and WRONG
+pretty(multivariatePLMM_phylo_test)
+#    LRT   df     p
+# 1 1.80 1.00 0.180 # PROBABLY WRONG
 
 
 # Comparison of mass proxies ----------------------------------------------

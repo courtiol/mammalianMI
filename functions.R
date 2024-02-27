@@ -498,16 +498,28 @@ draw_figure_xx <- function(data_mass, fit_default, fit_females) {
 
 draw_figure_4 <- function(data_subclasses) {
   
+  euth <- data_subclasses[data_subclasses$Subclass == "Eutheria", ]
+  euth <- euth[rank(-euth$MI) %in% 1:2 | rank(euth$MI) %in% 1:2, ] 
+  euth$x <- 1
+  meta <- data_subclasses[data_subclasses$Subclass == "Metatheria", ]
+  meta <- meta[rank(-meta$MI) %in% 1:2 | rank(meta$MI) %in% 1, ]
+  meta$x <- 2
+  mono <- data_subclasses[data_subclasses$Subclass == "Monotremata", ]
+  mono$x <- 3 - 0.02
+  flagged <- do.call("rbind", list(euth = euth, meta = meta, mono = mono))
+  
   fig <- ggplot2::ggplot(data = data_subclasses[data_subclasses$Subclass != "Monotremata", ]) +
           ggplot2::aes(x = Subclass, y = MI, col = Subclass, fill = Subclass) + 
           ggdist::stat_dots(alpha = 0.5, layout = "weave", show.legend = FALSE, dotsize = 1) + 
           ggdist::stat_pointinterval(show.legend = FALSE, .width = c(0.5, 0.95),
-                                     position = ggplot2::position_dodge(width = 0.1, preserve = "single")) +
+                                     position = ggplot2::position_nudge(x = -0.05)) +
           ggplot2::geom_point(data = data_subclasses[data_subclasses$Subclass == "Monotremata", ],
                               mapping = ggplot2::aes(y = MI, x = Subclass),
-                              colour = "#FCC501", fill = "#FCC501", alpha = 0.5, size = 1.5) +
+                              colour = "#FCC501", fill = "#FCC501", alpha = 0.5, size = 1) +
+          ggplot2::geom_text(ggplot2::aes(x = x - 0.02, y = MI, label = as.character(Name)),
+                             hjust = 1, data = flagged, show.legend = FALSE, size = 2) +
           ggplot2::labs(y = 'Maternal investment', x = 'Subclass') +
-          ggplot2::coord_cartesian(xlim = c(0.9, 3.1), expand = FALSE, ylim = c(-1, 1)) +
+          ggplot2::scale_y_continuous(breaks = seq(-1.5, 1.5, 0.5), expand = c(0.1, 0.1)) +
           ggplot2::theme_classic() +
           ggplot2::scale_color_manual(values = c("steelblue", "darkred", "#FCC501")) +
           ggplot2::scale_fill_manual(values = c("steelblue", "darkred", "#FCC501"))
