@@ -2,8 +2,13 @@
 # Nice display ------------------------------------------------------------
 
 pretty <- function(x, digits = 3) {
-  # do.call("data.frame", lapply(as.data.frame(stats), \(x) pretty(x, digits = digits))) ## for DF implementation
-  #rownames(res) <- rownames(stats) ## for DF implementation
+  
+  if (inherits(x, "matrix") || inherits(x, "data.frame")) {
+    res <- do.call("data.frame", lapply(as.data.frame(x), \(x) pretty(x, digits = digits)))
+    rownames(res) <- rownames(x)
+    return(res)
+  }
+  
   names <- names(x)
   format <- paste0("%#.", digits, "g")
   res <- sprintf(format, signif(x, digits = digits))

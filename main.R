@@ -120,12 +120,16 @@ plot(MI_models$Litter_mass_log10, predict(fit_PLMM_models, re.form = NA, type = 
 
 ### Computing CI for estimates in PLMM model (very computationally intensive)
 PLMM_summary <- extract_fit_summary(fit_PLMM_models)
-PLMM_summary
-#              estimate  lower upper
-# intercept      -0.215 -0.710 0.364 # CI OUTDATED waiting for fix in spaMM
-# 10^intercept    0.610  0.195  2.31 # CI OUTDATED waiting for fix in spaMM
-# slope           0.807  0.760 0.822 # CI OUTDATED waiting for fix in spaMM
-# lambda           1.00  0.999  1.00 # CI OUTDATED
+
+pretty(PLMM_summary$fixef)
+#                  estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
+# (Intercept)        -0.215       -0.313       -0.106        -0.326        -0.122      -0.307      -0.103
+# Adult_mass_log10    0.807        0.792        0.828         0.788         0.824       0.791       0.827
+# 10^(Intercept)      0.610        0.486        0.783         0.472         0.755       0.493       0.789
+
+pretty(PLMM_summary$Pagel_Lambda)
+# estimate    lower    upper 
+#   "1.00"  "0.999"   "1.00" 
 
 ### Computing R2 in PLMM model
 compure_r2(fit_PLMM_models) ## same as above!
@@ -225,13 +229,17 @@ plot(MI_models$Litter_mass_log10, predict(fit_MPLMM_models, re.form = NA, type =
 
 ### Computing CI for estimates in MPLMM model (very computationally intensive)
 MPLMM_summary <- extract_fit_summary(fit_MPLMM_models)
-MPLMM_summary
-#              estimate   lower upper
-# intercept       0.173  -1.18 0.0756 # OUTDATED waiting for fix in spaMM
-# 10^intercept     1.49 0.0657   1.19 # OUTDATED waiting for fix in spaMM
-# slope           0.837  0.726  0.801 # OUTDATED waiting for fix in spaMM
-# slope_InvDur   -0.195 0.0439  0.351 # OUTDATED waiting for fix in spaMM
-# lambda           1.00  0.999   1.00 # OUTDATED
+
+pretty(MPLMM_summary$fixef)
+#                           estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
+# (Intercept)                  0.173       -0.141        0.249        0.0958         0.484      -0.139       0.249
+# Adult_mass_log10             0.837        0.809        0.852         0.821         0.865       0.808       0.852
+# Investment_duration_log10   -0.195       -0.219      -0.0501        -0.340        -0.170      -0.220     -0.0500
+# 10^(Intercept)                1.49        0.723         1.77          1.25          3.05       0.725        1.78
+
+pretty(MPLMM_summary$Pagel_Lambda)
+# estimate    lower    upper 
+#   "1.00"  "0.999"   "1.00" 
 
 ### Computing R2 in MPLMM model
 compure_r2(fit_MPLMM_models)
