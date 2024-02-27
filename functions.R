@@ -218,7 +218,7 @@ confint_fixef <- function(fit, boot_args = NULL) {
     block
     })
   res_wide <- do.call("cbind", res)
-  colnames(res_wide) <- paste0(rep(names(res), each = 2), "_", colnames(res_wide))
+  colnames(res_wide) <- paste0(colnames(res_wide), "_", rep(names(res), each = 2))
   cbind(estimate = spaMM::fixef(fit), res_wide)
 }
 
