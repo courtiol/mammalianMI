@@ -3,7 +3,7 @@
 source("functions.R")
 
 # Checking dependencies ---------------------------------------------------
-check_dependencies_all(c("ape", "boot", "coin", "doSNOW", "ggdist", "ggplot2", "nlme", "scales", "smatr", "spaMM", "tidyr"))
+check_dependencies_all(c("ape", "boot", "coin", "doSNOW", "ggdist", "ggplot2", "nlme", "patchwork", "scales", "smatr", "spaMM", "tidyr"))
 
 
 # Load dependencies -------------------------------------------------------
@@ -32,14 +32,41 @@ MI_subclasses <- droplevels(MI_full[!is.na(MI_full$Investment_duration) & MI_ful
 nrow(MI_subclasses) # 738
 str(MI_subclasses)
 
+MI_subclasses_noD <- droplevels(MI_full[MI_full$Key %in% tree[["tip.label"]], ])
+nrow(MI_subclasses_noD) # 801
+str(MI_subclasses_noD)
+
+
 ### Prepare subsample with for comparison between orders
-orders_vs_N    <- aggregate(MI_subclasses[, "Key", drop = FALSE], list(Order = MI_subclasses$Order), length)
-orders_to_keep <- as.character(orders_vs_N$Order[orders_vs_N$Key >= 15])
+orders_vs_N1 <- aggregate(Subclass ~ Order, data = MI_subclasses, \(x) length(x))
+colnames(orders_vs_N1)[2] <- "Nsp"
+orders_vs_N2 <- aggregate(Subclass ~ Order, data = MI_subclasses, \(x) unique(x))
+orders_vs_N  <- merge(orders_vs_N1, orders_vs_N2, by = "Order")
+orders_vs_N  <- orders_vs_N[order(-orders_vs_N$Nsp), ]
+rownames(orders_vs_N) <- NULL
+orders_to_keep <- orders_vs_N[orders_vs_N$Nsp > 15, "Order"]
+orders_vs_N[orders_vs_N$Order %in% orders_to_keep, ]
+#             Order Nsp   Subclass
+# 1        Rodentia 252   Eutheria
+# 2       Carnivora  85   Eutheria
+# 3        Primates  83   Eutheria
+# 4      Chiroptera  71   Eutheria
+# 5 Cetartiodactyla  61   Eutheria
+# 6    Eulipotyphla  58   Eutheria
+# 7   Diprotodontia  44 Metatheria
+# 8  Dasyuromorphia  23 Metatheria
+# 9      Lagomorpha  22   Eutheria
 MI_orders <- droplevels(MI_subclasses[MI_subclasses$Order %in% orders_to_keep, ])
-sort(unique(MI_orders$Order))
-# [1] Carnivora Cetartiodactyla Chiroptera Dasyuromorphia Diprotodontia Eulipotyphla Lagomorpha Primates Rodentia       
 nrow(MI_orders) # 699
 str(MI_orders)
+
+MI_orders_euth <- droplevels(MI_orders[MI_orders$Subclass == "Eutheria", ])
+nrow(MI_orders_euth)
+# [1] 632
+
+MI_orders_meta <- droplevels(MI_orders[MI_orders$Subclass == "Metatheria", ])
+nrow(MI_orders_meta)
+# [1] 67
 
 ### Prepare subsample with no missing data for modelling
 MI_models <- MI_subclasses
@@ -473,13 +500,13 @@ if (FALSE) {
 # 10^(Intercept)                2.41         1.23         3.20          1.83          4.66        1.25        3.18
 }
 
-fit_MPLMM_metath <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_subclasses[MI_subclasses$Subclass == "Metatheria", ], 
-                                            args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
-                                                              resid.model =  ~ Adult_mass_log10 + (1|Key)))
+fit_MPLMM_meta <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_subclasses[MI_subclasses$Subclass == "Metatheria", ], 
+                                          args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
+                                                            resid.model =  ~ Adult_mass_log10 + (1|Key)))
 
 if (FALSE) {
-  MPLMM_metath_summary <- extract_fit_summary(fit_MPLMM_metath, lambdaCI = FALSE)
-  pretty(MPLMM_metath_summary$fixef)
+  MPLMM_meta_summary <- extract_fit_summary(fit_MPLMM_meta, lambdaCI = FALSE)
+  pretty(MPLMM_meta_summary$fixef)
 #                           estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
 # (Intercept)                 -0.109       -0.925        0.591        -0.799         0.705      -0.923       0.581
 # Adult_mass_log10             0.762        0.686        0.850         0.678         0.838       0.686       0.845
@@ -500,14 +527,14 @@ if (FALSE) {
 #  10^(Intercept)       1.10        0.884         1.60         0.771          1.41       0.863        1.58
 }
 
-fit_MPLMM_metath_noD <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_subclasses[MI_subclasses$Subclass == "Metatheria", ], 
-                                                args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + corrMatrix(1|Key),
+fit_MPLMM_meta_noD <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_subclasses[MI_subclasses$Subclass == "Metatheria", ], 
+                                              args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + corrMatrix(1|Key),
                                                                 resid.model =  ~ Adult_mass_log10 + (1|Key)))
 
 if (FALSE) {
-  MPLMM_metath_noD_summary <- extract_fit_summary(fit_MPLMM_metath_noD, lambdaCI = FALSE)
-  pretty(MPLMM_metath_noD_summary)
-  pretty(MPLMM_metath_noD_summary)
+  MPLMM_meta_noD_summary <- extract_fit_summary(fit_MPLMM_meta_noD, lambdaCI = FALSE)
+  pretty(MPLMM_meta_noD_summary)
+  pretty(MPLMM_meta_noD_summary)
 #                  estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
 # (Intercept)        -0.286       -0.370       -0.224        -0.352        -0.203      -0.369      -0.220
 # Adult_mass_log10    0.748        0.702        0.814         0.685         0.793       0.703       0.811
@@ -516,7 +543,108 @@ if (FALSE) {
 }
 
 
-# 20 Indicator Species
+
+# Comparison of Orders ------------------------------------------------
+
+MI_orders_euth$MI  <- MI_orders_euth$Litter_mass_log10 - predict(fit_MPLMM_euth, newdata = MI_orders_euth, re.form = NA, type = "link")[, 1]
+MI_orders_meta$MI  <- MI_orders_meta$Litter_mass_log10 - predict(fit_MPLMM_meta, newdata = MI_orders_meta, re.form = NA, type = "link")[, 1]
+
+## Figure 5
+fig5A <- draw_figure_5(MI_orders_euth, tag = "A.", col_begin = 0, col_end = 0.8, scale = 0.9)
+fig5B <- draw_figure_5(MI_orders_meta, dotsize = 0.8, tag = "B.", col_begin = 0.9, col_end = 1, scale = 0.2)
+patchwork::wrap_plots(fig5A, fig5B, ncol = 2, widths = c(0.8, 0.3))
+ggplot2::ggsave(filename = "figures/Fig5.pdf", scale = 1.2, width = 22, height = 10, units = "cm")
+ggplot2::ggsave(filename = "figures/Fig5.png", scale = 1.2, width = 22, height = 10, units = "cm")
+
+## Descriptive statistics
+pretty(aggregate(MI ~ Order, data = MI_orders_euth, \(x) c(mean = mean(x), sd = sd(x), N = length(x))))
+#             Order MI.mean MI.sd MI.N
+# 1       Carnivora  -0.134 0.258 85.0
+# 2 Cetartiodactyla -0.0823 0.203 61.0
+# 3      Chiroptera  -0.318 0.126 71.0
+# 4    Eulipotyphla   0.183 0.152 58.0
+# 5      Lagomorpha  -0.128 0.244 22.0
+# 6        Primates  -0.318 0.191 83.0
+# 7        Rodentia  -0.144 0.201 252.
+
+pretty(aggregate(MI ~ Order, data = MI_orders_meta, \(x) c(mean = mean(x), sd = sd(x), N = length(x))))
+#            Order MI.mean MI.sd MI.N
+# 1 Dasyuromorphia   0.247 0.281 23.0
+# 2  Diprotodontia  -0.198 0.183 44.0
+
+## MI comparisons
+coin::kruskal_test(MI ~ Order, data = MI_orders_euth)
+# Asymptotic Kruskal-Wallis Test
+# 
+# data:  MI by
+# Order (Carnivora, Cetartiodactyla, Chiroptera, Eulipotyphla, Lagomorpha, Primates, Rodentia)
+# chi-squared = 196.35, df = 6, p-value < 2.2e-16
+
+coin::wilcox_test(MI ~ Order, data = MI_orders_meta, distribution = "exact")
+# Exact Wilcoxon-Mann-Whitney Test
+# 
+# data:  MI by Order (Dasyuromorphia, Diprotodontia)
+# Z = 5.4803, p-value = 1.481e-09
+
+fit_MPLMM_subclass_O_euth <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_orders_euth, 
+                                                     args_spaMM = list(formula = Litter_mass_log10 ~ Order + Adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
+                                                                       resid.model =  ~ Adult_mass_log10 + (1|Key)))
+
+fit_MPLMM_subclass_OM_euth <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_orders_euth, 
+                                                      args_spaMM = list(formula = Litter_mass_log10 ~ Order*Adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
+                                                                        resid.model =  ~ Adult_mass_log10 + (1|Key),
+                                                                        control.HLfit = list(NbThreads = 2)))
+
+fit_MPLMM_subclass_OD_euth <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_orders_euth, 
+                                                      args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + Order*Investment_duration_log10 + corrMatrix(1|Key),
+                                                                        resid.model =  ~ Adult_mass_log10 + (1|Key),
+                                                                        control.HLfit = list(NbThreads = 2)))
+
+fit_MPLMM_subclass_O_meta <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_orders_meta, 
+                                                     args_spaMM = list(formula = Litter_mass_log10 ~ Order + Adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
+                                                                       resid.model =  ~ Adult_mass_log10 + (1|Key)))
+
+fit_MPLMM_subclass_OM_meta <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_orders_meta, 
+                                                      args_spaMM = list(formula = Litter_mass_log10 ~ Order*Adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
+                                                                        resid.model =  ~ Adult_mass_log10 + (1|Key),
+                                                                        control.HLfit = list(NbThreads = 2)))
+
+fit_MPLMM_subclass_OD_meta <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_orders_meta, 
+                                                      args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + Order*Investment_duration_log10 + corrMatrix(1|Key),
+                                                                        resid.model =  ~ Adult_mass_log10 + (1|Key),
+                                                                        control.HLfit = list(NbThreads = 2)))
+
+
+subclass_test_OM_euth <- data.frame(LRT = unname(-2*(logLik(fit_MPLMM_subclass_O_euth) - logLik(fit_MPLMM_subclass_OM_euth))))
+subclass_test_OM_euth$df <- 1
+subclass_test_OM_euth$p <- with(subclass_test_OM_euth, pchisq(LRT, df, lower.tail = FALSE))
+pretty(subclass_test_OM_euth)
+#     LRT  df        p
+# 1 21.6 1.00 3.27e-06
+
+subclass_test_OD_euth <- data.frame(LRT = unname(-2*(logLik(fit_MPLMM_subclass_O_euth) - logLik(fit_MPLMM_subclass_OD_euth))))
+subclass_test_OD_euth$df <- 1
+subclass_test_OD_euth$p <- with(subclass_test_OD_euth, pchisq(LRT, df, lower.tail = FALSE))
+pretty(subclass_test_OD_euth)
+#     LRT  df        p
+# 1 12.5 1.00 0.000403
+
+subclass_test_OM_meta <- data.frame(LRT = unname(-2*(logLik(fit_MPLMM_subclass_O_meta) - logLik(fit_MPLMM_subclass_OM_meta))))
+subclass_test_OM_meta$df <- 1
+subclass_test_OM_meta$p <- with(subclass_test_OM_meta, pchisq(LRT, df, lower.tail = FALSE))
+pretty(subclass_test_OM_meta)
+#     LRT  df        p
+# 1 16.6 1.00 4.52e-05
+
+subclass_test_OD_meta <- data.frame(LRT = unname(-2*(logLik(fit_MPLMM_subclass_O_meta) - logLik(fit_MPLMM_subclass_OD_meta))))
+subclass_test_OD_meta$df <- 1
+subclass_test_OD_meta$p <- with(subclass_test_OD_meta, pchisq(LRT, df, lower.tail = FALSE))
+pretty(subclass_test_OD_meta)
+#     LRT   df    p
+# 1 1.61 1.00 0.204
+
+
+# 20 Indicator Species --------------------------------------------------
 
 MI_indicators$MI  <- MI_indicators$Litter_mass_log10 - predict(fit_PLMM_models, newdata = MI_indicators, re.form = NA, type = "link")[, 1]
 

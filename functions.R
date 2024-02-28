@@ -547,7 +547,7 @@ draw_figure_4 <- function(data_subclasses) {
           ggplot2::geom_text(ggplot2::aes(x = x - 0.02, y = MI, label = as.character(Name)),
                              hjust = 1, data = flagged, show.legend = FALSE, size = 2,
                              colour = "black") +
-          ggplot2::labs(y = 'Maternal investment', x = 'Subclass') +
+          ggplot2::labs(y = 'Maternal investment', x = NULL) +
           ggplot2::scale_y_continuous(breaks = seq(-1.5, 1.5, 0.5), expand = c(0.1, 0.1)) +
           ggplot2::scale_shape_manual(values = 21:23) +
           ggplot2::theme_classic() +
@@ -557,6 +557,28 @@ draw_figure_4 <- function(data_subclasses) {
   print(fig)
 }
 
+
+## This function draws figure 5
+
+draw_figure_5 <- function(data_orders, dotsize = 1, tag = "", col_begin = 0, col_end = 1, scale = 1) {
+
+  data_orders$Order <- reorder(data_orders$Order, -data_orders$MI, median)
+  
+  fig <- ggplot2::ggplot(data = data_orders) +
+    ggplot2::aes(x = Order, y = MI, col = Order, fill = Order) + 
+    ggdist::stat_dots(alpha = 0.3, layout = "weave", show.legend = FALSE, dotsize = dotsize, scale = scale,
+                      slab_colour = "black", slab_linewidth = 0.3) + 
+    ggdist::stat_pointinterval(show.legend = FALSE, .width = c(0.5, 0.95),
+                               position = ggplot2::position_nudge(x = -0.05)) +
+    ggplot2::labs(y = 'Maternal investment', x = NULL, tag = tag) +
+    ggplot2::scale_y_continuous(breaks = seq(-1.5, 1.5, 0.5), expand = c(0.1, 0.1)) +
+    ggplot2::coord_cartesian(ylim = c(-1, 1)) +
+    ggplot2::theme_classic() +
+    ggplot2::scale_color_viridis_d(begin = col_begin, end = col_end) +
+    ggplot2::scale_fill_viridis_d(begin = col_begin, end = col_end)
+  
+  print(fig)
+}
 
 ## This function draws figure 5A
 
