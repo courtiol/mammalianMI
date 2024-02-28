@@ -301,6 +301,32 @@ compure_r2 <- function(fit, digits = 3) {
 }
 
 
+# Compare models ----------------------------------------------------------
+
+test_with_residualmod <- function(fit, parm, boot_args = list(nb_cores = 50, nsim = 1000, seed = 123)) {
+  
+  if (!is.null(boot_args) && boot_args$nb_cores > parallel::detectCores()) {
+    stop("test not computed under default settings; this is computationally challenging and therefore is best done on a large computer.")
+  }
+  
+  if (!is.null(fit$phylo)) {
+    corM <- fit$phylo$corM
+  } else {
+    corM <- NULL
+  }
+  
+  boot_obj <- spaMM::spaMM2boot(fit,
+                                statFUN = \(refit, ...) spaMM::fixef(refit, ...)[parm],
+                                nsim = boot_args$nsim,
+                                nb_cores = boot_args$nb_cores,
+                                seed = boot_args$seed,
+                                fit_env = list(corM = corM))
+
+  boot_obj$t <- t(boot_obj$t)
+  boot_res <- boot::boot.ci(boot_obj, type = "basic")
+  c(estimate = boot_res$t0[[1]], lower_basic = boot_res$basic[4], upper_basic = boot_res$basic[5])
+}
+
 
 # Figures -----------------------------------------------------------------
 
