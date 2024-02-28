@@ -320,7 +320,7 @@ fit_MPLMM_mass_default <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data 
 
 fit_MPLMM_mass_females <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_mass,
                                                   args_spaMM = list(formula = Litter_mass_log10 ~ Female_adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
-                                                                    resid.model =  ~ Female_adult_mass_log10 + (1|Key)))
+                                                                    resid.model =  ~ Female_adult_mass_log10 + (1|Key))) ## resid model does not quite converge...
 
 MI_mass$MI_default  <- MI_mass$Litter_mass_log10 - predict(fit_MPLMM_mass_default, re.form = NA, type = "link")[, 1]
 MI_mass$MI_females  <- MI_mass$Litter_mass_log10 - predict(fit_MPLMM_mass_females, re.form = NA, type = "link")[, 1]
@@ -399,15 +399,99 @@ coin::wilcox_test(MI ~ Subclass, data = droplevels(MI_subclasses[MI_subclasses$S
 # Z = 3.874, p-value = 0.0001071
 # alternative hypothesis: true mu is not equal to 0
 
-## Test via MPLMM
+## Test using MPLMM
 
 fit_MPLMM_subclass <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_subclasses[MI_subclasses$Subclass != "Monotremata", ], 
-                                              args_spaMM = list(formula = Litter_mass_log10 ~ Subclass*(Adult_mass_log10 + Investment_duration_log10) + corrMatrix(1|Key),
+                                              args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
                                                                 resid.model =  ~ Adult_mass_log10 + (1|Key)))
-if (FALSE) { # switch FALSE to TRUE to run
-  MPLMM_summary_subclass <- extract_fit_summary(fit_MPLMM_subclass, lambdaCI = FALSE)
-  pretty(MPLMM_summary_subclass$fixef)
+
+fit_MPLMM_subclass_S <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_subclasses[MI_subclasses$Subclass != "Monotremata", ], 
+                                                args_spaMM = list(formula = Litter_mass_log10 ~ Subclass + Adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
+                                                                  resid.model =  ~ Adult_mass_log10 + (1|Key)))
+
+fit_MPLMM_subclass_SM <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_subclasses[MI_subclasses$Subclass != "Monotremata", ], 
+                                                 args_spaMM = list(formula = Litter_mass_log10 ~ Subclass*Adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
+                                                                   resid.model =  ~ Adult_mass_log10 + (1|Key),
+                                                                   control.HLfit = list(NbThreads = 2)))
+
+fit_MPLMM_subclass_SD <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_subclasses[MI_subclasses$Subclass != "Monotremata", ], 
+                                                 args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + Subclass*Investment_duration_log10 + corrMatrix(1|Key),
+                                                                   resid.model =  ~ Adult_mass_log10 + (1|Key),
+                                                                   control.HLfit = list(NbThreads = 2)))
+
+fit_MPLMM_subclass_SMD <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_subclasses[MI_subclasses$Subclass != "Monotremata", ], 
+                                                  args_spaMM = list(formula = Litter_mass_log10 ~ Subclass*(Adult_mass_log10 + Investment_duration_log10) + corrMatrix(1|Key),
+                                                                    resid.model =  ~ Adult_mass_log10 + (1|Key),
+                                                                    control.HLfit = list(NbThreads = 2)))
+
+subclass_test_S <- data.frame(LRT = unname(-2*(logLik(fit_MPLMM_subclass) - logLik(fit_MPLMM_subclass_S))))
+subclass_test_S$df <- 1
+subclass_test_S$p <- with(subclass_test_S, pchisq(LRT, df, lower.tail = FALSE))
+pretty(subclass_test_S)
+#     LRT   df     p
+# 1 0.280 1.00 0.596 ## not used
+
+subclass_test_SM <- data.frame(LRT = unname(-2*(logLik(fit_MPLMM_subclass_S) - logLik(fit_MPLMM_subclass_SM))))
+subclass_test_SM$df <- 1
+subclass_test_SM$p <- with(subclass_test_SM, pchisq(LRT, df, lower.tail = FALSE))
+pretty(subclass_test_SM)
+#     LRT   df      p
+# 1 7.22 1.00 0.00722 ## used in manuscript
+
+subclass_test_SD <- data.frame(LRT = unname(-2*(logLik(fit_MPLMM_subclass_S) - logLik(fit_MPLMM_subclass_SD))))
+subclass_test_SD$df <- 1
+subclass_test_SD$p <- with(subclass_test_SD, pchisq(LRT, df, lower.tail = FALSE))
+pretty(subclass_test_SD)
+#     LRT   df      p
+# 1 7.50 1.00 0.00617 ## used in manuscript
+
+subclass_test_SMD <- data.frame(LRT = unname(-2*(logLik(fit_MPLMM_subclass_S) - logLik(fit_MPLMM_subclass_SMD))))
+subclass_test_SMD$df <- 2
+subclass_test_SMD$p <- with(subclass_test_SMD, pchisq(LRT, df, lower.tail = FALSE))
+pretty(subclass_test_SMD)
+#     LRT   df      p
+# 1 7.40  2.00 0.0247 ## not used
+
+subclass_test_SMD0 <- data.frame(LRT = unname(-2*(logLik(fit_MPLMM_subclass) - logLik(fit_MPLMM_subclass_SMD))))
+subclass_test_SMD0$df <- 3
+subclass_test_SMD0$p <- with(subclass_test_SMD0, pchisq(LRT, df, lower.tail = FALSE))
+pretty(subclass_test_SMD0)
+#    LRT   df      p
+# 1 7.68 3.00 0.0531 ## not used
+
+fit_MPLMM_euth <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_subclasses[MI_subclasses$Subclass == "Eutheria", ], 
+                                          args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
+                                                            resid.model =  ~ Adult_mass_log10 + (1|Key)))
+
+if (FALSE) {
+  MPLMM_euth_summary <- extract_fit_summary(fit_MPLMM_euth, lambdaCI = FALSE)
+  pretty(MPLMM_euth_summary$fixef)
+#                           estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
+# (Intercept)                  0.382       0.0903        0.505         0.262         0.669      0.0961       0.502
+# Adult_mass_log10             0.848        0.819        0.865         0.831         0.878       0.818       0.865
+# Investment_duration_log10   -0.190       -0.216      -0.0374        -0.342        -0.162      -0.217     -0.0373
+# 10^(Intercept)                2.41         1.23         3.20          1.83          4.66        1.25        3.18
 }
+
+fit_MPLMM_metath <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_subclasses[MI_subclasses$Subclass == "Metatheria", ], 
+                                            args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
+                                                              resid.model =  ~ Adult_mass_log10 + (1|Key)))
+
+if (FALSE) {
+  MPLMM_metath_summary <- extract_fit_summary(fit_MPLMM_metath, lambdaCI = FALSE)
+  pretty(MPLMM_metath_summary$fixef)
+#                           estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
+# (Intercept)                 -0.109       -0.925        0.591        -0.799         0.705      -0.923       0.581
+# Adult_mass_log10             0.762        0.686        0.850         0.678         0.838       0.686       0.845
+# Investment_duration_log10  -0.0806       -0.403        0.285        -0.441         0.243      -0.404       0.279
+# 10^(Intercept)               0.778        0.119         3.90         0.159          5.06       0.119        3.81
+}
+
+fit_MPLMM_euth_noD <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_subclasses[MI_subclasses$Subclass == "Eutheria", ], 
+                                              args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + corrMatrix(1|Key),
+                                                                resid.model =  ~ Adult_mass_log10 + (1|Key)))
+
+pretty(fit_MPLMM_euth_noD$fixef)
 
 
 
