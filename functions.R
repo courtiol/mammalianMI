@@ -604,20 +604,31 @@ draw_figure_5A <- function(MI_indicators) {
 }  
 
 
-## This function draws figure 5B
+## This function draws figure 6
  
-draw_figure_5B <- function(MI_indicators) {
+draw_figure_6 <- function(MI_indicators) {
+  
+  MI_indicators$Name <- reorder(MI_indicators$Name, MI_indicators$MI)
   
   fig <- ggplot2::ggplot(data = MI_indicators) +
-    ggplot2::aes(x = MI, y = reorder(Name, -MI), col = Subclass, fill = Subclass,
-                                     shape = Subclass) +
-    ggplot2::geom_point(alpha = 0.7) +
-    ggplot2::labs(y = 'Species', x = 'Maternal investment') +
+    ggplot2::aes(y = MI, x = Name,
+                 col = Subclass, fill = Subclass, shape = Subclass) +
+    ggplot2::geom_hline(yintercept = 0, linewidth = 0.3, color = "black", linetype = "dashed") +
+    ggplot2::geom_segment(ggplot2::aes(yend = MI, y = 0, xend = reorder(Name, MI)), alpha = 0.3) +
+    ggplot2::geom_point(alpha = 0.3, size = 2) +
+    rphylopic::geom_phylopic(ggplot2::aes(name = Species, x = Name, y = -0.7),
+                             size = 0.06,
+                             data = MI_indicators) +
+    ggplot2::labs(x = NULL, y = 'Maternal investment') +
+    ggplot2::scale_y_continuous(breaks = seq(-1.5, 1.5, 0.5), expand = c(0.1, 0.1)) +
+    ggplot2::coord_cartesian(ylim = c(-0.6, 1)) +
     ggplot2::scale_shape_manual(values = 21:23) +
-    ggplot2::theme_bw() +
-    ggplot2::geom_vline(xintercept = 0, linewidth = 0.8, color = "black") +
+    ggplot2::theme_classic() +
     ggplot2::scale_color_manual(values = c("steelblue", "darkred", "#FCC501")) +
-    ggplot2::scale_fill_manual(values = c("steelblue", "darkred", "#FCC501")) 
+    ggplot2::scale_fill_manual(values = c("steelblue", "darkred", "#FCC501")) +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1, vjust = 1),
+                   legend.position = "top", plot.margin = ggplot2::margin(l = 1, unit = "cm" ))
+    
   
   print(fig)
 }  

@@ -672,10 +672,11 @@ pretty(MI_indicators[order(-MI_indicators$MI), c("Name", "Species", "Order", "Su
 # 421          Short-beaked echidna Tachyglossus aculeatus     Monotremata Monotremata  -0.464
 
 
-draw_figure_5A(MI_indicators)
-ggplot2::ggsave(filename = "figures/Fig5A.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
-ggplot2::ggsave(filename = "figures/Fig5A.png", scale = 1.2, width = 15, height = 10, units = "cm")
 
-draw_figure_5B(MI_indicators)
-ggplot2::ggsave(filename = "figures/Fig5B.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
-ggplot2::ggsave(filename = "figures/Fig5B.png", scale = 1.2, width = 15, height = 10, units = "cm")
+# Figure 6 ----------------------------------------------------------------
+
+if (FALSE) { ## slow to run as it downloads the silhouettes
+  draw_figure_6(MI_indicators)
+  ggplot2::ggsave(filename = "figures/Fig6.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
+  ggplot2::ggsave(filename = "figures/Fig6.png", scale = 1.2, width = 15, height = 10, units = "cm")
+}
