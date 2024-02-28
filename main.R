@@ -491,8 +491,29 @@ fit_MPLMM_euth_noD <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI
                                               args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + corrMatrix(1|Key),
                                                                 resid.model =  ~ Adult_mass_log10 + (1|Key)))
 
-pretty(fit_MPLMM_euth_noD$fixef)
+if (FALSE) {
+  MPLMM_euth_noD_summary <- extract_fit_summary(fit_MPLMM_euth_noD, lambdaCI = FALSE)
+  pretty(MPLMM_euth_noD_summary)
+#                   estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
+#  (Intercept)        0.0430      -0.0536        0.204        -0.113         0.150     -0.0641       0.199
+#  Adult_mass_log10    0.820        0.803        0.841         0.799         0.837       0.802       0.840
+#  10^(Intercept)       1.10        0.884         1.60         0.771          1.41       0.863        1.58
+}
 
+fit_MPLMM_metath_noD <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_subclasses[MI_subclasses$Subclass == "Metatheria", ], 
+                                                args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + corrMatrix(1|Key),
+                                                                resid.model =  ~ Adult_mass_log10 + (1|Key)))
+
+if (FALSE) {
+  MPLMM_metath_noD_summary <- extract_fit_summary(fit_MPLMM_metath_noD, lambdaCI = FALSE)
+  pretty(MPLMM_metath_noD_summary)
+  pretty(MPLMM_metath_noD_summary)
+#                  estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
+# (Intercept)        -0.286       -0.370       -0.224        -0.352        -0.203      -0.369      -0.220
+# Adult_mass_log10    0.748        0.702        0.814         0.685         0.793       0.703       0.811
+# 10^(Intercept)      0.517        0.427        0.597         0.444         0.626       0.427       0.602
+  
+}
 
 
 # 20 Indicator Species
