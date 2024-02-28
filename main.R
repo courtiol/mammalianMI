@@ -3,7 +3,7 @@
 source("functions.R")
 
 # Checking dependencies ---------------------------------------------------
-check_dependencies_all(c("ape", "coin", "doSNOW", "ggdist", "ggplot2", "nlme", "scales", "smatr", "spaMM", "tidyr"))
+check_dependencies_all(c("ape", "boot", "coin", "doSNOW", "ggdist", "ggplot2", "nlme", "scales", "smatr", "spaMM", "tidyr"))
 
 
 # Load dependencies -------------------------------------------------------
@@ -37,8 +37,7 @@ orders_vs_N    <- aggregate(MI_subclasses[, "Key", drop = FALSE], list(Order = M
 orders_to_keep <- as.character(orders_vs_N$Order[orders_vs_N$Key >= 15])
 MI_orders <- droplevels(MI_subclasses[MI_subclasses$Order %in% orders_to_keep, ])
 sort(unique(MI_orders$Order))
-# [1] Carnivora       Cetartiodactyla Chiroptera      Dasyuromorphia  Diprotodontia   Eulipotyphla   
-# [7] Lagomorpha      Primates        Rodentia  
+# [1] Carnivora Cetartiodactyla Chiroptera Dasyuromorphia Diprotodontia Eulipotyphla Lagomorpha Primates Rodentia       
 nrow(MI_orders) # 756
 str(MI_orders)
 
@@ -122,16 +121,14 @@ plot(MI_models$Litter_mass_log10, predict(fit_PLMM_models, re.form = NA, type = 
 if (FALSE) { # switch FALSE to TRUE to run
   PLMM_summary <- extract_fit_summary(fit_PLMM_models)
   pretty(PLMM_summary$fixef)
-}
 #                  estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
 # (Intercept)        -0.192       -0.293      -0.0712        -0.312       -0.0977      -0.286     -0.0713
 # Adult_mass_log10    0.806        0.791        0.826         0.786         0.822       0.791       0.827
 # 10^(Intercept)      0.643        0.509        0.849         0.488         0.798       0.518       0.849
-
-
-pretty(PLMM_summary$Pagel_Lambda)
+  pretty(PLMM_summary$Pagel_Lambda)
 # estimate    lower    upper 
 #   "1.00"  "0.999"   "1.00" 
+}
 
 ### Computing R2 in PLMM model
 compure_r2(fit_PLMM_models) ## same as above!
@@ -231,17 +228,15 @@ plot(MI_models$Litter_mass_log10, predict(fit_MPLMM_models, re.form = NA, type =
 if (FALSE) { # switch FALSE to TRUE to run
   MPLMM_summary <- extract_fit_summary(fit_MPLMM_models)
   pretty(MPLMM_summary$fixef)
-}
-
 #                           estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
 # (Intercept)                  0.204       -0.126        0.305         0.104         0.543      -0.135       0.304
 # Adult_mass_log10             0.836        0.808        0.853         0.818         0.864       0.808       0.854
 # Investment_duration_log10   -0.199       -0.227      -0.0481        -0.351        -0.173      -0.225     -0.0473
 # 10^(Intercept)                1.60        0.748         2.02          1.27          3.49       0.733        2.01
-
-pretty(MPLMM_summary$Pagel_Lambda)
+  pretty(MPLMM_summary$Pagel_Lambda)
 # estimate    lower    upper 
 #   "1.00"  "0.999"   "1.00" 
+}
 
 ### Computing R2 in MPLMM model
 compure_r2(fit_MPLMM_models)
@@ -293,26 +288,28 @@ pretty(range(corMI, na.rm = TRUE))
 # [1] "0.917" "1.00" 
 
 univariate_phylo_test <- data.frame(LRT = unname(-2*(logLik(fit_SLR_models) - logLik(fit_PLMM_models))))
-univariate_phylo_test$df <- 1 ## that should be more than 1 since there are df for the residual model...
+univariate_phylo_test$df <- 3 # 1 for Pagel + 2 for the residual model
 univariate_phylo_test$p <- with(univariate_phylo_test, pchisq(LRT, df, lower.tail = FALSE))
 pretty(univariate_phylo_test)
 #    LRT   df         p
-# 1 933. 1.00 7.86e-205 # PROBABLY WRONG
+# 1 933. 3.00 7.35e-202
 
 multivariate_phylo_test <- data.frame(LRT = unname(-2*(logLik(fit_MSLR_models) - logLik(fit_MPLMM_models))))
-multivariate_phylo_test$df <- 1 ## that should be more than 1 since there are df for the residual model...
+multivariate_phylo_test$df <- 3 # 1 for Pagel + 2 for the residual model
 multivariate_phylo_test$p <- with(multivariate_phylo_test, pchisq(LRT, df, lower.tail = FALSE))
 pretty(multivariate_phylo_test)
 #    LRT   df         p
-# 1 824. 1.00 3.80e-181 # PROBABLY WRONG
+# 1 824. 3.00 3.13e-178
 
-## Comparison between the 2 PLMMs
-multivariatePLMM_phylo_test <- data.frame(LRT = unname(-2*(logLik(fit_PLMM_models) - logLik(fit_MPLMM_models))))
-multivariatePLMM_phylo_test$df <- 1
-multivariatePLMM_phylo_test$p <- with(multivariatePLMM_phylo_test, pchisq(LRT, df, lower.tail = FALSE))
-pretty(multivariatePLMM_phylo_test)
-#    LRT   df     p
-# 1 1.80 1.00 0.180 # PROBABLY WRONG
+## Test of Investment_duration_log10 effect in MPLMM (very computationally intensive)
+if (FALSE) { # switch FALSE to TRUE to run
+  CI_invest <- confint_param(fit_MPLMM_models, parm = "Investment_duration_log10")
+  pretty(CI_invest)
+# estimate lower_basic upper_basic 
+# "-0.199"    "-0.334"   "-0.0701" ## WHY is this different from confint result??
+  CI_invest2 <- confint(fit_MPLMM_models, parm = "Investment_duration_log10",
+                        boot_args = list(nb_cores = 50, nsim = 1000, seed = 123), format = "stats")
+}
 
 
 # Comparison of mass proxies ----------------------------------------------

@@ -303,7 +303,7 @@ compure_r2 <- function(fit, digits = 3) {
 
 # Testing via CI ----------------------------------------------------------
 
-test_with_residualmod <- function(fit, parm, boot_args = list(nb_cores = 50, nsim = 1000, seed = 123)) {
+confint_param <- function(fit, parm, boot_args = list(nb_cores = 50, nsim = 1000, seed = 123)) {
   
   if (!is.null(boot_args) && boot_args$nb_cores > parallel::detectCores()) {
     stop("test not computed under default settings; this is computationally challenging and therefore is best done on a large computer.")
@@ -322,30 +322,6 @@ test_with_residualmod <- function(fit, parm, boot_args = list(nb_cores = 50, nsi
                                 seed = boot_args$seed,
                                 fit_env = list(corM = corM))
 
-  boot_obj$t <- t(boot_obj$t)
-  boot_res <- boot::boot.ci(boot_obj, type = "basic")
-  c(estimate = boot_res$t0[[1]], lower_basic = boot_res$basic[4], upper_basic = boot_res$basic[5])
-}
-
-test_with_residualmod2 <- function(fit, boot_args = list(nb_cores = 50, nsim = 1000, seed = 123)) {
-  
-  if (!is.null(boot_args) && boot_args$nb_cores > parallel::detectCores()) {
-    stop("test not computed under default settings; this is computationally challenging and therefore is best done on a large computer.")
-  }
-  
-  if (!is.null(fit$phylo)) {
-    corM <- fit$phylo$corM
-  } else {
-    corM <- NULL
-  }
-  
-  boot_obj <- spaMM::spaMM2boot(fit,
-                                statFUN = \(refit, ...) spaMM::logLik(refit, ...),
-                                nsim = boot_args$nsim,
-                                nb_cores = boot_args$nb_cores,
-                                seed = boot_args$seed,
-                                fit_env = list(corM = corM))
-  
   boot_obj$t <- t(boot_obj$t)
   boot_res <- boot::boot.ci(boot_obj, type = "basic")
   c(estimate = boot_res$t0[[1]], lower_basic = boot_res$basic[4], upper_basic = boot_res$basic[5])
@@ -473,7 +449,7 @@ draw_figure_x <- function(data_mass, fit_default, fit_males, fit_females) {
   data_pred$Sex <- factor(data_pred$Sex, levels = c("default", "males", "females"))
   
   fig <- ggplot2::ggplot(data = data_pred, ggplot2::aes(x = Adult_mass, y = Predict, shape = Subclass, fill = Sex)) + 
-    ggplot2::geom_point(alpha = 0.8, size = 2) +
+    ggplot2::geom_point(alpha = 0.3, size = 2) +
     ggplot2::geom_text(ggplot2::aes(y = Predict + 0.2, label = Name), data = data_pred[data_pred$Predict > 1, ]) +
     ggplot2::scale_x_continuous(trans = "log10", breaks = c(0.1, 1, 10, 100, 1000, 10000, 100000), 
                                 labels = scales::number_format(accuracy = 0.1), expand = c(0.1, 0.1)) + 
@@ -497,7 +473,7 @@ draw_figure_3 <- function(data_mass, fit_default, fit_females) {
   data_mass$females <- data_mass$Litter_mass_log10 - predict(fit_females, re.form = NA, type = "link")[, 1]
   
   fig <- ggplot2::ggplot(data = data_mass, ggplot2::aes(y = females, x = default, shape = Subclass, fill = Subclass)) + 
-    ggplot2::geom_point(alpha = 0.8, size = 2) +
+    ggplot2::geom_point(alpha = 0.3, size = 2) +
     ggplot2::geom_text(ggplot2::aes(y = females, x = default - 0.02, label = Name), hjust = 1, data = data_mass[(data_mass$females - data_mass$default) > 0.1, ], size = 2) +
     ggplot2::geom_text(ggplot2::aes(y = females, x = default + 0.02, label = Name), hjust = 0, data = data_mass[(data_mass$default - data_mass$females) > 0.1, ], size = 2) +
     ggplot2::geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
@@ -526,7 +502,7 @@ draw_figure_xx <- function(data_mass, fit_default, fit_females) {
   data_mass$departure_avg <- abs(data_mass$Adult_mass - data_mass$average_mass)
   
   fig <- ggplot2::ggplot(data = data_mass, ggplot2::aes(y = females - default, x = departure_avg, shape = Subclass, fill = Subclass)) + 
-    ggplot2::geom_point(alpha = 0.8, size = 2) +
+    ggplot2::geom_point(alpha = 0.3, size = 2) +
     ggplot2::geom_abline(intercept = 0, slope = 0, linetype = "dashed") +
     ggplot2::geom_text(ggplot2::aes(y = females - default + 0.05, label = Name), data = data_mass[(data_mass$females - data_mass$default) > 0.1, ], size = 2) +
     ggplot2::geom_text(ggplot2::aes(y = females - default - 0.05, label = Name), data = data_mass[(data_mass$default - data_mass$females) > 0.1, ], size = 2) +
@@ -559,18 +535,21 @@ draw_figure_4 <- function(data_subclasses) {
   flagged <- do.call("rbind", list(euth = euth, meta = meta, mono = mono))
   
   fig <- ggplot2::ggplot(data = data_subclasses[data_subclasses$Subclass != "Monotremata", ]) +
-          ggplot2::aes(x = Subclass, y = MI, col = Subclass, fill = Subclass) + 
-          ggdist::stat_dots(alpha = 0.5, layout = "weave", show.legend = FALSE, dotsize = 1, shape = 22) + 
+          ggplot2::aes(x = Subclass, y = MI, col = Subclass, fill = Subclass, shape = Subclass) + 
+          ggdist::stat_dots(alpha = 0.3, layout = "weave", show.legend = FALSE, dotsize = 1,
+                            slab_colour = "black", slab_linewidth = 0.3) + 
           ggdist::stat_pointinterval(show.legend = FALSE, .width = c(0.5, 0.95),
                                      position = ggplot2::position_nudge(x = -0.05)) +
           ggplot2::geom_point(data = data_subclasses[data_subclasses$Subclass == "Monotremata", ],
                               mapping = ggplot2::aes(y = MI, x = Subclass),
-                              colour = "#FCC501", fill = "#FCC501", alpha = 0.5, size = 1,
+                              colour = "black", fill = "#FCC501", alpha = 0.3, size = 1,
                               shape = 23) +
           ggplot2::geom_text(ggplot2::aes(x = x - 0.02, y = MI, label = as.character(Name)),
-                             hjust = 1, data = flagged, show.legend = FALSE, size = 2) +
+                             hjust = 1, data = flagged, show.legend = FALSE, size = 2,
+                             colour = "black") +
           ggplot2::labs(y = 'Maternal investment', x = 'Subclass') +
           ggplot2::scale_y_continuous(breaks = seq(-1.5, 1.5, 0.5), expand = c(0.1, 0.1)) +
+          ggplot2::scale_shape_manual(values = 21:23) +
           ggplot2::theme_classic() +
           ggplot2::scale_color_manual(values = c("steelblue", "darkred", "#FCC501")) +
           ggplot2::scale_fill_manual(values = c("steelblue", "darkred", "#FCC501"))
