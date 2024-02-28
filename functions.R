@@ -3,6 +3,8 @@
 
 pretty <- function(x, digits = 3) {
   
+  if (is.character(x) || is.factor(x)) return(x)
+  
   if (inherits(x, "matrix") || inherits(x, "data.frame")) {
     res <- do.call("data.frame", lapply(as.data.frame(x), \(x) pretty(x, digits = digits)))
     rownames(res) <- rownames(x)
@@ -293,8 +295,8 @@ compure_r2 <- function(fit, digits = 3) {
   
   cor_res <- cor.test(pred, obs)
   stats <- data.frame(estimate = pretty(cor_res$estimate^2, digits = digits),
-                      lower = pretty(cor_res$conf.int[1][[1]], digits = digits),
-                      upper = pretty(cor_res$conf.int[2][[1]], digits = digits),
+                      lower = pretty(cor_res$conf.int[1][[1]]^2, digits = digits),
+                      upper = pretty(cor_res$conf.int[2][[1]]^2, digits = digits),
                       p = pretty(cor_res$p.value, digits = digits))
   rownames(stats) <- "r2"
   stats
@@ -371,17 +373,15 @@ draw_figure_1 <- function(data_models, fit_SLR, fit_PLMM, fit_SMA, fit_MA, fit_M
 draw_figure_2 <- function(data_mass, fit_default, fit_males, fit_females) {
   data_pred <- data.frame(Adult_mass = c(0.001, 1e4),
                           Adult_mass_log10 = log(c(0.001, 1e4), base = 10),
-                          Male_adult_mass = c(0.001, 1e4),
-                          Male_adult_mass_log10 = log(c(0.001, 1e4), base = 10),
                           Female_adult_mass = c(0.001, 1e4),
-                          Female_adult_mass_log10 = log(c(0.001, 1e4), base = 10))
+                          Female_adult_mass_log10 = log(c(0.001, 1e4), base = 10),
+                          Investment_duration_log10 = mean(data_mass$Investment_duration_log10))
   
   data_pred$default <- 10^(predict(fit_default, newdata = data_pred, re.form = NA)[, 1])
-  data_pred$males   <- 10^(predict(fit_males, newdata = data_pred, re.form = NA)[, 1])
   data_pred$females <- 10^(predict(fit_females, newdata = data_pred, re.form = NA)[, 1])
   
   data_pred <- tidyr::pivot_longer(data_pred, cols = default:females, names_to = "Sex", values_to = "Predict")
-  data_pred$Sex <- factor(data_pred$Sex, levels = c("default", "males", "females"))
+  data_pred$Sex <- factor(data_pred$Sex, levels = c("default", "females"))
   
   fig <- ggplot2::ggplot(data = data_mass, ggplot2::aes(x = Adult_mass, y = Litter_mass)) + 
     ggplot2::scale_x_continuous(trans = "log10", breaks = c(0.1, 1, 10, 100, 1000, 10000, 100000), 
@@ -391,7 +391,8 @@ draw_figure_2 <- function(data_mass, fit_default, fit_males, fit_females) {
                                 labels = scales::number_format(accuracy = 0.1), expand = c(0, 0)) +
     ggplot2::scale_shape_manual(values = 21:23) +
     ggplot2::scale_fill_manual(values = c("steelblue", "darkred", "#FCC501")) +
-    ggplot2::scale_color_viridis_d() +
+    ggplot2::scale_colour_manual(values = c("black", "#1fc3aa", "#8624f5")) +
+    #ggplot2::scale_color_viridis_d() +
     ggplot2::geom_point(ggplot2::aes(shape = Subclass, fill = Subclass), alpha = 0.3, size = 2) +
     ggplot2::geom_line(ggplot2::aes(y = Predict, x = Adult_mass, colour = Sex), data = data_pred,
                        linewidth = 0.7, alpha = 0.8, inherit.aes = FALSE) +
@@ -439,14 +440,13 @@ draw_figure_2bis <- function(data_mass, fit_default, fit_default_full, fit_males
 
 ## This function draws figure x (not used)
 
-draw_figure_x <- function(data_mass, fit_default, fit_males, fit_females) {
+draw_figure_x <- function(data_mass, fit_default, fit_females) {
 
   data_mass$default <- data_mass$Litter_mass_log10 - predict(fit_default, re.form = NA, type = "link")[, 1]
-  data_mass$males   <- data_mass$Litter_mass_log10 - predict(fit_males, re.form = NA, type = "link")[, 1]
   data_mass$females <- data_mass$Litter_mass_log10 - predict(fit_females, re.form = NA, type = "link")[, 1]
   
   data_pred <- tidyr::pivot_longer(data_mass, cols = default:females, names_to = "Sex", values_to = "Predict")
-  data_pred$Sex <- factor(data_pred$Sex, levels = c("default", "males", "females"))
+  data_pred$Sex <- factor(data_pred$Sex, levels = c("default", "females"))
   
   fig <- ggplot2::ggplot(data = data_pred, ggplot2::aes(x = Adult_mass, y = Predict, shape = Subclass, fill = Sex)) + 
     ggplot2::geom_point(alpha = 0.3, size = 2) +
@@ -528,7 +528,7 @@ draw_figure_4 <- function(data_subclasses) {
   euth <- euth[rank(-euth$MI) %in% 1:2 | rank(euth$MI) %in% 1:2, ] 
   euth$x <- 1
   meta <- data_subclasses[data_subclasses$Subclass == "Metatheria", ]
-  meta <- meta[rank(-meta$MI) %in% 1:2 | rank(meta$MI) %in% 1, ]
+  meta <- meta[rank(-meta$MI) %in% 1 | rank(meta$MI) %in% 1, ]
   meta$x <- 2
   mono <- data_subclasses[data_subclasses$Subclass == "Monotremata", ]
   mono$x <- 3 - 0.02

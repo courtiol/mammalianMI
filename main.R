@@ -28,8 +28,8 @@ MI_full <- prepare_df_MIfull(MI_raw)
 nrow(MI_full) # 1041
 
 ### Prepare subsample with for comparison between subclasses
-MI_subclasses <- droplevels(MI_full[MI_full$Key %in% tree[["tip.label"]], ])
-nrow(MI_subclasses) # 801
+MI_subclasses <- droplevels(MI_full[!is.na(MI_full$Investment_duration) & MI_full$Key %in% tree[["tip.label"]], ])
+nrow(MI_subclasses) # 738
 str(MI_subclasses)
 
 ### Prepare subsample with for comparison between orders
@@ -38,17 +38,17 @@ orders_to_keep <- as.character(orders_vs_N$Order[orders_vs_N$Key >= 15])
 MI_orders <- droplevels(MI_subclasses[MI_subclasses$Order %in% orders_to_keep, ])
 sort(unique(MI_orders$Order))
 # [1] Carnivora Cetartiodactyla Chiroptera Dasyuromorphia Diprotodontia Eulipotyphla Lagomorpha Primates Rodentia       
-nrow(MI_orders) # 756
+nrow(MI_orders) # 699
 str(MI_orders)
 
 ### Prepare subsample with no missing data for modelling
-MI_models <- droplevels(MI_subclasses[!is.na(MI_subclasses$Investment_duration), ])
+MI_models <- MI_subclasses
 nrow(MI_models) # 738
 str(MI_models)
 
 ### Prepare subsample with no missing data for mass proxy comparison
-MI_mass <- droplevels(MI_subclasses[!is.na(MI_subclasses$Male_adult_mass) & !is.na(MI_subclasses$Female_adult_mass), ])
-nrow(MI_mass) # 108
+MI_mass <- droplevels(MI_subclasses[!is.na(MI_subclasses$Female_adult_mass), ])
+nrow(MI_mass) # 105
 str(MI_mass)
 
 ### Prepare subsample for the 20 indicator species
@@ -92,7 +92,7 @@ pretty(extract_fit_summary(fit_SLR_models))
 ### Computing R2 in SLR model
 compure_r2(fit_SLR_models)
 #    estimate lower upper    p
-# r2    0.947 0.969 0.977 0.00
+# r2    0.947 0.939 0.954 0.00
 
 
 ## Fitting PLMM model for method comparison
@@ -133,7 +133,7 @@ if (FALSE) { # switch FALSE to TRUE to run
 ### Computing R2 in PLMM model
 compure_r2(fit_PLMM_models) ## same as above!
 #    estimate lower upper    p
-# r2    0.947 0.969 0.977 0.00
+# r2    0.947 0.939 0.954 0.00
 
 ## Fitting SMA model for method comparison
 
@@ -155,7 +155,7 @@ pretty(extract_fit_summary(fit_SMA_models))
 ### Computing R2 in SMA model
 compure_r2(fit_SMA_models)
 #    estimate lower upper    p
-# r2    0.987 0.992 0.994 0.00
+# r2    0.987 0.984 0.988 0.00
 
 ## Fitting MA model for method comparison
 
@@ -177,7 +177,7 @@ pretty(extract_fit_summary(fit_MA_models))
 ### Computing R2 in MA model
 compure_r2(fit_MA_models)
 #    estimate lower upper    p
-# r2    0.980 0.989 0.991 0.00
+# r2    0.980 0.977 0.983 0.00
 
 
 ## Fitting MSLR model for method comparison
@@ -200,7 +200,7 @@ pretty(extract_fit_summary(fit_MSLR_models))
 ### Computing R2 in MSLR model
 compure_r2(fit_MSLR_models)
 #    estimate lower upper    p
-# r2    0.954 0.973 0.980 0.00
+# r2    0.954 0.947 0.960 0.00
 
 
 ## Fitting MPLMM model for method comparison
@@ -216,7 +216,7 @@ if (FALSE) { # switch FALSE to TRUE to run
 ### Note: since best Pagel's Lambda is 1 on these data, the same output can be quickly obtained as follows
 fit_MPLMM_models <- fitme_phylo_lambdafixed(lambda = 1, data = MI_models, tree = tree,
                                             args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
-                                                              resid.model =  ~ Adult_mass_log10 + (1|Key)))
+                                                              resid.model =  ~ Adult_mass_log10 + (1|Key))) ## add Investment_duration_log10?
 
 ### Checking MPLMM model assumptions
 plot(fit_MPLMM_models, ask = FALSE, which = "mean")  ## diagnostics (heteroscedastic, but this is accounted for)
@@ -241,7 +241,7 @@ if (FALSE) { # switch FALSE to TRUE to run
 ### Computing R2 in MPLMM model
 compure_r2(fit_MPLMM_models)
 #    estimate lower upper    p
-# r2    0.952 0.972 0.979 0.00
+# r2    0.952 0.945 0.959 0.00
 
 # Figure 1 ----------------------------------------------------------------
 
@@ -314,60 +314,55 @@ if (FALSE) { # switch FALSE to TRUE to run
 
 # Comparison of mass proxies ----------------------------------------------
 
-fit_PLMM_mass_default <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_mass, 
-                                                 args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + corrMatrix(1|Key),
-                                                                   resid.model =  ~ Adult_mass_log10 + (1|Key)))
+fit_MPLMM_mass_default <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_mass, 
+                                                  args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
+                                                                    resid.model =  ~ Adult_mass_log10 + (1|Key)))
 
-fit_PLMM_mass_males <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_mass,
-                                               args_spaMM = list(formula = Litter_mass_log10 ~ Male_adult_mass_log10 + corrMatrix(1|Key),
-                                                                 resid.model =  ~ Male_adult_mass_log10 + (1|Key)))
+fit_MPLMM_mass_females <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_mass,
+                                                  args_spaMM = list(formula = Litter_mass_log10 ~ Female_adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
+                                                                    resid.model =  ~ Female_adult_mass_log10 + (1|Key)))
 
-fit_PLMM_mass_females <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_mass,
-                                                 args_spaMM = list(formula = Litter_mass_log10 ~ Female_adult_mass_log10 + corrMatrix(1|Key),
-                                                                   resid.model =  ~ Female_adult_mass_log10 + (1|Key)))
+MI_mass$MI_default  <- MI_mass$Litter_mass_log10 - predict(fit_MPLMM_mass_default, re.form = NA, type = "link")[, 1]
+MI_mass$MI_females  <- MI_mass$Litter_mass_log10 - predict(fit_MPLMM_mass_females, re.form = NA, type = "link")[, 1]
 
-MI_mass$MI_default_full  <- MI_mass$Litter_mass_log10 - predict(fit_PLMM_models, newdata = MI_mass, re.form = NA, type = "link")[, 1]
-
-MI_mass$MI_default  <- MI_mass$Litter_mass_log10 - predict(fit_PLMM_mass_default, re.form = NA, type = "link")[, 1]
-MI_mass$MI_females  <- MI_mass$Litter_mass_log10 - predict(fit_PLMM_mass_females, re.form = NA, type = "link")[, 1]
-MI_mass$MI_males    <- MI_mass$Litter_mass_log10 - predict(fit_PLMM_mass_males, re.form = NA, type = "link")[, 1]
-
-MI_mass_long <- as.data.frame(pivot_longer(MI_mass, cols = c("MI_default", "MI_females", "MI_males"), names_to = "Sex", values_to = "MI"))
+MI_mass_long <- as.data.frame(pivot_longer(MI_mass, cols = c("MI_default", "MI_females"), names_to = "Sex", values_to = "MI"))
 MI_mass_long$Sex <- as.factor(MI_mass_long$Sex)
 MI_mass_long$Name <- as.factor(MI_mass_long$Name)
 
-quade.test(as.matrix(MI_mass[, c("MI_default", "MI_females", "MI_males")]))
-# Quade F = 1.6138, num df = 2, denom df = 214, p-value = 0.2015
+coin::wilcoxsign_test(MI_default ~ MI_females, data = MI_mass, distribution = "exact")
+# data:  y by x (pos, neg) 
+# stratified by block
+# Z = 1.6608, p-value = 0.09704
+# alternative hypothesis: true mu is not equal to 0
 
 ## Percentage of species for which difference between estimates is > 0.1
 pretty(100*mean(abs(MI_mass$MI_females - MI_mass$MI_default) > 0.1))
-# [1] "13.0"
+# [1] "15.2"
 
 ## 0.1 expressed in SD of MI
 pretty(mean(c(0.1/sd(MI_mass$MI_default),
-              0.1/sd(MI_mass$MI_females),
-              0.1/sd(MI_models$MI_PLMM))), digits = 2)
-# [1] "0.35"
+              0.1/sd(MI_mass$MI_females))), digits = 2)
+# [1] "0.40"
 
 
 # Figure 2 ----------------------------------------------------------------
 
-draw_figure_2(data_mass = MI_mass, fit_default = fit_PLMM_mass_default, fit_males = fit_PLMM_mass_males, fit_females = fit_PLMM_mass_females)
+draw_figure_2(data_mass = MI_mass, fit_default = fit_MPLMM_mass_default, fit_females = fit_MPLMM_mass_females)
 ggplot2::ggsave(filename = "figures/Fig2.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
 ggplot2::ggsave(filename = "figures/Fig2.png", scale = 1.2, width = 15, height = 10, units = "cm")
 
 
 # Figure 3 ----------------------------------------------------------------
 
-draw_figure_3(data_mass = MI_mass, fit_default = fit_PLMM_mass_default, fit_females = fit_PLMM_mass_females)
+draw_figure_3(data_mass = MI_mass, fit_default = fit_MPLMM_mass_default, fit_females = fit_MPLMM_mass_females)
 ggplot2::ggsave(filename = "figures/Fig3.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
 ggplot2::ggsave(filename = "figures/Fig3.png", scale = 1.2, width = 15, height = 10, units = "cm")
 
-draw_figure_x(data_mass = MI_mass, fit_default = fit_PLMM_mass_default, fit_males = fit_PLMM_mass_males, fit_females = fit_PLMM_mass_females)
+draw_figure_x(data_mass = MI_mass, fit_default = fit_MPLMM_mass_default, fit_females = fit_MPLMM_mass_females)
 ggplot2::ggsave(filename = "figures/FigS1.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
 ggplot2::ggsave(filename = "figures/FigS1.png", scale = 1.2, width = 15, height = 10, units = "cm")
 
-draw_figure_xx(data_mass = MI_mass, fit_default = fit_PLMM_mass_default, fit_females = fit_PLMM_mass_females)
+draw_figure_xx(data_mass = MI_mass, fit_default = fit_MPLMM_mass_default, fit_females = fit_MPLMM_mass_females)
 ggplot2::ggsave(filename = "figures/FigS2.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
 ggplot2::ggsave(filename = "figures/FigS2.png", scale = 1.2, width = 15, height = 10, units = "cm")
 
@@ -375,11 +370,44 @@ ggplot2::ggsave(filename = "figures/FigS2.png", scale = 1.2, width = 15, height 
 
 # Comparison of Subclasses ------------------------------------------------
 
-MI_subclasses$MI  <- MI_subclasses$Litter_mass_log10 - predict(fit_PLMM_models, newdata = MI_subclasses, re.form = NA, type = "link")[, 1]
+MI_subclasses$MI  <- MI_subclasses$Litter_mass_log10 - predict(fit_MPLMM_models, newdata = MI_subclasses, re.form = NA, type = "link")[, 1]
 
+## Figure 4
 draw_figure_4(MI_subclasses)
 ggplot2::ggsave(filename = "figures/Fig4.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
 ggplot2::ggsave(filename = "figures/Fig4.png", scale = 1.2, width = 15, height = 10, units = "cm")
+
+## Descriptive statistics
+pretty(aggregate(MI ~ Subclass, data = MI_subclasses, \(x) c(mean = mean(x), sd = sd(x), N = length(x))) )
+#      Subclass MI.mean MI.sd MI.N
+# 1    Eutheria  0.0483 0.242 654.
+# 2  Metatheria -0.0708 0.313 81.0
+# 3 Monotremata  -0.356 0.697 3.00
+
+## MI comparisons
+coin::kruskal_test(MI ~ Subclass, data = MI_subclasses)
+# Asymptotic Kruskal-Wallis Test
+# 
+# data:  MI by Subclass (Eutheria, Metatheria, Monotremata)
+# chi-squared = 16.218, df = 2, p-value = 0.0003008
+
+#dunn.test::dunn.test(MI_subclasses$MI, MI_subclasses$Subclass, method = "bonferroni")
+coin::wilcox_test(MI ~ Subclass, data = droplevels(MI_subclasses[MI_subclasses$Subclass != "Monotremata", ]), distribution = "asymptotic")
+# Asymptotic Wilcoxon-Mann-Whitney Test
+# 
+# data:  MI by Subclass (Eutheria, Metatheria)
+# Z = 3.874, p-value = 0.0001071
+# alternative hypothesis: true mu is not equal to 0
+
+## Test via MPLMM
+
+fit_MPLMM_subclass <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_subclasses[MI_subclasses$Subclass != "Monotremata", ], 
+                                              args_spaMM = list(formula = Litter_mass_log10 ~ Subclass*(Adult_mass_log10 + Investment_duration_log10) + corrMatrix(1|Key),
+                                                                resid.model =  ~ Adult_mass_log10 + (1|Key)))
+if (FALSE) { # switch FALSE to TRUE to run
+  MPLMM_summary_subclass <- extract_fit_summary(fit_MPLMM_subclass, lambdaCI = FALSE)
+  pretty(MPLMM_summary_subclass$fixef)
+}
 
 
 
