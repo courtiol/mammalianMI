@@ -646,7 +646,31 @@ pretty(subclass_test_OD_meta)
 
 # 20 Indicator Species --------------------------------------------------
 
-MI_indicators$MI  <- MI_indicators$Litter_mass_log10 - predict(fit_PLMM_models, newdata = MI_indicators, re.form = NA, type = "link")[, 1]
+MI_indicators$MI  <- MI_indicators$Litter_mass_log10 - predict(fit_MPLMM_models, newdata = MI_indicators, re.form = NA, type = "link")[, 1]
+
+pretty(MI_indicators[order(-MI_indicators$MI), c("Name", "Species", "Order", "Subclass", "MI")])
+#                              Name                Species           Order    Subclass      MI
+# 2                 Tailless tenrec       Tenrec ecaudatus    Afrosoricida    Eutheria   0.803
+# 998                Eurasian shrew          Sorex araneus    Eulipotyphla    Eutheria   0.625
+# 61                        Red fox          Vulpes vulpes       Carnivora    Eutheria   0.458
+# 150                    Blue whale  Balaenoptera musculus Cetartiodactyla    Eutheria   0.216
+# 7                  American bison            Bison bison Cetartiodactyla    Eutheria   0.180
+# 563         African bush elephant     Loxodonta africana     Proboscidea    Eutheria   0.134
+# 896                           Rat          Rattus rattus        Rodentia    Eutheria  0.0915
+# 54                      Red panda        Ailurus fulgens       Carnivora    Eutheria  0.0576
+# 4                          Impala     Aepyceros melampus Cetartiodactyla    Eutheria  0.0523
+# 339                Tammar wallaby       Macropus eugenii   Diprotodontia  Metatheria  0.0101
+# 297               Tasmanian devil   Sarcophilus harrisii  Dasyuromorphia  Metatheria -0.0143
+# 124                     Grey seal     Halichoerus grypus       Carnivora    Eutheria -0.0200
+# 545                    Chimpanzee        Pan troglodytes        Primates    Eutheria -0.0270
+# 449      Geoffroy's spider monkey       Ateles geoffroyi        Primates    Eutheria -0.0425
+# 77                          Tiger        Panthera tigris       Carnivora    Eutheria -0.0628
+# 398                 European hare        Lepus europaeus      Lagomorpha    Eutheria  -0.110
+# 191 Greater short-nosed fruit bat      Cynopterus sphinx      Chiroptera    Eutheria  -0.134
+# 345                  Red kangaroo         Macropus rufus   Diprotodontia  Metatheria  -0.304
+# 385   Southern hairy-nosed wombat  Lasiorhinus latifrons   Diprotodontia  Metatheria  -0.319
+# 421          Short-beaked echidna Tachyglossus aculeatus     Monotremata Monotremata  -0.464
+
 
 draw_figure_5A(MI_indicators)
 ggplot2::ggsave(filename = "figures/Fig5A.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
