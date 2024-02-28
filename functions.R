@@ -301,7 +301,7 @@ compure_r2 <- function(fit, digits = 3) {
 }
 
 
-# Compare models ----------------------------------------------------------
+# Testing via CI ----------------------------------------------------------
 
 test_with_residualmod <- function(fit, parm, boot_args = list(nb_cores = 50, nsim = 1000, seed = 123)) {
   
@@ -322,6 +322,30 @@ test_with_residualmod <- function(fit, parm, boot_args = list(nb_cores = 50, nsi
                                 seed = boot_args$seed,
                                 fit_env = list(corM = corM))
 
+  boot_obj$t <- t(boot_obj$t)
+  boot_res <- boot::boot.ci(boot_obj, type = "basic")
+  c(estimate = boot_res$t0[[1]], lower_basic = boot_res$basic[4], upper_basic = boot_res$basic[5])
+}
+
+test_with_residualmod2 <- function(fit, boot_args = list(nb_cores = 50, nsim = 1000, seed = 123)) {
+  
+  if (!is.null(boot_args) && boot_args$nb_cores > parallel::detectCores()) {
+    stop("test not computed under default settings; this is computationally challenging and therefore is best done on a large computer.")
+  }
+  
+  if (!is.null(fit$phylo)) {
+    corM <- fit$phylo$corM
+  } else {
+    corM <- NULL
+  }
+  
+  boot_obj <- spaMM::spaMM2boot(fit,
+                                statFUN = \(refit, ...) spaMM::logLik(refit, ...),
+                                nsim = boot_args$nsim,
+                                nb_cores = boot_args$nb_cores,
+                                seed = boot_args$seed,
+                                fit_env = list(corM = corM))
+  
   boot_obj$t <- t(boot_obj$t)
   boot_res <- boot::boot.ci(boot_obj, type = "basic")
   c(estimate = boot_res$t0[[1]], lower_basic = boot_res$basic[4], upper_basic = boot_res$basic[5])
@@ -429,7 +453,7 @@ draw_figure_2bis <- function(data_mass, fit_default, fit_default_full, fit_males
     ggplot2::scale_color_viridis_d() +
     ggplot2::geom_point(ggplot2::aes(shape = Subclass, fill = Subclass), alpha = 0.3, size = 2) +
     ggplot2::geom_line(ggplot2::aes(y = Predict, x = Adult_mass, colour = Sex), data = data_pred,
-                       linewidth = 0.7, alpha = 0.8, inherit.aes = FALSE) +
+                       linewidth = 0.7, alpha = 0.3, inherit.aes = FALSE) +
     ggplot2::labs(x = 'Adult mass (kg)', y = 'Litter mass at weaning age (kg)', colour = 'Source for body mass') +
     ggplot2::theme_classic() +
     ggplot2::theme(legend.position = "right")
