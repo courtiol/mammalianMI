@@ -605,10 +605,33 @@ draw_figure_5A <- function(MI_indicators) {
 
 
 ## This function draws figure 6
- 
+
 draw_figure_6 <- function(MI_indicators) {
   
+  MI_indicators <- MI_indicators[order(MI_indicators$MI), ]
+  
   MI_indicators$Name <- reorder(MI_indicators$Name, MI_indicators$MI)
+  
+  message("Downloading IDs of animal silhouettes...")
+  MI_indicators$Phylopic_uuid <- sapply(as.character(MI_indicators$Species), \(sp) rphylopic::get_uuid(name = sp, n = 1))
+  
+  ## Nicer alternatives for some animals
+  MI_indicators$Phylopic_uuid[MI_indicators$Species == "Rattus rattus"] <- "a460430b-472b-4018-ba03-6b8eeb57fa5c" #"66511ed6-60f4-44a6-abfc-68488e98f678"
+  MI_indicators$Phylopic_uuid[MI_indicators$Species == "Loxodonta africana"] <- "80db1004-bc9f-4318-84e7-cdd9639a1f3e"
+  MI_indicators$Phylopic_uuid[MI_indicators$Species == "Sarcophilus harrisii"] <- "b511b4fa-c6c4-437e-b286-3c67c3b1aaac"
+  
+  message("Downloading animal silhouettes...")
+  MI_indicators$Phylopic_img <- sapply(MI_indicators$Phylopic_uuid, \(uuid) rphylopic::get_phylopic(uuid = uuid))
+  
+  ## Define orientation by hand since it does not seem to be standardised...
+  MI_indicators$Phylopic_orientation_left <- c(F, T, F, F, T, T, F, T, T, F, T, T, F, T, T, T, F, T, T, T)
+  
+  ## flipping silhouettes
+  MI_indicators$Phylopic_img <- mapply(rphylopic::flip_phylopic, MI_indicators$Phylopic_img, MI_indicators$Phylopic_orientation_left, FALSE)
+  MI_indicators$Phylopic_img <- mapply(rphylopic::flip_phylopic, MI_indicators$Phylopic_img, MI_indicators$MI > 0, FALSE) 
+  
+  message("Downloading attributions for animal silhouettes...")
+  MI_indicators$Phylopic_artist <- sapply(MI_indicators$Phylopic_uuid, \(uuid) rphylopic::get_attribution(uuid = uuid)[[1]])
   
   fig <- ggplot2::ggplot(data = MI_indicators) +
     ggplot2::aes(y = MI, x = Name,
@@ -616,8 +639,8 @@ draw_figure_6 <- function(MI_indicators) {
     ggplot2::geom_hline(yintercept = 0, linewidth = 0.3, color = "black", linetype = "dashed") +
     ggplot2::geom_segment(ggplot2::aes(yend = MI, y = 0, xend = reorder(Name, MI)), alpha = 0.3) +
     ggplot2::geom_point(alpha = 0.3, size = 2) +
-    rphylopic::geom_phylopic(ggplot2::aes(name = Species, x = Name, y = -0.7),
-                             size = 0.06,
+    rphylopic::geom_phylopic(ggplot2::aes(img = Phylopic_img, x = Name, y = -0.81),
+                             size = 0.09, colour = NA,
                              data = MI_indicators) +
     ggplot2::labs(x = NULL, y = 'Maternal investment') +
     ggplot2::scale_y_continuous(breaks = seq(-1.5, 1.5, 0.5), expand = c(0.1, 0.1)) +
@@ -628,7 +651,8 @@ draw_figure_6 <- function(MI_indicators) {
     ggplot2::scale_fill_manual(values = c("steelblue", "darkred", "#FCC501")) +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1, vjust = 1),
                    legend.position = "top", plot.margin = ggplot2::margin(l = 1, unit = "cm" ))
-    
+  
   
   print(fig)
+  return(MI_indicators[, c("Phylopic_artist", "Species", "Name")])
 }  

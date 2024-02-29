@@ -676,7 +676,12 @@ pretty(MI_indicators[order(-MI_indicators$MI), c("Name", "Species", "Order", "Su
 # Figure 6 ----------------------------------------------------------------
 
 if (FALSE) { ## slow to run as it downloads the silhouettes
-  draw_figure_6(MI_indicators)
+  fig6 <- draw_figure_6(MI_indicators)
   ggplot2::ggsave(filename = "figures/Fig6.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
   ggplot2::ggsave(filename = "figures/Fig6.png", scale = 1.2, width = 15, height = 10, units = "cm")
+  fig6$Phylopic_artist
+#  [1] "Becky Barnes"          "Sam Arman"             "T. Michael Keesey"     "Baheerathan Murugavel" "Ferran Sayol"         
+#  [6] "Gabriela Palomo-Munoz" "Andy Wilson"           "Kai Caspar"            "Margot Michaud"        "Margot Michaud"       
+#  [11] "Geoff Shaw"            "T. Michael Keesey"     "T. Michael Keesey"     "Ferran Sayol"          "T. Michael Keesey"    
+#  [16] "Gabriela Palomo-Munoz" "T. Michael Keesey"     "Rebecca Groom"         "Becky Barnes"          "Yan Wong"  
 }
