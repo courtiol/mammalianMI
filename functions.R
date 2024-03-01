@@ -241,7 +241,7 @@ confint_fixef <- function(fit, boot_args = NULL) {
 
 ## This functions extract parameters and their 95% confidence intervals
 
-extract_fit_summary <- function(fit, digits = 3, boot_args = list(nb_cores = 50, nsim = 1000, seed = 123), lambdaCI = TRUE) {
+extract_fit_summary <- function(fit, digits = 3, boot_args = list(nb_cores = 50, nsim = 1000, seed = 123, type = "marginal"), lambdaCI = TRUE) {
   
   if (inherits(fit, what = "HLfit")) {
     
