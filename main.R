@@ -148,10 +148,10 @@ plot(MI_models$Litter_mass_log10, predict(fit_PLMM_models, re.form = NA, type = 
 if (FALSE) { # switch FALSE to TRUE to run
   PLMM_summary <- extract_fit_summary(fit_PLMM_models)
   pretty(PLMM_summary$fixef)
-#                  estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
-# (Intercept)        -0.192       -0.293      -0.0712        -0.312       -0.0977      -0.286     -0.0713
-# Adult_mass_log10    0.806        0.791        0.826         0.786         0.822       0.791       0.827
-# 10^(Intercept)      0.643        0.509        0.849         0.488         0.798       0.518       0.849
+#                   estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
+#  (Intercept)        -0.192       -0.544        0.157        -0.556         0.150      -0.534       0.173
+#  Adult_mass_log10    0.806        0.781        0.832         0.780         0.831       0.782       0.833
+#  10^(Intercept)      0.643        0.286         1.44         0.278          1.41       0.293        1.49
   pretty(PLMM_summary$Pagel_Lambda)
 # estimate    lower    upper 
 #   "1.00"  "0.999"   "1.00" 
@@ -255,11 +255,13 @@ plot(MI_models$Litter_mass_log10, predict(fit_MPLMM_models, re.form = NA, type =
 if (FALSE) { # switch FALSE to TRUE to run
   MPLMM_summary <- extract_fit_summary(fit_MPLMM_models)
   pretty(MPLMM_summary$fixef)
-#                           estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
-# (Intercept)                  0.204       -0.126        0.305         0.104         0.543      -0.135       0.304
-# Adult_mass_log10             0.836        0.808        0.853         0.818         0.864       0.808       0.854
-# Investment_duration_log10   -0.199       -0.227      -0.0481        -0.351        -0.173      -0.225     -0.0473
-# 10^(Intercept)                1.60        0.748         2.02          1.27          3.49       0.733        2.01
+  >  pretty(MPLMM_summary$fixef)
+#                            estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
+#  (Intercept)                  0.204       -0.225        0.625        -0.221         0.663      -0.255       0.628
+#  Adult_mass_log10             0.836        0.805        0.868         0.802         0.868       0.804       0.870
+#  Investment_duration_log10   -0.199       -0.326      -0.0701        -0.328       -0.0638      -0.334     -0.0701
+#  10^(Intercept)                1.60        0.596         4.21         0.602          4.60       0.556        4.25
+  
   pretty(MPLMM_summary$Pagel_Lambda)
 # estimate    lower    upper 
 #   "1.00"  "0.999"   "1.00" 
@@ -327,16 +329,6 @@ multivariate_phylo_test$p <- with(multivariate_phylo_test, pchisq(LRT, df, lower
 pretty(multivariate_phylo_test)
 #    LRT   df         p
 # 1 824. 3.00 3.13e-178
-
-## Test of Investment_duration_log10 effect in MPLMM (very computationally intensive)
-if (FALSE) { # switch FALSE to TRUE to run
-  CI_invest <- confint_param(fit_MPLMM_models, parm = "Investment_duration_log10")
-  pretty(CI_invest)
-# estimate lower_basic upper_basic 
-# "-0.199"    "-0.334"   "-0.0701" ## WHY is this different from confint result??
-  CI_invest2 <- confint(fit_MPLMM_models, parm = "Investment_duration_log10",
-                        boot_args = list(nb_cores = 50, nsim = 1000, seed = 123), format = "stats")
-}
 
 
 # Comparison of mass proxies ----------------------------------------------
@@ -492,12 +484,12 @@ fit_MPLMM_euth <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_sub
 
 if (FALSE) {
   MPLMM_euth_summary <- extract_fit_summary(fit_MPLMM_euth, lambdaCI = FALSE)
-  pretty(MPLMM_euth_summary$fixef)
-#                           estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
-# (Intercept)                  0.382       0.0903        0.505         0.262         0.669      0.0961       0.502
-# Adult_mass_log10             0.848        0.819        0.865         0.831         0.878       0.818       0.865
-# Investment_duration_log10   -0.190       -0.216      -0.0374        -0.342        -0.162      -0.217     -0.0373
-# 10^(Intercept)                2.41         1.23         3.20          1.83          4.66        1.25        3.18
+  pretty(MPLMM_euth_summary)
+#                            estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
+#  (Intercept)                  0.382       -0.104        0.875       -0.0977         0.889      -0.124       0.862
+#  Adult_mass_log10             0.848        0.816        0.881         0.816         0.880       0.816       0.880
+#  Investment_duration_log10   -0.190       -0.314      -0.0653        -0.322       -0.0662      -0.313     -0.0575
+#  10^(Intercept)                2.41        0.788         7.50         0.799          7.74       0.751        7.28
 }
 
 fit_MPLMM_meta <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_subclasses[MI_subclasses$Subclass == "Metatheria", ], 
@@ -506,12 +498,12 @@ fit_MPLMM_meta <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_sub
 
 if (FALSE) {
   MPLMM_meta_summary <- extract_fit_summary(fit_MPLMM_meta, lambdaCI = FALSE)
-  pretty(MPLMM_meta_summary$fixef)
+  pretty(MPLMM_meta_summary)
 #                           estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
-# (Intercept)                 -0.109       -0.925        0.591        -0.799         0.705      -0.923       0.581
-# Adult_mass_log10             0.762        0.686        0.850         0.678         0.838       0.686       0.845
-# Investment_duration_log10  -0.0806       -0.403        0.285        -0.441         0.243      -0.404       0.279
-# 10^(Intercept)               0.778        0.119         3.90         0.159          5.06       0.119        3.81
+# (Intercept)                 -0.109        -1.33         1.03         -1.33          1.07       -1.29        1.11
+# Adult_mass_log10             0.762        0.647        0.871         0.643         0.873       0.651       0.880
+# Investment_duration_log10  -0.0806       -0.552        0.411        -0.555         0.411      -0.572       0.393
+# 10^(Intercept)               0.778       0.0470         10.8        0.0470          11.9      0.0509        12.9
 }
 
 fit_MPLMM_euth_noD <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_subclasses[MI_subclasses$Subclass == "Eutheria", ], 
@@ -521,10 +513,11 @@ fit_MPLMM_euth_noD <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI
 if (FALSE) {
   MPLMM_euth_noD_summary <- extract_fit_summary(fit_MPLMM_euth_noD, lambdaCI = FALSE)
   pretty(MPLMM_euth_noD_summary)
-#                   estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
-#  (Intercept)        0.0430      -0.0536        0.204        -0.113         0.150     -0.0641       0.199
-#  Adult_mass_log10    0.820        0.803        0.841         0.799         0.837       0.802       0.840
-#  10^(Intercept)       1.10        0.884         1.60         0.771          1.41       0.863        1.58
+#                  estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
+# (Intercept)        0.0430       -0.409        0.501        -0.418         0.500      -0.414       0.504
+# Adult_mass_log10    0.820        0.793        0.848         0.792         0.846       0.793       0.847
+# 10^(Intercept)       1.10        0.390         3.17         0.382          3.16       0.385        3.19
+  
 }
 
 fit_MPLMM_meta_noD <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI_subclasses[MI_subclasses$Subclass == "Metatheria", ], 
@@ -534,14 +527,13 @@ fit_MPLMM_meta_noD <- fitme_phylo_lambdafixed(lambda = 1, tree = tree, data = MI
 if (FALSE) {
   MPLMM_meta_noD_summary <- extract_fit_summary(fit_MPLMM_meta_noD, lambdaCI = FALSE)
   pretty(MPLMM_meta_noD_summary)
-  pretty(MPLMM_meta_noD_summary)
 #                  estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
-# (Intercept)        -0.286       -0.370       -0.224        -0.352        -0.203      -0.369      -0.220
-# Adult_mass_log10    0.748        0.702        0.814         0.685         0.793       0.703       0.811
-# 10^(Intercept)      0.517        0.427        0.597         0.444         0.626       0.427       0.602
+# (Intercept)        -0.286       -0.870        0.269        -0.838         0.283      -0.855       0.265
+# Adult_mass_log10    0.748        0.671        0.823         0.669         0.824       0.672       0.826
+# 10^(Intercept)      0.517        0.135         1.86         0.145          1.92       0.140        1.84
+  
   
 }
-
 
 
 # Comparison of Orders ------------------------------------------------
