@@ -47,6 +47,7 @@ check_dependencies_all <- function(pkgs) {
 ## - Species: the species name
 ## - Key: a key based on the taxonomy which is used to match the tips in the phylogenetic tree
 ## - Subclass: the mammalian subclass
+## - Family: the mammalian family
 ## - Order: the mammalian order
 ## - Name: the vernacular name for the species
 ## - Adult_mass: the adult mass for the species, in kg
@@ -120,7 +121,7 @@ prepare_df_MIfull <- function(raw_df) {
   raw_df <- raw_df[!too_small, ]
 
   ## Reorder and select columns
-  raw_df <- raw_df[, c("Species", "Key", "Subclass", "Order", "Name",
+  raw_df <- raw_df[, c("Species", "Key", "Subclass", "Family", "Order", "Name",
                        "Adult_mass", "Adult_mass_log10",
                        "Male_adult_mass", "Male_adult_mass_log10",
                        "Female_adult_mass", "Female_adult_mass_log10",

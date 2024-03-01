@@ -77,6 +77,11 @@ str(MI_models)
 MI_mass <- droplevels(MI_subclasses[!is.na(MI_subclasses$Female_adult_mass), ])
 nrow(MI_mass) # 105
 str(MI_mass)
+sum(MI_mass$Family %in% c("Cercopithecidae")) ## number of Cercopithecidae
+# [1] 44
+sum(MI_mass$Family %in% c("Odobenidae", "Otariidae", "Phocidae")) ## number of Pinnipeds
+# [1] 6
+
 
 ### Prepare subsample for the 20 indicator species
 indicator_species <- c("Tailless tenrec", "Red fox", "Blue whale", "Eurasian shrew",
