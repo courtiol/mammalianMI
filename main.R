@@ -32,12 +32,12 @@ MI_subclasses <- droplevels(MI_full[!is.na(MI_full$Investment_duration) & MI_ful
 nrow(MI_subclasses) # 738
 str(MI_subclasses)
 
+### Prepare subsample without dropping species without investment duration
 MI_subclasses_noD <- droplevels(MI_full[MI_full$Key %in% tree[["tip.label"]], ])
 nrow(MI_subclasses_noD) # 801
 str(MI_subclasses_noD)
 
-
-### Prepare subsample with for comparison between orders
+### Prepare subsample for the comparison between orders
 orders_vs_N1 <- aggregate(Subclass ~ Order, data = MI_subclasses, \(x) length(x))
 colnames(orders_vs_N1)[2] <- "Nsp"
 orders_vs_N2 <- aggregate(Subclass ~ Order, data = MI_subclasses, \(x) unique(x))
@@ -60,15 +60,17 @@ MI_orders <- droplevels(MI_subclasses[MI_subclasses$Order %in% orders_to_keep, ]
 nrow(MI_orders) # 699
 str(MI_orders)
 
+#### Prepare subsample for the comparison between orders solely including Eutheria
 MI_orders_euth <- droplevels(MI_orders[MI_orders$Subclass == "Eutheria", ])
 nrow(MI_orders_euth)
 # [1] 632
 
+#### Prepare subsample for the comparison between orders solely including Metatheria
 MI_orders_meta <- droplevels(MI_orders[MI_orders$Subclass == "Metatheria", ])
 nrow(MI_orders_meta)
 # [1] 67
 
-### Prepare subsample with no missing data for modelling
+### Prepare subsample with no missing data for modelling 
 MI_models <- MI_subclasses
 nrow(MI_models) # 738
 str(MI_models)
@@ -79,7 +81,7 @@ nrow(MI_mass) # 105
 str(MI_mass)
 sum(MI_mass$Family %in% c("Cercopithecidae")) ## number of Cercopithecidae
 # [1] 44
-sum(MI_mass$Family %in% c("Odobenidae", "Otariidae", "Phocidae")) ## number of Pinnipeds
+sum(MI_mass$Family %in% c("Odobenidae", "Otariidae", "Phocidae")) ## number of Pinnipedia
 # [1] 6
 
 
@@ -267,7 +269,7 @@ if (FALSE) { # switch FALSE to TRUE to run
 #  Investment_duration_log10   -0.199       -0.326      -0.0701        -0.328       -0.0638      -0.334     -0.0701
 #  10^(Intercept)                1.60        0.596         4.21         0.602          4.60       0.556        4.25
   
-  pretty(MPLMM_summary$Pagel_Lambda)
+  pretty(MPLMM_summary$Pagel_Lambda) # Pagel's lambda
 # estimate    lower    upper 
 #   "1.00"  "0.999"   "1.00" 
 }
@@ -307,7 +309,7 @@ MI_models$MI_MPLMM <- MI_models$Litter_mass_log10 - predict(fit_MPLMM_models, re
 corMI <- cor(MI_models[, c("MI_SLR", "MI_SMA", "MI_MA", "MI_MSLR")])
 diag(corMI) <- NA
 corMI
-pretty(range(corMI, na.rm = TRUE))
+pretty(range(corMI, na.rm = TRUE)) # Range of correlation coefficients between models
 # [1] "0.921" "1.00" 
 
 quade.test(as.matrix(MI_models[, c("MI_SLR", "MI_SMA", "MI_MA", "MI_MSLR")]))
@@ -318,7 +320,7 @@ quade.test(as.matrix(MI_models[, c("MI_SLR", "MI_SMA", "MI_MA", "MI_MSLR")]))
 corMI <- cor(MI_models[, c("MI_PLMM", "MI_MPLMM", "MI_SLR", "MI_SMA", "MI_MA", "MI_MSLR")])
 diag(corMI) <- NA
 corMI
-pretty(range(corMI, na.rm = TRUE))
+pretty(range(corMI, na.rm = TRUE)) # Range of correlation coefficients between models
 # [1] "0.917" "1.00" 
 
 univariate_phylo_test <- data.frame(LRT = unname(-2*(logLik(fit_SLR_models) - logLik(fit_PLMM_models))))
@@ -396,7 +398,7 @@ ggplot2::ggsave(filename = "figures/FigS2.png", scale = 1.2, width = 15, height 
 
 MI_subclasses$MI  <- MI_subclasses$Litter_mass_log10 - predict(fit_MPLMM_models, newdata = MI_subclasses, re.form = NA, type = "link")[, 1]
 
-## Figure 4
+## Figure 4 
 draw_figure_4(MI_subclasses)
 ggplot2::ggsave(filename = "figures/Fig4.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
 ggplot2::ggsave(filename = "figures/Fig4.png", scale = 1.2, width = 15, height = 10, units = "cm")
@@ -541,7 +543,7 @@ if (FALSE) {
 }
 
 
-# Comparison of Orders ------------------------------------------------
+# Comparison of Orders ---------------------------------------------------
 
 MI_orders_euth$MI  <- MI_orders_euth$Litter_mass_log10 - predict(fit_MPLMM_euth, newdata = MI_orders_euth, re.form = NA, type = "link")[, 1]
 MI_orders_meta$MI  <- MI_orders_meta$Litter_mass_log10 - predict(fit_MPLMM_meta, newdata = MI_orders_meta, re.form = NA, type = "link")[, 1]
@@ -667,7 +669,6 @@ pretty(MI_indicators[order(-MI_indicators$MI), c("Name", "Species", "Order", "Su
 # 345                  Red kangaroo         Macropus rufus   Diprotodontia  Metatheria  -0.304
 # 385   Southern hairy-nosed wombat  Lasiorhinus latifrons   Diprotodontia  Metatheria  -0.319
 # 421          Short-beaked echidna Tachyglossus aculeatus     Monotremata Monotremata  -0.464
-
 
 
 # Figure 6 ----------------------------------------------------------------
