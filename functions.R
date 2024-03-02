@@ -404,67 +404,6 @@ draw_figure_2 <- function(data_mass, fit_default, fit_males, fit_females) {
   print(fig)
 }
 
-draw_figure_2bis <- function(data_mass, fit_default, fit_default_full, fit_males, fit_females) {
-  data_pred <- data.frame(Adult_mass = c(0.001, 1e4),
-                          Adult_mass_log10 = log(c(0.001, 1e4), base = 10),
-                          Male_adult_mass = c(0.001, 1e4),
-                          Male_adult_mass_log10 = log(c(0.001, 1e4), base = 10),
-                          Female_adult_mass = c(0.001, 1e4),
-                          Female_adult_mass_log10 = log(c(0.001, 1e4), base = 10))
-  
-  data_pred$default <- 10^(predict(fit_default, newdata = data_pred, re.form = NA)[, 1])
-  data_pred$`default (larger dataset)` <- 10^(predict(fit_default_full, newdata = data_pred, re.form = NA)[, 1])
-  data_pred$males   <- 10^(predict(fit_males, newdata = data_pred, re.form = NA)[, 1])
-  data_pred$females <- 10^(predict(fit_females, newdata = data_pred, re.form = NA)[, 1])
-
-  data_pred <- tidyr::pivot_longer(data_pred, cols = default:females, names_to = "Sex", values_to = "Predict")
-  data_pred$Sex <- factor(data_pred$Sex, levels = c("default (larger dataset)", "default", "males", "females"))
-  
-  fig <- ggplot2::ggplot(data = data_mass, ggplot2::aes(x = Adult_mass, y = Litter_mass)) + 
-    ggplot2::scale_x_continuous(trans = "log10", breaks = c(0.1, 1, 10, 100, 1000, 10000, 100000), 
-                                labels = scales::number_format(accuracy = 0.1), expand = c(0, 0)) + 
-    ggplot2::scale_y_continuous(trans = "log10",
-                                breaks = c(0.1, 1, 10, 100, 1000, 10000),
-                                labels = scales::number_format(accuracy = 0.1), expand = c(0, 0)) +
-    ggplot2::scale_shape_manual(values = 21:23) +
-    ggplot2::scale_fill_manual(values = c("steelblue", "darkred", "#FCC501")) +
-    ggplot2::scale_color_viridis_d() +
-    ggplot2::geom_point(ggplot2::aes(shape = Subclass, fill = Subclass), alpha = 0.3, size = 2) +
-    ggplot2::geom_line(ggplot2::aes(y = Predict, x = Adult_mass, colour = Sex), data = data_pred,
-                       linewidth = 0.7, alpha = 0.3, inherit.aes = FALSE) +
-    ggplot2::labs(x = 'Adult mass (kg)', y = 'Litter mass at weaning age (kg)', colour = 'Source for body mass') +
-    ggplot2::theme_classic() +
-    ggplot2::theme(legend.position = "right")
-  
-  print(fig)
-}
-
-## This function draws figure x (not used)
-
-draw_figure_x <- function(data_mass, fit_default, fit_females) {
-
-  data_mass$default <- data_mass$Litter_mass_log10 - predict(fit_default, re.form = NA, type = "link")[, 1]
-  data_mass$females <- data_mass$Litter_mass_log10 - predict(fit_females, re.form = NA, type = "link")[, 1]
-  
-  data_pred <- tidyr::pivot_longer(data_mass, cols = default:females, names_to = "Sex", values_to = "Predict")
-  data_pred$Sex <- factor(data_pred$Sex, levels = c("default", "females"))
-  
-  fig <- ggplot2::ggplot(data = data_pred, ggplot2::aes(x = Adult_mass, y = Predict, shape = Subclass, fill = Sex)) + 
-    ggplot2::geom_point(alpha = 0.3, size = 2) +
-    ggplot2::geom_text(ggplot2::aes(y = Predict + 0.2, label = Name), data = data_pred[data_pred$Predict > 1, ]) +
-    ggplot2::scale_x_continuous(trans = "log10", breaks = c(0.1, 1, 10, 100, 1000, 10000, 100000), 
-                                labels = scales::number_format(accuracy = 0.1), expand = c(0.1, 0.1)) + 
-    ggplot2::scale_y_continuous(breaks = seq(-0.5, 4, by = 0.5),
-                                labels = scales::number_format(accuracy = 0.1)) +
-    ggplot2::scale_shape_manual(values = 21:23) +
-    ggplot2::scale_fill_manual(values = c("grey", "#1fc3aa", "#8624f5")) +
-    ggplot2::guides(fill = ggplot2::guide_legend(override.aes = list(shape = 21))) +
-    ggplot2::labs(x = 'Adult mass (kg)', y = 'Maternal investment metric (MI)', fill = 'Source for body mass') +
-    ggplot2::theme_classic() +
-    ggplot2::theme(legend.position = "right")
-  
-  print(fig)
-}
 
 ## This function draws figure 3
 
@@ -492,34 +431,6 @@ draw_figure_3 <- function(data_mass, fit_default, fit_females) {
   print(fig)
 }
 
-
-## This function draws figure xx
-
-draw_figure_xx <- function(data_mass, fit_default, fit_females) {
-  
-  data_mass$default <- data_mass$Litter_mass_log10 - predict(fit_default, re.form = NA, type = "link")[, 1]
-  data_mass$females <- data_mass$Litter_mass_log10 - predict(fit_females, re.form = NA, type = "link")[, 1]
-  data_mass$average_mass <- 0.5*(data_mass$Male_adult_mass + data_mass$Female_adult_mass)
-  data_mass$departure_avg <- abs(data_mass$Adult_mass - data_mass$average_mass)
-  
-  fig <- ggplot2::ggplot(data = data_mass, ggplot2::aes(y = females - default, x = departure_avg, shape = Subclass, fill = Subclass)) + 
-    ggplot2::geom_point(alpha = 0.3, size = 2) +
-    ggplot2::geom_abline(intercept = 0, slope = 0, linetype = "dashed") +
-    ggplot2::geom_text(ggplot2::aes(y = females - default + 0.05, label = Name), data = data_mass[(data_mass$females - data_mass$default) > 0.1, ], size = 2) +
-    ggplot2::geom_text(ggplot2::aes(y = females - default - 0.05, label = Name), data = data_mass[(data_mass$default - data_mass$females) > 0.1, ], size = 2) +
-    ggplot2::scale_x_continuous(trans = "log1p", breaks = c(0.1, 1, 10, 100, 1000, 10000, 100000), 
-                                labels = scales::number_format(accuracy = 0.1)) + 
-    ggplot2::scale_y_continuous(breaks = seq(-0.5, 4, by = 0.5),
-                                labels = scales::number_format(accuracy = 0.1)) +
-    ggplot2::scale_shape_manual(values = 21:23) +
-    ggplot2::scale_fill_manual(values = c("steelblue", "darkred", "#FCC501")) +
-    ggplot2::coord_fixed(ylim = c(-0.75, 0.75)) +
-    ggplot2::labs(y = 'MI (females) - MI (default)', x = 'abs(Adult mass - Average adult mass across sexes)') +
-    ggplot2::theme_classic() +
-    ggplot2::theme(legend.position = "right")
-  
-  print(fig)
-}
 
 ## This function draws figure 4
 
@@ -580,29 +491,6 @@ draw_figure_5 <- function(data_orders, dotsize = 1, tag = "", col_begin = 0, col
   
   print(fig)
 }
-
-## This function draws figure 5A
-
-draw_figure_5A <- function(MI_indicators) {
-
-  fig <- ggplot2::ggplot(data = MI_indicators) + 
-         ggplot2::aes(x = Investment_duration_log10, y = Litter_mass_log10, col = Subclass, fill = Subclass, 
-                      shape = Subclass) +
-         ggplot2::geom_point(alpha = 0.7) + 
-         ggplot2::geom_text(ggplot2::aes(x = Investment_duration_log10 + 0.02, y = Litter_mass_log10 - 0.05, label = as.character(Name)),
-                       hjust = 0, vjust = 0, data = MI_indicators, show.legend = FALSE, size = 3,
-                       colour = "black") +
-         ggplot2::labs(y = 'Actual litter mass at weaning (kg)', x = 'Predicted litter mass at weaning(kg)') +
-         ggplot2::scale_shape_manual(values = 21:23) +
-         ggplot2::theme_bw() +
-         ggplot2::theme(legend.position = "NULL") +
-         ggplot2::geom_abline(size=0.8, color="black") +
-         ggplot2::scale_color_manual(values = c("steelblue", "darkred", "#FCC501")) +
-         ggplot2::scale_fill_manual(values = c("steelblue", "darkred", "#FCC501"))
-         
-
-  print(fig)
-}  
 
 
 ## This function draws figure 6
