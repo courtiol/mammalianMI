@@ -137,7 +137,7 @@ plot(MI_models$Litter_mass_log10, predict(fit_PLMM_models, re.form = NA, type = 
 ### Computing CI for estimates in PLMM model (very computationally intensive)
 if (FALSE) { # switch FALSE to TRUE to run
   PLMM_summary <- extract_fit_summary(fit_PLMM_models)
-  pretty(PLMM_summary$fixef)
+  pretty(PLMM_summary$fixef) # Note: we report the basic intervals in the MS
 #                   estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
 #  (Intercept)        -0.192       -0.544        0.157        -0.556         0.150      -0.534       0.173
 #  Adult_mass_log10    0.806        0.781        0.832         0.780         0.831       0.782       0.833
@@ -246,8 +246,7 @@ plot(MI_models$Litter_mass_log10, predict(fit_MPLMM_models, re.form = NA, type =
 ### Computing CI for estimates in MPLMM model (very computationally intensive)
 if (FALSE) { # switch FALSE to TRUE to run
   MPLMM_summary <- extract_fit_summary(fit_MPLMM_models)
-  pretty(MPLMM_summary$fixef)
-  >  pretty(MPLMM_summary$fixef)
+  pretty(MPLMM_summary$fixef) # Note: we report the basic intervals in the MS
 #                            estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
 #  (Intercept)                  0.204       -0.225        0.625        -0.221         0.663      -0.255       0.628
 #  Adult_mass_log10             0.836        0.805        0.868         0.802         0.868       0.804       0.870
@@ -308,23 +307,28 @@ corMI
 pretty(range(corMI, na.rm = TRUE)) # Range of correlation coefficients between models
 # [1] "0.917" "1.00" 
 
+## Comparison of models by LRT
+if (FALSE) { # switch FALSE to TRUE to run (slow)
+  univariate_phylo_test <- compute_LRT(fit = fit_PLMM_models, fit_null = fit_SLR_models)
+  # ======== Bootstrap: ========
+  #   Raw simulated p-value: 0.000999
+  univariate_phylo_test$basicLRT
+  # chi2_LR df p_value
+  # p_v 932.6449 NA      NA
+  1 + compute_df(fit_PLMM_models) - compute_df(fit_SLR_models) # dfs include + 1 for Pagel
+  # [1] 3
+}
 
-univariate_phylo_test <- compute_LRT(fit = fit_PLMM_models, fit_null = fit_SLR_models,
-                                     boot_args = list(nb_cores = 5, nsim = 20, seed = 123))
-
-univariate_phylo_test <- data.frame(LRT = unname(-2*(logLik(fit_SLR_models) - logLik(fit_PLMM_models))))
-univariate_phylo_test$df <- 3 # 1 for Pagel + 2 for the residual model
-univariate_phylo_test$p <- with(univariate_phylo_test, pchisq(LRT, df, lower.tail = FALSE))
-pretty(univariate_phylo_test)
-#    LRT   df         p
-# 1 933. 3.00 7.35e-202
-
-multivariate_phylo_test <- data.frame(LRT = unname(-2*(logLik(fit_MSLR_models) - logLik(fit_MPLMM_models))))
-multivariate_phylo_test$df <- 3 # 1 for Pagel + 2 for the residual model
-multivariate_phylo_test$p <- with(multivariate_phylo_test, pchisq(LRT, df, lower.tail = FALSE))
-pretty(multivariate_phylo_test)
-#    LRT   df         p
-# 1 824. 3.00 3.13e-178
+if (FALSE) { # switch FALSE to TRUE to run (slow)
+  multivariate_phylo_test <- compute_LRT(fit = fit_MPLMM_models, fit_null = fit_MSLR_models)
+  # ======== Bootstrap: ========
+  #   Raw simulated p-value: 0.000999
+  multivariate_phylo_test$basicLRT
+  # chi2_LR df p_value
+  # p_v   823.7 NA      NA
+  1 + compute_df(fit_MPLMM_models) - compute_df(fit_MSLR_models) # dfs include + 1 for Pagel
+  # [1] 3
+}
 
 
 # Comparison of mass proxies ----------------------------------------------
@@ -441,40 +445,53 @@ fit_MPLMM_subclass_SMD <- fitme_phylo_lambdafixed(
                     resid.model =  ~ Adult_mass_log10 + (1|Key),
                     control.HLfit = list(NbThreads = 2)))
 
-subclass_test_S <- data.frame(LRT = unname(-2*(logLik(fit_MPLMM_subclass) - logLik(fit_MPLMM_subclass_S))))
-subclass_test_S$df <- 1
-subclass_test_S$p <- with(subclass_test_S, pchisq(LRT, df, lower.tail = FALSE))
-pretty(subclass_test_S)
+
+if (FALSE) { # switch FALSE to TRUE to run (slow)
+  subclass_test_SMD.vs.0 <- compute_LRT(fit_MPLMM_subclass_SMD, fit_MPLMM_subclass)
+  subclass_test_SMD.vs.0$basicLRT
+  compute_df(fit_MPLMM_subclass_SMD) - compute_df(fit_MPLMM_subclass) # dfs
+  
+}
+#    LRT   df      p
+# 1 7.68 3.00 0.0531 ## not used
+
+if (FALSE) { # switch FALSE to TRUE to run (slow)
+  subclass_test_S.vs.0 <- compute_LRT(fit_MPLMM_subclass_S, fit_MPLMM_subclass)
+  subclass_test_S.vs.0$basicLRT
+  compute_df(fit_MPLMM_subclass_S) - compute_df(fit_MPLMM_subclass) # dfs
+  
+}
 #     LRT   df     p
 # 1 0.280 1.00 0.596 ## not used
 
-subclass_test_SM <- data.frame(LRT = unname(-2*(logLik(fit_MPLMM_subclass_S) - logLik(fit_MPLMM_subclass_SM))))
-subclass_test_SM$df <- 1
-subclass_test_SM$p <- with(subclass_test_SM, pchisq(LRT, df, lower.tail = FALSE))
-pretty(subclass_test_SM)
+if (FALSE) { # switch FALSE to TRUE to run (slow)
+  subclass_test_SM.vs.S <- compute_LRT(fit_MPLMM_subclass_SM, fit_MPLMM_subclass_S)
+  subclass_test_SM.vs.S$basicLRT
+  compute_df(fit_MPLMM_subclass_SM) - compute_df(fit_MPLMM_subclass_S) # dfs
+  
+}
 #     LRT   df      p
 # 1 7.22 1.00 0.00722 ## used in manuscript
 
-subclass_test_SD <- data.frame(LRT = unname(-2*(logLik(fit_MPLMM_subclass_S) - logLik(fit_MPLMM_subclass_SD))))
-subclass_test_SD$df <- 1
-subclass_test_SD$p <- with(subclass_test_SD, pchisq(LRT, df, lower.tail = FALSE))
-pretty(subclass_test_SD)
+if (FALSE) { # switch FALSE to TRUE to run (slow)
+  subclass_test_SD.vs.S <- compute_LRT(fit_MPLMM_subclass_SD, fit_MPLMM_subclass_S)
+  subclass_test_SD.vs.S$basicLRT
+  compute_df(fit_MPLMM_subclass_SD) - compute_df(fit_MPLMM_subclass_S) # dfs
+  
+}
 #     LRT   df      p
 # 1 7.50 1.00 0.00617 ## used in manuscript
 
-subclass_test_SMD <- data.frame(LRT = unname(-2*(logLik(fit_MPLMM_subclass_S) - logLik(fit_MPLMM_subclass_SMD))))
-subclass_test_SMD$df <- 2
-subclass_test_SMD$p <- with(subclass_test_SMD, pchisq(LRT, df, lower.tail = FALSE))
-pretty(subclass_test_SMD)
+if (FALSE) { # switch FALSE to TRUE to run (slow)
+  subclass_test_SMD.vs.S <- compute_LRT(fit_MPLMM_subclass_SMD, fit_MPLMM_subclass_S)
+  subclass_test_SMD.vs.S$basicLRT
+  compute_df(fit_MPLMM_subclass_SMD) - compute_df(fit_MPLMM_subclass_S) # dfs
+  
+}
 #     LRT   df      p
 # 1 7.40  2.00 0.0247 ## not used
 
-subclass_test_SMD0 <- data.frame(LRT = unname(-2*(logLik(fit_MPLMM_subclass) - logLik(fit_MPLMM_subclass_SMD))))
-subclass_test_SMD0$df <- 3
-subclass_test_SMD0$p <- with(subclass_test_SMD0, pchisq(LRT, df, lower.tail = FALSE))
-pretty(subclass_test_SMD0)
-#    LRT   df      p
-# 1 7.68 3.00 0.0531 ## not used
+
 
 fit_MPLMM_euth <- fitme_phylo_lambdafixed(
   lambda = 1, tree = tree, data = MI_subclasses[MI_subclasses$Subclass == "Eutheria", ], 

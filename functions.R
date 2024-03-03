@@ -260,17 +260,22 @@ compute_LRT <- function(fit, fit_null, boot_args = list(nb_cores = 50, nsim = 10
     
     requireNamespace("doSNOW", quietly = TRUE)
     
-    res <- LRT(fit, fit_null, 
-               boot.repl = boot_args$nsim,
-               nb_cores = boot_args$nb_cores,
-               seed = boot_args$seed)
+    res <- spaMM::LRT(fit, fit_null, 
+                      boot.repl = boot_args$nsim,
+                      nb_cores = boot_args$nb_cores,
+                      seed = boot_args$seed)
   } else {
-    res <- LRT(fit, fit_null)
+    res <- spaMM::LRT(fit, fit_null)
   }
   
   res
 }
 
+## This functions computes the total number of dfs for a model fitted with spaMM
+
+compute_df <- function(fit) {
+  sum(c(unlist(fit$dfs), spaMM:::.calc_p_rdisp(fit)), na.rm = TRUE)
+}
 
 # Extract information from fits -------------------------------------------
 
