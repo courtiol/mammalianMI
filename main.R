@@ -308,6 +308,10 @@ corMI
 pretty(range(corMI, na.rm = TRUE)) # Range of correlation coefficients between models
 # [1] "0.917" "1.00" 
 
+
+univariate_phylo_test <- compute_LRT(fit = fit_PLMM_models, fit_null = fit_SLR_models,
+                                     boot_args = list(nb_cores = 5, nsim = 20, seed = 123))
+
 univariate_phylo_test <- data.frame(LRT = unname(-2*(logLik(fit_SLR_models) - logLik(fit_PLMM_models))))
 univariate_phylo_test$df <- 3 # 1 for Pagel + 2 for the residual model
 univariate_phylo_test$p <- with(univariate_phylo_test, pchisq(LRT, df, lower.tail = FALSE))

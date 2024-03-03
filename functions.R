@@ -246,6 +246,31 @@ confint_fixef <- function(fit, boot_args = list(nb_cores = 50, nsim = 1000, seed
   cbind(estimate = spaMM::fixef(fit), res_wide)
 }
 
+## This functions computes the LRT between 2 models fitted with spaMM by parametric bootstrap
+
+compute_LRT <- function(fit, fit_null, boot_args = list(nb_cores = 50, nsim = 1000, seed = 123)) {
+  
+  if (!is.null(boot_args)) {
+    
+    if (boot_args$nb_cores > parallel::detectCores()) {
+      stop("LRT not computed under default settings; this is computationally challenging and therefore is best done on a large computer.")
+    }
+  
+    message("Estimating LRT by parametric bootstrap... be patient")
+    
+    requireNamespace("doSNOW", quietly = TRUE)
+    
+    res <- LRT(fit, fit_null, 
+               boot.repl = boot_args$nsim,
+               nb_cores = boot_args$nb_cores,
+               seed = boot_args$seed)
+  } else {
+    res <- LRT(fit, fit_null)
+  }
+  
+  res
+}
+
 
 # Extract information from fits -------------------------------------------
 
