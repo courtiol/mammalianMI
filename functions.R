@@ -1,5 +1,7 @@
 
-# Nice display ------------------------------------------------------------
+# Nicer display for numbers -----------------------------------------------
+
+## This function prints vectors of numbers sticking to a fixed number of significant digits
 
 pretty <- function(x, digits = 3) {
   
@@ -136,18 +138,25 @@ prepare_df_MIfull <- function(raw_df) {
 }
 
 
-# Fit P(G)LMM models ------------------------------------------------------
+# Prepare data frame with fill data for more than 15 species per order ---------
 
-## This function fits a phylogenetic GLMM given a lambda value using spaMM
+## This function prepares the data containing information required to compute the Maternal Investment metrics and to compare orders
 
-fitme_phylo_lambdafixed_old <- function(lambda = 1, tree, data, cor_fn = ape::corPagel, return.fit = TRUE, ...) {
-  corM <- nlme::corMatrix(nlme::Initialize(cor_fn(lambda, form = ~ Key, phy = tree), data = data)) 
-  fit <- spaMM::fitme(corrMatrix = corM, data = data, ...)
-  fit$phylo <- list(lambda = lambda, tree = tree, cor_fn = cor_fn, corM = corM)
-  if (return.fit) return(fit)
-  logLik(fit)
+prepare_df_MIfull.orders <- function(df) {
+  orders_vs_N1 <- aggregate(Subclass ~ Order, data = df, \(x) length(x))
+  colnames(orders_vs_N1)[2] <- "Nsp"
+  orders_vs_N2 <- aggregate(Subclass ~ Order, data = df, \(x) unique(x))
+  orders_vs_N  <- merge(orders_vs_N1, orders_vs_N2, by = "Order")
+  orders_vs_N  <- orders_vs_N[order(-orders_vs_N$Nsp), ]
+  rownames(orders_vs_N) <- NULL
+  orders_to_keep <- orders_vs_N[orders_vs_N$Nsp > 15, "Order"]
+  droplevels(df[df$Order %in% orders_to_keep, ])
 }
 
+
+# Fit P(G)LMM models ------------------------------------------------------
+
+## This function fits a phylogenetic GLMM given a Pagel's lambda value using spaMM
 
 fitme_phylo_lambdafixed <- function(lambda = 1, tree, data, cor_fn = ape::corPagel, return.fit = TRUE, args_spaMM = list()) {
   corM <- nlme::corMatrix(nlme::Initialize(cor_fn(lambda, form = ~ Key, phy = tree), data = data)) 
@@ -158,7 +167,7 @@ fitme_phylo_lambdafixed <- function(lambda = 1, tree, data, cor_fn = ape::corPag
   logLik(fit)
 }
 
-## This function fits a phylogenetic GLMM using spaMM and estimate the value of the parameter of the correlation structure (lambda)
+## This function fits a phylogenetic GLMM using spaMM and estimate the value of the parameter of the correlation structure (Pagel's lambda)
 ## by outer estimation
 
 fitme_phylo_lambdafree <- function(tree, data, cor_fn = ape::corPagel, args_spaMM = list()) {
@@ -171,7 +180,7 @@ fitme_phylo_lambdafree <- function(tree, data, cor_fn = ape::corPagel, args_spaM
   fit
 }
 
-## This function estimates the 95% CI of the parameter of the correlation structure (lambda)
+## This function estimates the 95% CI of the parameter of the correlation structure (Pagel's lambda)
 
 confint_lambda <- function(bestfit) {
   lambda_ref <- bestfit$phylo$lambda
@@ -210,7 +219,7 @@ confint_lambda <- function(bestfit) {
 
 ## This function estimates the 95% CI for the fixed effects of models fitted with spaMM
 
-confint_fixef <- function(fit, boot_args = NULL) {
+confint_fixef <- function(fit, boot_args = list(nb_cores = 50, nsim = 1000, seed = 123, type = "marginal")) {
   
   if (!is.null(boot_args) && boot_args$nb_cores > parallel::detectCores()) {
     stop("CI not computed under default settings; this is computationally challenging and therefore is best done on a large computer.")
@@ -279,7 +288,7 @@ extract_fit_summary <- function(fit, digits = 3, boot_args = list(nb_cores = 50,
 
 ## This functions extract the r-squared value associated with the model
 ## Note: We compute it as the squared coefficient for the Pearson correlation between prediction and observations at the log scale
-##       For mixed modes, we do not account for the random effect when computing the predictions
+##       For mixed models, we do not account for the realisation of the random effects when computing the predictions
 
 compure_r2 <- function(fit, digits = 3) {
   
@@ -301,33 +310,6 @@ compure_r2 <- function(fit, digits = 3) {
                       p = pretty(cor_res$p.value, digits = digits))
   rownames(stats) <- "r2"
   stats
-}
-
-
-# Testing via CI ----------------------------------------------------------
-
-confint_param <- function(fit, parm, boot_args = list(nb_cores = 50, nsim = 1000, seed = 123)) {
-  
-  if (!is.null(boot_args) && boot_args$nb_cores > parallel::detectCores()) {
-    stop("test not computed under default settings; this is computationally challenging and therefore is best done on a large computer.")
-  }
-  
-  if (!is.null(fit$phylo)) {
-    corM <- fit$phylo$corM
-  } else {
-    corM <- NULL
-  }
-  
-  boot_obj <- spaMM::spaMM2boot(fit,
-                                statFUN = \(refit, ...) spaMM::fixef(refit, ...)[parm],
-                                nsim = boot_args$nsim,
-                                nb_cores = boot_args$nb_cores,
-                                seed = boot_args$seed,
-                                fit_env = list(corM = corM))
-
-  boot_obj$t <- t(boot_obj$t)
-  boot_res <- boot::boot.ci(boot_obj, type = "basic")
-  c(estimate = boot_res$t0[[1]], lower_basic = boot_res$basic[4], upper_basic = boot_res$basic[5])
 }
 
 
@@ -368,6 +350,7 @@ draw_figure_1 <- function(data_models, fit_SLR, fit_PLMM, fit_SMA, fit_MA, fit_M
     
     print(fig)
 }
+
 
 ## This function draws figure 2
 
