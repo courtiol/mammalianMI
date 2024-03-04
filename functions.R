@@ -180,6 +180,26 @@ fitme_phylo_lambdafree <- function(tree, data, cor_fn = ape::corPagel, args_spaM
   fit
 }
 
+## This function draws the log-likelihood profile for Pagel's lambda
+
+profile_lambda <- function(fit, lambda_seq = seq(0.9, 1, by = 0.01)) {
+  
+  if (is.null(fit$residModel)) {
+    fixed <- list(phi = 1e-5)
+  } else {
+    fixed <- list()
+    fit$residModel$family <- NULL # to avoid bug in spaMM 
+  }
+  
+  res <- sapply(lambda_seq, \ (lambda) {
+    cat(paste0("computing logLik for Pagel's Lambda = ", lambda, "\n"))
+    logLik(fitme_phylo_lambdafixed(lambda, tree = fit$phylo$tree, data = fit$data, cor_fn = fit$phylo$cor_fn,
+                                                                      args_spaMM = list(formula = formula(fit), resid.model = fit$residModel, fixed = fixed)))
+    })
+  
+  data.frame(Pagel_lambda = lambda_seq, logLik = res)
+}
+
 ## This function estimates the 95% CI of the parameter of the correlation structure (Pagel's lambda)
 
 confint_lambda <- function(bestfit) {

@@ -128,6 +128,10 @@ fit_PLMM_models <- fitme_phylo_lambdafixed(
   args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + corrMatrix(1|Key),
                     resid.model =  ~ Adult_mass_log10 + (1|Key)))
 
+### Profile for Pagel's lamba
+profile_lambda_PLMM <- profile_lambda(fit_PLMM_models)
+plot(logLik ~ Pagel_lambda, data = profile_lambda_PLMM, type = "o")
+
 ### Checking PLMM model assumptions
 plot(fit_PLMM_models, ask = FALSE, which = "mean")  ## diagnostics (heteroscedastic, but this is accounted for)
 plot(fit_PLMM_models, ask = FALSE, which = "ranef") ## diagnostics (ok)
@@ -572,6 +576,7 @@ coin::wilcox_test(MI ~ Order, data = MI_orders_meta, distribution = "exact")
 # data:  MI by Order (Dasyuromorphia, Diprotodontia)
 # Z = 5.4803, p-value = 1.481e-09
 
+## fit models for LRT
 fit_MPLMM_subclass_O_euth <- fitme_phylo_lambdafixed(
   lambda = 1, tree = tree, data = MI_orders_euth, 
   args_spaMM = list(formula = Litter_mass_log10 ~ Order + Adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
@@ -606,7 +611,7 @@ fit_MPLMM_subclass_OD_meta <- fitme_phylo_lambdafixed(
                     resid.model =  ~ Adult_mass_log10 + (1|Key),
                     control.HLfit = list(NbThreads = 2)))
 
-
+## LRTs
 if (FALSE) { # switch FALSE to TRUE to run (slow)
   subclass_test_OM_euth <- compute_LRT(fit_MPLMM_subclass_OM_euth, fit_MPLMM_subclass_O_euth)
   subclass_test_OM_euth
