@@ -129,8 +129,10 @@ fit_PLMM_models <- fitme_phylo_lambdafixed(
                     resid.model =  ~ Adult_mass_log10 + (1|Key)))
 
 ### Profile for Pagel's lamba
-profile_lambda_PLMM <- profile_lambda(fit_PLMM_models)
-plot(logLik ~ Pagel_lambda, data = profile_lambda_PLMM, type = "o")
+if (FALSE) { # switch FALSE to TRUE to run
+  profile_lambda_PLMM <- profile_lambda(fit_PLMM_models)
+  plot(logLik ~ Pagel_lambda, data = profile_lambda_PLMM, type = "o")
+}
 
 ### Checking PLMM model assumptions
 plot(fit_PLMM_models, ask = FALSE, which = "mean")  ## diagnostics (heteroscedastic, but this is accounted for)
@@ -240,6 +242,12 @@ fit_MPLMM_models <- fitme_phylo_lambdafixed(
   lambda = 1, data = MI_models, tree = tree,
   args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
                     resid.model =  ~ Adult_mass_log10 + (1|Key)))
+
+### Profile for Pagel's lamba
+if (FALSE) { # switch FALSE to TRUE to run
+  profile_lambda_MPLMM <- profile_lambda(fit_MPLMM_models)
+  plot(logLik ~ Pagel_lambda, data = profile_lambda_MPLMM, type = "o")
+}
 
 ### Checking MPLMM model assumptions
 plot(fit_MPLMM_models, ask = FALSE, which = "mean")  ## diagnostics (heteroscedastic, but this is accounted for)
