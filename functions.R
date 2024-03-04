@@ -248,7 +248,7 @@ confint_fixef <- function(fit, boot_args = list(nb_cores = 50, nsim = 1000, seed
 
 ## This functions computes the LRT between 2 models fitted with spaMM by parametric bootstrap
 
-compute_LRT <- function(fit, fit_null, boot_args = list(nb_cores = 50, nsim = 1000, seed = 123)) {
+compute_LRT <- function(fit, fit_null, boot_args = list(nb_cores = 100, nsim = 1000, seed = 123)) {
   
   if (!is.null(boot_args)) {
     
@@ -281,7 +281,7 @@ compute_df <- function(fit) {
 
 ## This functions extract parameters and their 95% confidence intervals
 
-extract_fit_summary <- function(fit, digits = 3, boot_args = list(nb_cores = 50, nsim = 1000, seed = 123, type = "marginal"), lambdaCI = TRUE) {
+extract_fit_summary <- function(fit, digits = 3, boot_args = list(nb_cores = 100, nsim = 1000, seed = 123, type = "marginal"), lambdaCI = TRUE) {
   
   if (inherits(fit, what = "HLfit")) {
     

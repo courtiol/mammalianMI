@@ -445,52 +445,29 @@ fit_MPLMM_subclass_SMD <- fitme_phylo_lambdafixed(
                     resid.model =  ~ Adult_mass_log10 + (1|Key),
                     control.HLfit = list(NbThreads = 2)))
 
-
-if (FALSE) { # switch FALSE to TRUE to run (slow)
-  subclass_test_SMD.vs.0 <- compute_LRT(fit_MPLMM_subclass_SMD, fit_MPLMM_subclass)
-  subclass_test_SMD.vs.0$basicLRT
-  compute_df(fit_MPLMM_subclass_SMD) - compute_df(fit_MPLMM_subclass) # dfs
-  
-}
-#    LRT   df      p
-# 1 7.68 3.00 0.0531 ## not used
-
-if (FALSE) { # switch FALSE to TRUE to run (slow)
-  subclass_test_S.vs.0 <- compute_LRT(fit_MPLMM_subclass_S, fit_MPLMM_subclass)
-  subclass_test_S.vs.0$basicLRT
-  compute_df(fit_MPLMM_subclass_S) - compute_df(fit_MPLMM_subclass) # dfs
-  
-}
-#     LRT   df     p
-# 1 0.280 1.00 0.596 ## not used
-
 if (FALSE) { # switch FALSE to TRUE to run (slow)
   subclass_test_SM.vs.S <- compute_LRT(fit_MPLMM_subclass_SM, fit_MPLMM_subclass_S)
+  subclass_test_SM.vs.S
+  # ======== Bootstrap: ========
+  #  Raw simulated p-value: 0.023
   subclass_test_SM.vs.S$basicLRT
+  # chi2_LR df p_value
+  # p_v 7.216617 NA      NA
   compute_df(fit_MPLMM_subclass_SM) - compute_df(fit_MPLMM_subclass_S) # dfs
-  
+  # [1] 1
 }
-#     LRT   df      p
-# 1 7.22 1.00 0.00722 ## used in manuscript
 
 if (FALSE) { # switch FALSE to TRUE to run (slow)
   subclass_test_SD.vs.S <- compute_LRT(fit_MPLMM_subclass_SD, fit_MPLMM_subclass_S)
+  subclass_test_SD.vs.S
+  # ======== Bootstrap: ========
+  #   Raw simulated p-value: 0.014
   subclass_test_SD.vs.S$basicLRT
+  # chi2_LR df p_value
+  # p_v 7.500569 NA      NA
   compute_df(fit_MPLMM_subclass_SD) - compute_df(fit_MPLMM_subclass_S) # dfs
-  
+  # [1] 1
 }
-#     LRT   df      p
-# 1 7.50 1.00 0.00617 ## used in manuscript
-
-if (FALSE) { # switch FALSE to TRUE to run (slow)
-  subclass_test_SMD.vs.S <- compute_LRT(fit_MPLMM_subclass_SMD, fit_MPLMM_subclass_S)
-  subclass_test_SMD.vs.S$basicLRT
-  compute_df(fit_MPLMM_subclass_SMD) - compute_df(fit_MPLMM_subclass_S) # dfs
-  
-}
-#     LRT   df      p
-# 1 7.40  2.00 0.0247 ## not used
-
 
 
 fit_MPLMM_euth <- fitme_phylo_lambdafixed(
@@ -523,7 +500,7 @@ if (FALSE) {
 # 10^(Intercept)               0.778       0.0470         10.8        0.0470          11.9      0.0509        12.9
 }
 
-fit_MPLMM_euth_noD <- fitme_phylo_lambdafixed(
+fit_MPLMM_euth_noD <- fitme_phylo_lambdafixed( ## noD as for no investment duration
   lambda = 1, tree = tree, data = MI_subclasses[MI_subclasses$Subclass == "Eutheria", ], 
   args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + corrMatrix(1|Key),
                     resid.model =  ~ Adult_mass_log10 + (1|Key)))
@@ -630,33 +607,41 @@ fit_MPLMM_subclass_OD_meta <- fitme_phylo_lambdafixed(
                     control.HLfit = list(NbThreads = 2)))
 
 
-subclass_test_OM_euth <- data.frame(LRT = unname(-2*(logLik(fit_MPLMM_subclass_O_euth) - logLik(fit_MPLMM_subclass_OM_euth))))
-subclass_test_OM_euth$df <- 1
-subclass_test_OM_euth$p <- with(subclass_test_OM_euth, pchisq(LRT, df, lower.tail = FALSE))
-pretty(subclass_test_OM_euth)
-#     LRT  df        p
-# 1 21.6 1.00 3.27e-06
+if (FALSE) { # switch FALSE to TRUE to run (slow)
+  subclass_test_OM_euth <- compute_LRT(fit_MPLMM_subclass_OM_euth, fit_MPLMM_subclass_O_euth)
+  subclass_test_OM_euth
+  # ======== Bootstrap: ========
+  subclass_test_OM_euth$basicLRT
+  # chi2_LR df p_value
+  compute_df(fit_MPLMM_subclass_OM_euth) - compute_df(fit_MPLMM_subclass_O_euth) # dfs
+}
 
-subclass_test_OD_euth <- data.frame(LRT = unname(-2*(logLik(fit_MPLMM_subclass_O_euth) - logLik(fit_MPLMM_subclass_OD_euth))))
-subclass_test_OD_euth$df <- 1
-subclass_test_OD_euth$p <- with(subclass_test_OD_euth, pchisq(LRT, df, lower.tail = FALSE))
-pretty(subclass_test_OD_euth)
-#     LRT  df        p
-# 1 12.5 1.00 0.000403
+if (FALSE) { # switch FALSE to TRUE to run (slow)
+  subclass_test_OD_euth <- compute_LRT(fit_MPLMM_subclass_OD_euth, fit_MPLMM_subclass_O_euth)
+  subclass_test_OD_euth
+  # ======== Bootstrap: ========
+  subclass_test_OD_euth$basicLRT
+  # chi2_LR df p_value
+  compute_df(fit_MPLMM_subclass_OD_euth) - compute_df(fit_MPLMM_subclass_O_euth) # dfs
+}
 
-subclass_test_OM_meta <- data.frame(LRT = unname(-2*(logLik(fit_MPLMM_subclass_O_meta) - logLik(fit_MPLMM_subclass_OM_meta))))
-subclass_test_OM_meta$df <- 1
-subclass_test_OM_meta$p <- with(subclass_test_OM_meta, pchisq(LRT, df, lower.tail = FALSE))
-pretty(subclass_test_OM_meta)
-#     LRT  df        p
-# 1 16.6 1.00 4.52e-05
+if (FALSE) { # switch FALSE to TRUE to run (slow)
+  subclass_test_OM_meta <- compute_LRT(fit_MPLMM_subclass_OM_meta, fit_MPLMM_subclass_O_meta)
+  subclass_test_OM_meta
+  # ======== Bootstrap: ========
+  subclass_test_OM_meta$basicLRT
+  # chi2_LR df p_value
+  compute_df(fit_MPLMM_subclass_OM_meta) - compute_df(fit_MPLMM_subclass_O_meta) # dfs
+}
 
-subclass_test_OD_meta <- data.frame(LRT = unname(-2*(logLik(fit_MPLMM_subclass_O_meta) - logLik(fit_MPLMM_subclass_OD_meta))))
-subclass_test_OD_meta$df <- 1
-subclass_test_OD_meta$p <- with(subclass_test_OD_meta, pchisq(LRT, df, lower.tail = FALSE))
-pretty(subclass_test_OD_meta)
-#     LRT   df    p
-# 1 1.61 1.00 0.204
+if (FALSE) { # switch FALSE to TRUE to run (slow)
+  subclass_test_OD_meta <- compute_LRT(fit_MPLMM_subclass_OD_meta, fit_MPLMM_subclass_O_meta)
+  subclass_test_OD_meta
+  # ======== Bootstrap: ========
+  subclass_test_OD_meta$basicLRT
+  # chi2_LR df p_value
+  compute_df(fit_MPLMM_subclass_OD_meta) - compute_df(fit_MPLMM_subclass_O_meta) # dfs
+}
 
 
 # 20 Indicator Species --------------------------------------------------
