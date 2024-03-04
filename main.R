@@ -611,36 +611,48 @@ if (FALSE) { # switch FALSE to TRUE to run (slow)
   subclass_test_OM_euth <- compute_LRT(fit_MPLMM_subclass_OM_euth, fit_MPLMM_subclass_O_euth)
   subclass_test_OM_euth
   # ======== Bootstrap: ========
+  # Raw simulated p-value: 0.0571
   subclass_test_OM_euth$basicLRT
   # chi2_LR df p_value
+  # p_v 21.64892 NA      NA
   compute_df(fit_MPLMM_subclass_OM_euth) - compute_df(fit_MPLMM_subclass_O_euth) # dfs
+  # [1] 6
 }
 
 if (FALSE) { # switch FALSE to TRUE to run (slow)
   subclass_test_OD_euth <- compute_LRT(fit_MPLMM_subclass_OD_euth, fit_MPLMM_subclass_O_euth)
   subclass_test_OD_euth
   # ======== Bootstrap: ========
+  # Raw simulated p-value: 0.134
   subclass_test_OD_euth$basicLRT
   # chi2_LR df p_value
+  # p_v 12.51678 NA      NA
   compute_df(fit_MPLMM_subclass_OD_euth) - compute_df(fit_MPLMM_subclass_O_euth) # dfs
+  # [1] 6
 }
 
 if (FALSE) { # switch FALSE to TRUE to run (slow)
   subclass_test_OM_meta <- compute_LRT(fit_MPLMM_subclass_OM_meta, fit_MPLMM_subclass_O_meta)
   subclass_test_OM_meta
   # ======== Bootstrap: ========
+  # Raw simulated p-value: 0.036
   subclass_test_OM_meta$basicLRT
   # chi2_LR df p_value
+  # p_v 16.64098 NA      NA
   compute_df(fit_MPLMM_subclass_OM_meta) - compute_df(fit_MPLMM_subclass_O_meta) # dfs
+  # [1] 1
 }
 
 if (FALSE) { # switch FALSE to TRUE to run (slow)
   subclass_test_OD_meta <- compute_LRT(fit_MPLMM_subclass_OD_meta, fit_MPLMM_subclass_O_meta)
   subclass_test_OD_meta
   # ======== Bootstrap: ========
+  # Raw simulated p-value: 0.314
   subclass_test_OD_meta$basicLRT
   # chi2_LR df p_value
+  # p_v 1.61142 NA      NA
   compute_df(fit_MPLMM_subclass_OD_meta) - compute_df(fit_MPLMM_subclass_O_meta) # dfs
+  # [1] 1
 }
 
 
