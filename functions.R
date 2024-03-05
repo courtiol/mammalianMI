@@ -45,7 +45,7 @@ check_dependencies_all <- function(pkgs) {
 
 ## This function prepares the data containing information required to compute the Maternal Investment metrics
 
-## It produces a dataset with 15 columns:
+## It produces a dataset with 18 columns:
 ## - Species: the species name
 ## - Key: a key based on the taxonomy which is used to match the tips in the phylogenetic tree
 ## - Subclass: the mammalian subclass
@@ -62,6 +62,8 @@ check_dependencies_all <- function(pkgs) {
 ## - Litter_mass_log10: the log (base 10) mass of the litter at weaning age
 ## - Investment_duration: the duration of maternal investment (gestation + lactation), in days
 ## - Investment_duration_log10: the log (base 10) duration of maternal investment (gestation + lactation)
+## - Lifespan: the maximal duration of life, in days
+## - Lifespan_log10: the log (base 10) of the maximal duration of life
 
 prepare_df_MIfull <- function(raw_df) {
   
@@ -83,6 +85,8 @@ prepare_df_MIfull <- function(raw_df) {
   raw_df$Female_adult_mass_log10 <- log(raw_df$Female_adult_mass, base = 10)
   raw_df$Litter_mass_log10 <- log(raw_df$Litter_mass, base = 10)
   raw_df$Investment_duration_log10 <-  log(raw_df$Investment_duration, base = 10)
+  raw_df$Lifespan <- raw_df$Maximum_longevity_y * 365.25
+  raw_df$Lifespan_log10 <- log(raw_df$Lifespan, base = 10)
   
   ## Format character-columns into factors
   raw_df$Subclass <- as.factor(raw_df$Subclass)
@@ -128,7 +132,8 @@ prepare_df_MIfull <- function(raw_df) {
                        "Male_adult_mass", "Male_adult_mass_log10",
                        "Female_adult_mass", "Female_adult_mass_log10",
                        "Litter_mass", "Litter_mass_log10",
-                       "Investment_duration", "Investment_duration_log10")]
+                       "Investment_duration", "Investment_duration_log10",
+                       "Lifespan", "Lifespan_log10")]
   
   ## Final cleaning
   raw_df <- droplevels(raw_df)
