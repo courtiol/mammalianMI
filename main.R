@@ -4,7 +4,7 @@ source("functions.R")
 
 # Checking dependencies ---------------------------------------------------
 check_dependencies_all(c("ape", "coin", "doSNOW", "ggdist", "ggplot2", "nlme",
-                         "patchwork", "rphylopic", "scales", "smatr", "spaMM", "tidyr"))
+                         "patchwork", "rphylopic", "smatr", "spaMM", "tidyr"))
 
 
 # Load dependencies used here (and not just in functions imported above) ----
