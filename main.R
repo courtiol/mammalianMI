@@ -387,15 +387,6 @@ draw_figure_3(data_mass = MI_mass, fit_default = fit_MPLMM_mass_default, fit_fem
 ggplot2::ggsave(filename = "figures/Fig3.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
 ggplot2::ggsave(filename = "figures/Fig3.png", scale = 1.2, width = 15, height = 10, units = "cm")
 
-draw_figure_x(data_mass = MI_mass, fit_default = fit_MPLMM_mass_default, fit_females = fit_MPLMM_mass_females)
-ggplot2::ggsave(filename = "figures/FigS1.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
-ggplot2::ggsave(filename = "figures/FigS1.png", scale = 1.2, width = 15, height = 10, units = "cm")
-
-draw_figure_xx(data_mass = MI_mass, fit_default = fit_MPLMM_mass_default, fit_females = fit_MPLMM_mass_females)
-ggplot2::ggsave(filename = "figures/FigS2.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
-ggplot2::ggsave(filename = "figures/FigS2.png", scale = 1.2, width = 15, height = 10, units = "cm")
-
-
 
 # Comparison of Subclasses ------------------------------------------------
 
@@ -548,8 +539,8 @@ MI_orders_euth$MI  <- MI_orders_euth$Litter_mass_log10 - predict(fit_MPLMM_euth,
 MI_orders_meta$MI  <- MI_orders_meta$Litter_mass_log10 - predict(fit_MPLMM_meta, newdata = MI_orders_meta, re.form = NA, type = "link")[, 1]
 
 ## Figure 5
-fig5A <- draw_figure_5(MI_orders_euth, tag = "A.", col_begin = 0, col_end = 0.8, scale = 0.9)
-fig5B <- draw_figure_5(MI_orders_meta, dotsize = 0.8, tag = "B.", col_begin = 0.9, col_end = 1, scale = 0.2)
+fig5A <- draw_figure_5(MI_orders_euth, tag = "A.", col_begin = 0, col_end = 0.7, scale = 0.9)
+fig5B <- draw_figure_5(MI_orders_meta, dotsize = 0.8, tag = "B.", col_begin = 0.8, col_end = 0.9, scale = 0.2)
 patchwork::wrap_plots(fig5A, fig5B, ncol = 2, widths = c(0.8, 0.3))
 ggplot2::ggsave(filename = "figures/Fig5.pdf", scale = 1.2, width = 22, height = 10, units = "cm")
 ggplot2::ggsave(filename = "figures/Fig5.png", scale = 1.2, width = 22, height = 10, units = "cm")

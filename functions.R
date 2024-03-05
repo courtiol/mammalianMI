@@ -383,15 +383,17 @@ draw_figure_1 <- function(data_models, fit_SLR, fit_PLMM, fit_SMA, fit_MA, fit_M
   data_pred$Model <- factor(data_pred$Model, levels = c("SLR", "PLMM", "SMA", "MA", "MSLR", "MPLMM"))
   
   fig <- ggplot2::ggplot(data = data_models, ggplot2::aes(Adult_mass, Litter_mass)) + 
-    ggplot2::scale_x_continuous(trans = "log10", breaks = c(0.1, 1, 10, 100, 1000, 10000, 100000), 
-                                labels = scales::number_format(accuracy = 0.1), expand = c(0, 0)) + 
+    ggplot2::scale_x_continuous(trans = "log10", breaks = c(0.1, 1, 10, 100, 1000, 10000, 100000),
+                                labels = c("0.1", "1", "10", "100", "1000", "10,000", "100,000"),
+                                expand = c(0, 0)) + 
     ggplot2::scale_y_continuous(trans = "log10",
                                 breaks = c(0.1, 1, 10, 100, 1000, 10000),
-                                labels = scales::number_format(accuracy = 0.1), expand = c(0, 0)) +
+                                labels = c("0.1", "1", "10", "100", "1000", "10,000"),
+                                expand = c(0, 0)) +
     ggplot2::scale_shape_manual(values = 21:23) +
     ggplot2::scale_fill_manual(values = c("steelblue", "darkred", "#FCC501")) +
-    ggplot2::scale_color_viridis_d() +
-    ggplot2::geom_point(ggplot2::aes(shape = Subclass, fill = Subclass), alpha = 0.3, size = 2) +
+    ggplot2::scale_color_viridis_d(option = "H", end = 0.8) +
+    ggplot2::geom_point(ggplot2::aes(shape = Subclass, fill = Subclass), alpha = 0.7, size = 2) +
     ggplot2::geom_line(ggplot2::aes(y = Predict, x = Adult_mass, colour = Model), data = data_pred,
                        linewidth = 0.7, alpha = 0.8, inherit.aes = FALSE) +
     ggplot2::labs(x = 'Adult mass (kg)', y = 'Litter mass at weaning age (kg)') +
@@ -419,15 +421,17 @@ draw_figure_2 <- function(data_mass, fit_default, fit_males, fit_females) {
   
   fig <- ggplot2::ggplot(data = data_mass, ggplot2::aes(x = Adult_mass, y = Litter_mass)) + 
     ggplot2::scale_x_continuous(trans = "log10", breaks = c(0.1, 1, 10, 100, 1000, 10000, 100000), 
-                                labels = scales::number_format(accuracy = 0.1), expand = c(0, 0)) + 
+                                labels = c("0.1", "1", "10", "100", "1000", "10,000", "100,000"),
+                                expand = c(0, 0)) + 
     ggplot2::scale_y_continuous(trans = "log10",
                                 breaks = c(0.1, 1, 10, 100, 1000, 10000),
-                                labels = scales::number_format(accuracy = 0.1), expand = c(0, 0)) +
+                                labels = c("0.1", "1", "10", "100", "1000", "10,000"),
+                                expand = c(0, 0)) +
     ggplot2::scale_shape_manual(values = 21:23) +
     ggplot2::scale_fill_manual(values = c("steelblue", "darkred", "#FCC501")) +
     ggplot2::scale_colour_manual(values = c("black", "#1fc3aa", "#8624f5")) +
     #ggplot2::scale_color_viridis_d() +
-    ggplot2::geom_point(ggplot2::aes(shape = Subclass, fill = Subclass), alpha = 0.3, size = 2) +
+    ggplot2::geom_point(ggplot2::aes(shape = Subclass, fill = Subclass), alpha = 0.7, size = 2) +
     ggplot2::geom_line(ggplot2::aes(y = Predict, x = Adult_mass, colour = Sex), data = data_pred,
                        linewidth = 0.7, alpha = 0.8, inherit.aes = FALSE) +
     ggplot2::labs(x = 'Adult mass (kg)', y = 'Litter mass at weaning age (kg)', colour = 'Source for body mass') +
@@ -446,14 +450,12 @@ draw_figure_3 <- function(data_mass, fit_default, fit_females) {
   data_mass$females <- data_mass$Litter_mass_log10 - predict(fit_females, re.form = NA, type = "link")[, 1]
   
   fig <- ggplot2::ggplot(data = data_mass, ggplot2::aes(y = females, x = default, shape = Subclass, fill = Subclass)) + 
-    ggplot2::geom_point(alpha = 0.3, size = 2) +
+    ggplot2::geom_point(alpha = 0.7, size = 2) +
     ggplot2::geom_text(ggplot2::aes(y = females, x = default - 0.02, label = Name), hjust = 1, data = data_mass[(data_mass$females - data_mass$default) > 0.1, ], size = 2) +
     ggplot2::geom_text(ggplot2::aes(y = females, x = default + 0.02, label = Name), hjust = 0, data = data_mass[(data_mass$default - data_mass$females) > 0.1, ], size = 2) +
     ggplot2::geom_abline(intercept = 0, slope = 1, linetype = "dashed") +
-    ggplot2::scale_x_continuous(breaks = seq(-0.5, 4, by = 0.5), 
-                                labels = scales::number_format(accuracy = 0.1)) + 
-    ggplot2::scale_y_continuous(breaks = seq(-0.5, 4, by = 0.5),
-                                labels = scales::number_format(accuracy = 0.1)) +
+    ggplot2::scale_x_continuous(breaks = seq(-0.5, 4, by = 0.5)) + 
+    ggplot2::scale_y_continuous(breaks = seq(-0.5, 4, by = 0.5)) +
     ggplot2::scale_shape_manual(values = 21:23) +
     ggplot2::scale_fill_manual(values = c("steelblue", "darkred", "#FCC501")) +
     ggplot2::coord_fixed(xlim = c(-0.75, 0.75), ylim = c(-0.75, 0.75)) +
@@ -481,13 +483,13 @@ draw_figure_4 <- function(data_subclasses) {
   
   fig <- ggplot2::ggplot(data = data_subclasses[data_subclasses$Subclass != "Monotremata", ]) +
           ggplot2::aes(x = Subclass, y = MI, col = Subclass, fill = Subclass, shape = Subclass) + 
-          ggdist::stat_dots(alpha = 0.3, layout = "weave", show.legend = FALSE, dotsize = 1,
+          ggdist::stat_dots(alpha = 0.7, layout = "weave", show.legend = FALSE, dotsize = 1,
                             slab_colour = "black", slab_linewidth = 0.3) + 
           ggdist::stat_pointinterval(show.legend = FALSE, .width = c(0.5, 0.95),
                                      position = ggplot2::position_nudge(x = -0.05)) +
           ggplot2::geom_point(data = data_subclasses[data_subclasses$Subclass == "Monotremata", ],
                               mapping = ggplot2::aes(y = MI, x = Subclass),
-                              colour = "black", fill = "#FCC501", alpha = 0.3, size = 1,
+                              colour = "black", fill = "#FCC501", alpha = 0.7, size = 1,
                               shape = 23) +
           ggplot2::geom_text(ggplot2::aes(x = x - 0.02, y = MI, label = as.character(Name)),
                              hjust = 1, data = flagged, show.legend = FALSE, size = 2,
@@ -511,7 +513,7 @@ draw_figure_5 <- function(data_orders, dotsize = 1, tag = "", col_begin = 0, col
   
   fig <- ggplot2::ggplot(data = data_orders) +
     ggplot2::aes(x = Order, y = MI, col = Order, fill = Order) + 
-    ggdist::stat_dots(alpha = 0.3, layout = "weave", show.legend = FALSE, dotsize = dotsize, scale = scale,
+    ggdist::stat_dots(alpha = 0.7, layout = "weave", show.legend = FALSE, dotsize = dotsize, scale = scale,
                       slab_colour = "black", slab_linewidth = 0.3) + 
     ggdist::stat_pointinterval(show.legend = FALSE, .width = c(0.5, 0.95),
                                position = ggplot2::position_nudge(x = -0.05)) +
@@ -519,8 +521,8 @@ draw_figure_5 <- function(data_orders, dotsize = 1, tag = "", col_begin = 0, col
     ggplot2::scale_y_continuous(breaks = seq(-1.5, 1.5, 0.5), expand = c(0.1, 0.1)) +
     ggplot2::coord_cartesian(ylim = c(-1, 1)) +
     ggplot2::theme_classic() +
-    ggplot2::scale_color_viridis_d(begin = col_begin, end = col_end) +
-    ggplot2::scale_fill_viridis_d(begin = col_begin, end = col_end)
+    ggplot2::scale_color_viridis_d(option = "B", begin = col_begin, end = col_end) +
+    ggplot2::scale_fill_viridis_d(option = "B", begin = col_begin, end = col_end)
   
   print(fig)
 }
@@ -559,8 +561,8 @@ draw_figure_6 <- function(MI_indicators) {
     ggplot2::aes(y = MI, x = Name,
                  col = Subclass, fill = Subclass, shape = Subclass) +
     ggplot2::geom_hline(yintercept = 0, linewidth = 0.3, color = "black", linetype = "dashed") +
-    ggplot2::geom_segment(ggplot2::aes(yend = MI, y = 0, xend = reorder(Name, MI)), alpha = 0.3) +
-    ggplot2::geom_point(alpha = 0.3, size = 2) +
+    ggplot2::geom_segment(ggplot2::aes(yend = MI, y = 0, xend = reorder(Name, MI)), alpha = 0.7) +
+    ggplot2::geom_point(alpha = 0.7, size = 2) +
     rphylopic::geom_phylopic(ggplot2::aes(img = Phylopic_img, x = Name, y = -0.81),
                              size = 0.09, colour = NA,
                              data = MI_indicators) +
