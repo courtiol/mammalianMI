@@ -425,7 +425,8 @@ draw_figure_2 <- function(data_mass, fit_default, fit_males, fit_females) {
   data_pred$Sex <- factor(data_pred$Sex, levels = c("default", "females"))
   
   fig <- ggplot2::ggplot(data = data_mass, ggplot2::aes(x = Adult_mass, y = Litter_mass)) + 
-    ggplot2::scale_x_continuous(trans = "log10", breaks = c(0.1, 1, 10, 100, 1000, 10000, 100000), 
+    ggplot2::scale_x_continuous(trans = "log10",
+                                breaks = c(0.1, 1, 10, 100, 1000, 10000, 100000), 
                                 labels = c("0.1", "1", "10", "100", "1000", "10,000", "100,000"),
                                 expand = c(0, 0)) + 
     ggplot2::scale_y_continuous(trans = "log10",

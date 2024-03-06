@@ -11,6 +11,12 @@ check_dependencies_all(c("ape", "coin", "doSNOW", "ggdist", "ggplot2", "nlme",
 library(spaMM)
 library(smatr)
 
+# General settings --------------------------------------------------------
+
+## By default, the script will not run intensive computational steps, replace FALSE by TRUE if you want too
+run_slow <- FALSE
+
+
 # Data preparation --------------------------------------------------------
 
 ## Import the phylogenetic tree (downloaded from https://datadryad.org/stash/dataset/doi:10.5061/dryad.q2bvq83r2)
@@ -113,7 +119,7 @@ compure_r2(fit_SLR_models)
 ## Fitting PLMM model for method comparison
 
 ### Fitting PLMM model with estimation of best Pagel's Lambda (version 1: very slow)
-if (FALSE) { # switch FALSE to TRUE to run
+if (run_slow) {
   fit_PLMM_models <- fitme_phylo_lambdafree(
     tree = tree, data = MI_models,
     args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + corrMatrix(1|Key),
@@ -129,7 +135,7 @@ fit_PLMM_models <- fitme_phylo_lambdafixed(
                     resid.model =  ~ Adult_mass_log10 + (1|Key)))
 
 ### Profile for Pagel's lamba
-if (FALSE) { # switch FALSE to TRUE to run
+if (run_slow) {
   profile_lambda_PLMM <- profile_lambda(fit_PLMM_models)
   plot(logLik ~ Pagel_lambda, data = profile_lambda_PLMM, type = "o")
 }
@@ -141,7 +147,7 @@ plot(fit_PLMM_models, ask = FALSE, which = "predict") ## diagnostics (bad: resid
 plot(MI_models$Litter_mass_log10, predict(fit_PLMM_models, re.form = NA, type = "link")[, 1]) ## diagnostics, excluding ranef (good!)
 
 ### Computing CI for estimates in PLMM model (very computationally intensive)
-if (FALSE) { # switch FALSE to TRUE to run
+if (run_slow) {
   PLMM_summary <- extract_fit_summary(fit_PLMM_models)
   pretty(PLMM_summary$fixef) # Note: we report the basic intervals in the MS
 #                   estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
@@ -229,7 +235,7 @@ compure_r2(fit_MSLR_models)
 ## Fitting MPLMM model for method comparison
 
 ### Fitting MPLMM model with estimation of best Pagel's Lambda (version 1: very slow)
-if (FALSE) { # switch FALSE to TRUE to run
+if (run_slow) {
   fit_MPLMM_models <- fitme_phylo_lambdafree(
     data = MI_models, tree = tree,
     args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
@@ -244,7 +250,7 @@ fit_MPLMM_models <- fitme_phylo_lambdafixed(
                     resid.model =  ~ Adult_mass_log10 + (1|Key)))
 
 ### Profile for Pagel's lamba
-if (FALSE) { # switch FALSE to TRUE to run
+if (run_slow) {
   profile_lambda_MPLMM <- profile_lambda(fit_MPLMM_models)
   plot(logLik ~ Pagel_lambda, data = profile_lambda_MPLMM, type = "o")
 }
@@ -256,7 +262,7 @@ plot(fit_MPLMM_models, ask = FALSE, which = "predict") ## diagnostics (bad: resi
 plot(MI_models$Litter_mass_log10, predict(fit_MPLMM_models, re.form = NA, type = "link")[, 1]) ## diagnostics, excluding ranef (good!)
 
 ### Computing CI for estimates in MPLMM model (very computationally intensive)
-if (FALSE) { # switch FALSE to TRUE to run
+if (run_slow) {
   MPLMM_summary <- extract_fit_summary(fit_MPLMM_models)
   pretty(MPLMM_summary$fixef) # Note: we report the basic intervals in the MS
 #                            estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
@@ -320,7 +326,7 @@ pretty(range(corMI, na.rm = TRUE)) # Range of correlation coefficients between m
 # [1] "0.917" "1.00" 
 
 ## Comparison of models by LRT
-if (FALSE) { # switch FALSE to TRUE to run (slow)
+if (run_slow) {
   univariate_phylo_test <- compute_LRT(fit = fit_PLMM_models, fit_null = fit_SLR_models)
   # ======== Bootstrap: ========
   #   Raw simulated p-value: 0.000999
@@ -331,7 +337,7 @@ if (FALSE) { # switch FALSE to TRUE to run (slow)
   # [1] 3
 }
 
-if (FALSE) { # switch FALSE to TRUE to run (slow)
+if (run_slow) {
   multivariate_phylo_test <- compute_LRT(fit = fit_MPLMM_models, fit_null = fit_MSLR_models)
   # ======== Bootstrap: ========
   #   Raw simulated p-value: 0.000999
@@ -448,7 +454,7 @@ fit_MPLMM_subclass_SMD <- fitme_phylo_lambdafixed(
                     resid.model =  ~ Adult_mass_log10 + (1|Key),
                     control.HLfit = list(NbThreads = 2)))
 
-if (FALSE) { # switch FALSE to TRUE to run (slow)
+if (run_slow) {
   subclass_test_SM.vs.S <- compute_LRT(fit_MPLMM_subclass_SM, fit_MPLMM_subclass_S)
   subclass_test_SM.vs.S
   # ======== Bootstrap: ========
@@ -460,7 +466,7 @@ if (FALSE) { # switch FALSE to TRUE to run (slow)
   # [1] 1
 }
 
-if (FALSE) { # switch FALSE to TRUE to run (slow)
+if (run_slow) {
   subclass_test_SD.vs.S <- compute_LRT(fit_MPLMM_subclass_SD, fit_MPLMM_subclass_S)
   subclass_test_SD.vs.S
   # ======== Bootstrap: ========
@@ -478,7 +484,7 @@ fit_MPLMM_euth <- fitme_phylo_lambdafixed(
   args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
                     resid.model =  ~ Adult_mass_log10 + (1|Key)))
 
-if (FALSE) {
+if (run_slow) {
   MPLMM_euth_summary <- extract_fit_summary(fit_MPLMM_euth, lambdaCI = FALSE)
   pretty(MPLMM_euth_summary)
 #                            estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
@@ -493,7 +499,7 @@ fit_MPLMM_meta <- fitme_phylo_lambdafixed(
   args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + Investment_duration_log10 + corrMatrix(1|Key),
                     resid.model =  ~ Adult_mass_log10 + (1|Key)))
 
-if (FALSE) {
+if (run_slow) {
   MPLMM_meta_summary <- extract_fit_summary(fit_MPLMM_meta, lambdaCI = FALSE)
   pretty(MPLMM_meta_summary)
 #                           estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
@@ -508,7 +514,7 @@ fit_MPLMM_euth_noD <- fitme_phylo_lambdafixed( ## noD as for no investment durat
   args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + corrMatrix(1|Key),
                     resid.model =  ~ Adult_mass_log10 + (1|Key)))
 
-if (FALSE) {
+if (run_slow) {
   MPLMM_euth_noD_summary <- extract_fit_summary(fit_MPLMM_euth_noD, lambdaCI = FALSE)
   pretty(MPLMM_euth_noD_summary)
 #                  estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
@@ -523,7 +529,7 @@ fit_MPLMM_meta_noD <- fitme_phylo_lambdafixed(
   args_spaMM = list(formula = Litter_mass_log10 ~ Adult_mass_log10 + corrMatrix(1|Key),
                     resid.model =  ~ Adult_mass_log10 + (1|Key)))
 
-if (FALSE) {
+if (run_slow) {
   MPLMM_meta_noD_summary <- extract_fit_summary(fit_MPLMM_meta_noD, lambdaCI = FALSE)
   pretty(MPLMM_meta_noD_summary)
 #                  estimate lower_normal upper_normal lower_percent upper_percent lower_basic upper_basic
@@ -611,7 +617,7 @@ fit_MPLMM_subclass_OD_meta <- fitme_phylo_lambdafixed(
                     control.HLfit = list(NbThreads = 2)))
 
 ## LRTs
-if (FALSE) { # switch FALSE to TRUE to run (slow)
+if (run_slow) {
   subclass_test_OM_euth <- compute_LRT(fit_MPLMM_subclass_OM_euth, fit_MPLMM_subclass_O_euth)
   subclass_test_OM_euth
   # ======== Bootstrap: ========
@@ -623,7 +629,7 @@ if (FALSE) { # switch FALSE to TRUE to run (slow)
   # [1] 6
 }
 
-if (FALSE) { # switch FALSE to TRUE to run (slow)
+if (run_slow) {
   subclass_test_OD_euth <- compute_LRT(fit_MPLMM_subclass_OD_euth, fit_MPLMM_subclass_O_euth)
   subclass_test_OD_euth
   # ======== Bootstrap: ========
@@ -635,7 +641,7 @@ if (FALSE) { # switch FALSE to TRUE to run (slow)
   # [1] 6
 }
 
-if (FALSE) { # switch FALSE to TRUE to run (slow)
+if (run_slow) {
   subclass_test_OM_meta <- compute_LRT(fit_MPLMM_subclass_OM_meta, fit_MPLMM_subclass_O_meta)
   subclass_test_OM_meta
   # ======== Bootstrap: ========
@@ -647,7 +653,7 @@ if (FALSE) { # switch FALSE to TRUE to run (slow)
   # [1] 1
 }
 
-if (FALSE) { # switch FALSE to TRUE to run (slow)
+if (run_slow) {
   subclass_test_OD_meta <- compute_LRT(fit_MPLMM_subclass_OD_meta, fit_MPLMM_subclass_O_meta)
   subclass_test_OD_meta
   # ======== Bootstrap: ========
@@ -690,7 +696,7 @@ pretty(MI_indicators[order(-MI_indicators$MI), c("Name", "Species", "Order", "Su
 
 # Figure 6 ----------------------------------------------------------------
 
-if (FALSE) { ## slow to run as it downloads the silhouettes
+if (run_slow) { ## slow to run as it downloads the silhouettes
   fig6 <- draw_figure_6(MI_indicators)
   ggplot2::ggsave(filename = "figures/Fig6.pdf", scale = 1.2, width = 15, height = 10, units = "cm")
   ggplot2::ggsave(filename = "figures/Fig6.png", scale = 1.2, width = 15, height = 10, units = "cm")
